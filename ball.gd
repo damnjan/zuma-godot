@@ -1,5 +1,7 @@
 extends Area2D
 
+class_name Ball
+
 signal died(index)
 
 var frame = randi_range(0,3)

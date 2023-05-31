@@ -1,15 +1,15 @@
 extends Node2D
 
-signal clicked(ball, collider, normal)
+signal clicked(ball: Ball, collider, normal)
 
 var BallScene = preload("res://Ball.tscn")
 
 @onready var shape_cast_2d: ShapeCast2D = $ShapeCast2D
 @onready var line_2d = $"Line2D"
 
-var ball
+var ball: Ball
 var collider
-var rotated_normal
+var rotated_normal: Vector2
 
 func create_ball():
 	ball = BallScene.instantiate()
@@ -40,7 +40,7 @@ func _process(delta):
 	else:
 		ball.position = self.position
 		collider = null
-		rotated_normal = null
+#		rotated_normal = null
 		
 		
 func _input(event):
