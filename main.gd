@@ -5,9 +5,11 @@ extends Node2D
 const BALL_WIDTH = Globals.BALL_WIDTH
 const BallScene = preload("res://Ball.tscn")
 
-var follows: Array[FollowingBall] = []
+var follows: Array[FollowingBall]
 var global_progress = 0.0
 var _follows_to_delete: Array[FollowingBall] = []
+var _split_pointers: Array[int] # points where split started (index of first item for deletion)
+var _going_backwards = false
 
 func _ready():
 	seed(123)
@@ -15,28 +17,36 @@ func _ready():
 		var b = BallScene.instantiate()
 		b.frame = i
 		_add_follow(b)
-		
-func _delete_dead_follows():
-	for follow_to_remove in _follows_to_delete:
-		follows.erase(follow_to_remove)
-		follow_to_remove.ball.died.connect(_on_ball_died)
-		follow_to_remove.ball.die(follow_to_remove)
-	_follows_to_delete = []
 	
 		
 func _physics_process(delta):
 	_move_follows(delta)
-	_check_for_matches()
-	_delete_dead_follows()	
+	if not _going_backwards: 
+		_check_for_matches()
 
+# I have noooo idea why but this works kinda
 func _move_follows(delta):
-	global_progress += 100 * delta
+	if not _going_backwards:
+		global_progress += 100 * delta
+		
+	_going_backwards = false
 	for i in follows.size():
-		var new_progress = i * BALL_WIDTH + global_progress
-		follows[i].progress = lerpf(follows[i].progress, new_progress, 0.2)
+		var new_progress = i * BALL_WIDTH
+		if i > 0:
+			var diff = follows[i].progress - follows[i - 1].progress
+			if diff > BALL_WIDTH + 1:
+				new_progress = i * BALL_WIDTH + global_progress - diff
+				_going_backwards = true
+				
+		if not _going_backwards:
+			new_progress += global_progress
+		
+		follows[i].progress = lerpf(follows[i].progress, new_progress, 0.1)
 
 # check for 3 or more matching
 func _check_for_matches():
+	if not _follows_to_delete.is_empty():
+		return
 	for i in follows.size():
 		var consecutive = []
 		var x = i
@@ -45,13 +55,21 @@ func _check_for_matches():
 			x += 1
 		if consecutive.size() >= 3:
 			_follows_to_delete.append_array(consecutive)
+			for follow in consecutive:
+				follow.kill_ball()
+			_split_pointers.append(x - consecutive.size())
+			print(_split_pointers)
+			break
+			
 	
 func _on_ball_died(follow):
 	follows.erase(follow)
+	_follows_to_delete.erase(follow)
 
 func _add_follow(ball, index = null):
 	var follow = FollowingBall.new()
 	follow.add_ball(ball)
+	ball.died.connect(_on_ball_died)
 	path_2d.add_child(follow)
 	if index == null:
 		follows.append(follow)

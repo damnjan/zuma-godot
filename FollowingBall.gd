@@ -2,8 +2,11 @@ extends PathFollow2D
 
 class_name FollowingBall
 
-var ball: Area2D
+var ball: Ball
 
-func add_ball(ball: Area2D):
+func add_ball(ball: Ball):
 	self.ball = ball
 	add_child(ball)
+	
+func kill_ball():
+	ball.die(self)
