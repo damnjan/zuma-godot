@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://cs0g6j0rmm486"]
 
-[ext_resource type="Script" path="res://ball.gd" id="1_lblui"]
+[ext_resource type="Script" path="res://ball.gd" id="1_cmi47"]
 [ext_resource type="Texture2D" uid="uid://bc4vugfwmyg38" path="res://ball.png" id="1_x31f7"]
 [ext_resource type="Texture2D" uid="uid://chi0mvlrflppb" path="res://ball_blue.png" id="3_0ar6v"]
 [ext_resource type="Texture2D" uid="uid://cw66ymm4r15dw" path="res://ball_green.png" id="4_eow4n"]
@@ -28,6 +28,45 @@ animations = [{
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2fy1i"]
 radius = 46.0
+
+[sub_resource type="Animation" id="Animation_t2jj0"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CPUParticles2D:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [true]
+}
 
 [sub_resource type="Animation" id="Animation_5at2x"]
 resource_name = "die"
@@ -82,45 +121,6 @@ tracks/3/keys = {
 }]
 }
 
-[sub_resource type="Animation" id="Animation_t2jj0"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("CPUParticles2D:emitting")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("CollisionShape2D:disabled")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [true]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2lata"]
 _data = {
 "RESET": SubResource("Animation_t2jj0"),
@@ -146,7 +146,7 @@ point_count = 2
 
 [node name="Ball" type="Area2D"]
 self_modulate = Color(0, 0, 0, 1)
-script = ExtResource("1_lblui")
+script = ExtResource("1_cmi47")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(-3.09426, -0.652313)

@@ -13,7 +13,9 @@ var _going_backwards = false
 
 func _ready():
 	seed(123)
-	for i in [0,0,1,1,0,0]:
+#	for i in [0,0,1,1,0,0]:
+#	for i in 50:
+	for i in [0,1,3,2,3,0,0,1,1,0,0,3,3,0,0,1,1,3,0,1,0,1,2,0,0,1,3,1,0,0,1,2,3]:
 		var b = BallScene.instantiate()
 		b.frame = i
 		_add_follow(b)
@@ -55,6 +57,7 @@ func _check_for_matches():
 			x += 1
 		if consecutive.size() >= 3:
 			_follows_to_delete.append_array(consecutive)
+			$Shaker.start()
 			for follow in consecutive:
 				follow.kill_ball()
 			_split_pointers.append(x - consecutive.size())

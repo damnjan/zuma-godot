@@ -23,3 +23,7 @@ window/size/viewport_height=1700
 [editor]
 
 movie_writer/movie_file="/Users/damnjan/Documents/Godot/zuma/movie.avi"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/shaker/plugin.cfg")

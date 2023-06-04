@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=6 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
+[ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="3_r5c63"]
 
 [sub_resource type="Curve2D" id="Curve2D_dkb43"]
 _data = {
@@ -14,6 +15,13 @@ radius = 48.28
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wdpau")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -84.0
+offset_top = -63.0
+offset_right = 3170.0
+offset_bottom = 1804.0
+color = Color(0, 0.137756, 0.144531, 1)
 
 [node name="Path2D" type="Path2D" parent="."]
 position = Vector2(-94.0856, -8.42374)
@@ -30,5 +38,17 @@ shape = SubResource("CircleShape2D_pbtvq")
 collide_with_areas = true
 
 [node name="Line2D" type="Line2D" parent="BallSpawner"]
+default_color = Color(1, 1, 1, 0.470588)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(1497, 847)
+
+[node name="Shaker" type="Node" parent="." node_paths=PackedStringArray("target_node")]
+script = ExtResource("3_r5c63")
+target_node = NodePath("../Camera2D")
+target_property = &"offset"
+max_value = 50.0
+constant = true
+duration = 0.2
 
 [connection signal="clicked" from="BallSpawner" to="." method="_on_ball_spawner_clicked"]
