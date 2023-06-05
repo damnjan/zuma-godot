@@ -39,7 +39,8 @@ func _add_follow(ball, index = null, group = first_group):
 
 	return follow
 
-func _on_ball_spawner_clicked(ball, collider, normal):
+
+func _on_ball_spawner_collided(ball, collider, normal):
 	if !collider:
 		return
 	var group = first_group

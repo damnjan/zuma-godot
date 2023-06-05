@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=5 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
@@ -9,9 +9,6 @@ _data = {
 "points": PackedVector2Array(-33.9795, 434.182, 33.9795, -434.182, 290.086, 517.424, -135.918, 6.60712, 135.918, -6.60712, 1129.09, 92.4237, -242.113, -190.579, 242.113, 190.579, 2571.09, 231.424, 215.169, -228.373, -215.169, 228.373, 2692.09, 1486.42, 160.01, 105.833, -160.01, -105.833, 516.086, 1378.42, -52.2699, 205.056, 52.2699, -205.056, 385.086, 724.424, -271.962, 66.2857, 271.962, -66.2857, 751.086, 399.424, -219.528, -52.6766, 219.528, 52.6766, 1982.09, 336.424, 62.51, -225.651, -62.51, 225.651, 2234.09, 850.424, 286.325, 33.9127, -286.325, -33.9127, 1847.09, 1362.42, 0, 0, 0, 0, 816.086, 950.424)
 }
 point_count = 11
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_pbtvq"]
-radius = 48.28
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wdpau")
@@ -33,10 +30,6 @@ script = ExtResource("2_cpssc")
 
 [node name="RayCast2D" type="RayCast2D" parent="BallSpawner"]
 
-[node name="ShapeCast2D" type="ShapeCast2D" parent="BallSpawner"]
-shape = SubResource("CircleShape2D_pbtvq")
-collide_with_areas = true
-
 [node name="Line2D" type="Line2D" parent="BallSpawner"]
 default_color = Color(1, 1, 1, 0.470588)
 
@@ -51,4 +44,4 @@ max_value = 50.0
 constant = true
 duration = 0.2
 
-[connection signal="clicked" from="BallSpawner" to="." method="_on_ball_spawner_clicked"]
+[connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_collided"]

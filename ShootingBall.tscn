@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxv7m5gem4v6x"]
+
+[ext_resource type="Script" path="res://ShootingBall.gd" id="1_icmqd"]
+[ext_resource type="PackedScene" uid="uid://cs0g6j0rmm486" path="res://Ball.tscn" id="2_30jl1"]
+
+[node name="ShootingBall" type="Node2D"]
+script = ExtResource("1_icmqd")
+
+[node name="Ball" parent="." instance=ExtResource("2_30jl1")]
