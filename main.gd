@@ -20,7 +20,7 @@ func _ready():
 #	for i in [0]:
 		var b = BallScene.instantiate()
 #		b.frame = i
-		_add_follow()
+		_add_follow(null, null, first_group, true)
 		
 	
 		
@@ -31,10 +31,10 @@ func _physics_process(delta):
 		next = next.next_group
 
 
-func _add_follow(frame = null, index = null, group = first_group):
+func _add_follow(frame = null, index = null, group = first_group, ignore_check = false):
 	var follow: FollowingBall = FollowingBall.new(frame)
 	path_2d.add_child.call_deferred(follow)
-	group.add_item(follow, index)
+	group.add_item(follow, index, ignore_check)
 
 	return follow
 
