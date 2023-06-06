@@ -23,7 +23,7 @@ func _input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			shooting_ball.shoot(shooting_direction)
-			spawn_shooting_ball()
+			GlobalTimer.create_async(spawn_shooting_ball, 0.1)
 
 func spawn_shooting_ball():
 	shooting_ball = ShootingBallScene.instantiate()
