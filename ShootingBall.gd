@@ -8,7 +8,7 @@ enum State {
 	IDLE, SHOOTING
 }
 
-@onready var ball = $Ball
+@onready var ball: Ball = $Ball
 var state = State.IDLE
 
 var _direction: Vector2
@@ -23,6 +23,11 @@ func shoot(direction: Vector2):
 	_direction = direction
 	state = State.SHOOTING
 	ball.area_entered.connect(_on_ball_area_entered)
+	
+func change_color():
+	var prev_frame = ball.frame
+	while ball.frame == prev_frame:
+		ball.set_random_color()
 
 
 func _on_ball_area_entered(area):

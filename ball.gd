@@ -4,8 +4,14 @@ class_name Ball
 
 signal died(index)
 
-var frame = randi_range(0,3)
+var frame
 var follow_to_remove
+
+func set_random_color():
+	frame = randi_range(0,3)
+	
+func _init():
+	set_random_color()
 
 func _ready():
 	$Sprite.frame = frame

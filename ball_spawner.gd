@@ -20,10 +20,12 @@ func _process(delta):
 	line_2d.set_point_position(1, shooting_direction * 4000 )
 
 func _input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT :
 			shooting_ball.shoot(shooting_direction)
 			GlobalTimer.create_async(spawn_shooting_ball, 0.1)
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			shooting_ball.change_color()
 
 func spawn_shooting_ball():
 	shooting_ball = ShootingBallScene.instantiate()

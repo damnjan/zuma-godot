@@ -99,7 +99,8 @@ func _check_for_matches_from(index: int, direction: int = 0):
 	print({ "index": index, "start": start, "end": end})
 	if end - start >= Globals.MIN_CONSECUTIVE_MATCH:
 		_explode_balls(start, end)
-	
+
+
 func _explode_balls(start: int, end: int):
 	Globals.shake_camera()
 	var items_to_remove = items.slice(start, end)
