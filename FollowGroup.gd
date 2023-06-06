@@ -10,7 +10,11 @@ var next_group: FollowGroup
 var state = State.FORWARDS
 var items: Array[FollowingBall]
 var global_progress = 0
+var current_speed: float
+var acceleration_curve: Curve = preload("res://acceleration_curve.tres")
+
 var _follows_to_delete: Array[FollowingBall]
+var _is_inserting = false
 
 # a and b are indexes of first and last marble that explodes
 func split_group(a, b):
@@ -32,6 +36,7 @@ func split_group(a, b):
 
 
 func add_item(item: FollowingBall, index, ignore_check = false):
+	_is_inserting = true
 	if index != null:
 		items.insert(index, item)
 	else:
@@ -39,7 +44,7 @@ func add_item(item: FollowingBall, index, ignore_check = false):
 		index = items.size() - 1
 	item.progress = index * Globals.BALL_WIDTH + global_progress
 	if !ignore_check:
-		GlobalTimer.create_async(func(): _check_for_matches_from(index), 0.1)
+		GlobalTimer.create_async(func(): _check_for_matches_from(index); _is_inserting = false, 0.15)
 
 func change_state(next_state: State):
 	state = next_state
@@ -53,24 +58,44 @@ func remove():
 func merge_next_group():
 	var last_index = items.size() - 1
 	items.append_array(next_group.items)
+	current_speed += next_group.current_speed	
 	next_group.remove()
 	_check_for_matches_from(last_index)
 
+var curve_time: float = 0.0
+var last_speed = current_speed
 
 func physics_process(delta):
 	match state:
 		State.FORWARDS:
-			global_progress += Globals.FORWARDS_SPEED * delta
+			
+			if (last_speed <= 0 and current_speed > 0):
+				curve_time = 0
+				
+			last_speed = current_speed
+			curve_time += delta
+			
+			var acceleration = acceleration_curve.sample(curve_time) * 1000 if current_speed >= 0 else 4000
+			
+			current_speed = min(current_speed + acceleration * delta, Globals.FORWARDS_SPEED)
+				
+			global_progress += current_speed * delta
 			for i in items.size():
 				var new_progress = global_progress + i * Globals.BALL_WIDTH
-				items[i].progress = lerpf(items[i].progress, new_progress, 0.1)
+				items[i].progress = lerpf(items[i].progress, new_progress, 0.1 if _is_inserting else 1)
 
 			if next_group != null and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
 				merge_next_group()
 		
 		State.BACKWARDS:
-			for item in items:
-				item.progress -= Globals.BACKWARDS_SPEED * delta
+#			if current_speed > -Globals.BACKWARDS_SPEED:
+#				current_speed -= 1500 * delta
+			current_speed = -Globals.BACKWARDS_SPEED	
+			global_progress += current_speed * delta
+			for i in items.size():
+				var new_progress = global_progress + i * Globals.BALL_WIDTH
+				items[i].progress = lerpf(items[i].progress, new_progress, 0.1)
+
 			if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
 				prev_group.merge_next_group()
 				
@@ -88,6 +113,8 @@ func last_item() -> FollowingBall:
 	return items.back()
 		
 func _check_for_matches_from(index: int, direction: int = 0):
+	if index > items.size():
+		return
 	var start = index
 	var end = index
 	if direction <= 0:
