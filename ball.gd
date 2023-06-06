@@ -20,6 +20,7 @@ func _process(delta):
 	$Sprite.frame = frame
 	
 func die(follow):
+	self.set_collision_layer_value(1, false)
 	follow_to_remove = follow
 	$AnimationPlayer.play("die")
 

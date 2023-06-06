@@ -7,6 +7,7 @@ enum State {
 var prev_group: FollowGroup
 var next_group: FollowGroup
 
+var is_removed = false
 var state = State.FORWARDS
 var items: Array[FollowingBall]
 var global_progress = 0
@@ -15,6 +16,7 @@ var acceleration_curve: Curve = preload("res://acceleration_curve.tres")
 
 var _follows_to_delete: Array[FollowingBall]
 var _is_inserting = false
+
 
 # a and b are indexes of first and last marble that explodes
 func split_group(a, b):
@@ -44,7 +46,7 @@ func add_item(item: FollowingBall, index, ignore_check = false):
 		index = items.size() - 1
 	item.progress = index * Globals.BALL_WIDTH + global_progress
 	if !ignore_check:
-		GlobalTimer.create_async(func(): _check_for_matches_from(index); _is_inserting = false, 0.15)
+		GlobalTimer.create_async(func(): _check_for_matches_from(index); _is_inserting = false, 0.2)
 
 func change_state(next_state: State):
 	state = next_state
@@ -54,13 +56,14 @@ func remove():
 		prev_group.next_group = next_group
 	if next_group:
 		next_group.prev_group = prev_group
+	is_removed = true
 
 func merge_next_group():
 	var last_index = items.size() - 1
 	items.append_array(next_group.items)
 	current_speed += next_group.current_speed	
 	next_group.remove()
-	_check_for_matches_from(last_index)
+	_check_for_matches_from(last_index, true)
 
 var curve_time: float = 0.0
 var last_speed = current_speed
@@ -112,19 +115,21 @@ func first_item() -> FollowingBall:
 func last_item() -> FollowingBall:
 	return items.back()
 		
-func _check_for_matches_from(index: int, direction: int = 0):
-	if index > items.size():
+func _check_for_matches_from(index: int, is_merge = false):
+	if index >= items.size():
+		print("THIS IS BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD")
 		return
 	var start = index
-	var end = index
-	if direction <= 0:
-		while start -1 >= 0 and items[start - 1].frame == items[index].frame:
-			start -= 1
-	if direction >= 0:
-		while end < items.size() and items[end].frame == items[index].frame:
-			end += 1
-	print({ "index": index, "start": start, "end": end})
+	var end = index # end is non inclusive
+	while start -1 >= 0 and items[start - 1].frame == items[index].frame:
+		start -= 1
+	while end < items.size() and items[end].frame == items[index].frame:
+		end += 1
+#	print({ "index": index, "start": start, "end": end})
 	if end - start >= Globals.MIN_CONSECUTIVE_MATCH:
+		if is_merge and end == index + 1:
+			print("Skipping check")
+			return
 		_explode_balls(start, end)
 
 
@@ -137,9 +142,14 @@ func _explode_balls(start: int, end: int):
 		group.state = FollowGroup.State.WAITING
 		if group.prev_group and group.first_item().frame == group.prev_group.last_item().frame:
 			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, 0.5)
+	elif start == 0:
+		print("Removing from the start")
+		global_progress += items_to_remove.size() * Globals.BALL_WIDTH
 	else:
-		print("NOOOOO")
+		print("This is probably a whole group removed :)")
 		
 	for follow in items_to_remove:
 		follow.kill_ball()
 		items.erase(follow)
+		if items.is_empty():
+			remove()

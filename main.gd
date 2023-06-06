@@ -15,22 +15,28 @@ var _going_backwards = false
 func _ready():
 	seed(123)
 #	for i in [0,0,1,1,0,0]:
-#	for i in 50:
+	for i in 50:
 #	for i in [0,1,3,2,3,0,0,1,1,0,0,3,3,0,0,1,1,3,0,1,0,1,2,0,0,1,3,1,0,0,1,2,3]:
 #	for i in [0]:
-	for i in [0,0,1,2,2,1,3,3,1,0,0,1,2,2,1,3,3,1]:
+#	for i in [0,0,1,2,2,1,3,3,1,0,0,1,2,2,1,3,3,1]:
+#	for i in [2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,2,2,2]:
 		var b = BallScene.instantiate()
 #		b.frame = i
-		_add_follow(i, null, first_group, true)
+		_add_follow(null, null, first_group, true)
 		
 	
 		
 func _physics_process(delta):
+	_check_first_group()
 	var next: FollowGroup = first_group
 	while next:
 		next.physics_process(delta)
 		next = next.next_group
 
+func _check_first_group():
+	if first_group and first_group.is_removed and first_group.next_group:
+		first_group = first_group.next_group
+		first_group.state = FollowGroup.State.FORWARDS
 
 func _add_follow(frame = null, index = null, group = first_group, ignore_check = false):
 	var follow: FollowingBall = FollowingBall.new(frame)

@@ -1,19 +1,26 @@
-[gd_scene load_steps=5 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=6 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
 [ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="3_r5c63"]
+[ext_resource type="Texture2D" uid="uid://6yn7bgnrwxmq" path="res://zuma_bg3.png" id="4_gu86m"]
 
-[sub_resource type="Curve2D" id="Curve2D_dkb43"]
+[sub_resource type="Curve2D" id="Curve2D_osee1"]
 _data = {
-"points": PackedVector2Array(-33.9795, 434.182, 33.9795, -434.182, 290.086, 517.424, -135.918, 6.60712, 135.918, -6.60712, 1129.09, 92.4237, -242.113, -190.579, 242.113, 190.579, 2571.09, 231.424, 215.169, -228.373, -215.169, 228.373, 2692.09, 1486.42, 160.01, 105.833, -160.01, -105.833, 516.086, 1378.42, -52.2699, 205.056, 52.2699, -205.056, 385.086, 724.424, -271.962, 66.2857, 271.962, -66.2857, 751.086, 399.424, -219.528, -52.6766, 219.528, 52.6766, 1982.09, 336.424, 62.51, -225.651, -62.51, 225.651, 2234.09, 850.424, 286.325, 33.9127, -286.325, -33.9127, 1847.09, 1362.42, 0, 0, 0, 0, 816.086, 950.424)
+"points": PackedVector2Array(-890.073, 79.2854, 890.073, -79.2854, 556.086, 421.424, -181.224, -192.55, 181.224, 192.55, 2527.09, 516.424, -17.9336, -100.995, 17.9336, 100.995, 2731.09, 939.424, 210.484, -44.3621, -210.484, 44.3621, 2493.09, 1363.42, 213.316, 216.147, -213.316, -216.147, 741.086, 1246.42, -242.576, 111.377, 242.576, -111.377, 902.086, 628.424, -177.448, -354.897, 177.448, 354.897, 2356.09, 839.424, 253.902, 16.0459, -253.902, -16.0459, 1935.09, 1216.42, 0, 0, 0, 0, 1068.09, 1112.42)
 }
-point_count = 11
+point_count = 9
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wdpau")
 
+[node name="ZumaBg3" type="Sprite2D" parent="."]
+position = Vector2(1493, 854)
+scale = Vector2(1.659, 1.659)
+texture = ExtResource("4_gu86m")
+
 [node name="ColorRect" type="ColorRect" parent="."]
+visible = false
 offset_left = -84.0
 offset_top = -63.0
 offset_right = 3170.0
@@ -22,7 +29,7 @@ color = Color(0, 0.137756, 0.144531, 1)
 
 [node name="Path2D" type="Path2D" parent="."]
 position = Vector2(-94.0856, -8.42374)
-curve = SubResource("Curve2D_dkb43")
+curve = SubResource("Curve2D_osee1")
 
 [node name="BallSpawner" type="Node2D" parent="."]
 position = Vector2(1777, 1000)
@@ -40,7 +47,7 @@ position = Vector2(1497, 847)
 script = ExtResource("3_r5c63")
 target_node = NodePath("../Camera2D")
 target_property = &"offset"
-max_value = 50.0
+max_value = 10.0
 constant = true
 duration = 0.2
 

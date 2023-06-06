@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://cs0g6j0rmm486"]
+[gd_scene load_steps=15 format=3 uid="uid://cs0g6j0rmm486"]
 
 [ext_resource type="Script" path="res://ball.gd" id="1_cmi47"]
 [ext_resource type="Texture2D" uid="uid://bc4vugfwmyg38" path="res://ball.png" id="1_x31f7"]
+[ext_resource type="Texture2D" uid="uid://cuki8wkf7edkr" path="res://ball_orange.png" id="2_i1cv2"]
 [ext_resource type="Texture2D" uid="uid://chi0mvlrflppb" path="res://ball_blue.png" id="3_0ar6v"]
 [ext_resource type="Texture2D" uid="uid://cw66ymm4r15dw" path="res://ball_green.png" id="4_eow4n"]
 [ext_resource type="Texture2D" uid="uid://djtqce3pd4g7c" path="res://ball_purple.png" id="5_vyxwv"]
@@ -10,16 +11,19 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_x31f7")
+"texture": ExtResource("2_i1cv2")
 }, {
 "duration": 1.0,
 "texture": ExtResource("3_0ar6v")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_eow4n")
+"texture": ExtResource("1_x31f7")
 }, {
 "duration": 1.0,
 "texture": ExtResource("5_vyxwv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_eow4n")
 }],
 "loop": false,
 "name": &"default",

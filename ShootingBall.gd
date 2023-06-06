@@ -19,7 +19,6 @@ func _physics_process(delta):
 		position += _direction * Globals.SHOOTING_SPEED
 
 func shoot(direction: Vector2):
-	print("Shooting ", ball.frame)
 	_direction = direction
 	state = State.SHOOTING
 	ball.area_entered.connect(_on_ball_area_entered)

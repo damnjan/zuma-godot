@@ -16,14 +16,17 @@ func _ready():
 
 
 func _process(delta):
-	shooting_direction =  Vector2(get_local_mouse_position()).normalized()
+	shooting_direction = global_position.direction_to(get_global_mouse_position()).normalized()
 	line_2d.set_point_position(1, shooting_direction * 4000 )
 
 func _input(event):
+	if shooting_ball == null:
+		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT :
 			shooting_ball.shoot(shooting_direction)
-			GlobalTimer.create_async(spawn_shooting_ball, 0.1)
+			shooting_ball = null
+			GlobalTimer.create_async(spawn_shooting_ball, 0.2)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			shooting_ball.change_color()
 
