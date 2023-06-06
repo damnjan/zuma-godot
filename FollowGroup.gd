@@ -15,7 +15,9 @@ var current_speed: float
 var acceleration_curve: Curve = preload("res://acceleration_curve.tres")
 
 var _follows_to_delete: Array[FollowingBall]
-var _is_inserting = false
+var _should_interpolate_progress = false
+
+
 
 
 # a and b are indexes of first and last marble that explodes
@@ -38,7 +40,7 @@ func split_group(a, b):
 
 
 func add_item(item: FollowingBall, index, ignore_check = false):
-	_is_inserting = true
+	_should_interpolate_progress = true
 	if index != null:
 		items.insert(index, item)
 	else:
@@ -46,7 +48,8 @@ func add_item(item: FollowingBall, index, ignore_check = false):
 		index = items.size() - 1
 	item.progress = index * Globals.BALL_WIDTH + global_progress
 	if !ignore_check:
-		GlobalTimer.create_async(func(): _check_for_matches_from(index); _is_inserting = false, 0.2)
+		GlobalTimer.create_async(func(): _check_for_matches_from(index), 0.2)
+		
 
 func change_state(next_state: State):
 	state = next_state
@@ -62,6 +65,7 @@ func merge_next_group():
 	var last_index = items.size() - 1
 	items.append_array(next_group.items)
 	current_speed += next_group.current_speed	
+	_should_interpolate_progress = false
 	next_group.remove()
 	_check_for_matches_from(last_index, true)
 
@@ -85,7 +89,7 @@ func physics_process(delta):
 			global_progress += current_speed * delta
 			for i in items.size():
 				var new_progress = global_progress + i * Globals.BALL_WIDTH
-				items[i].progress = lerpf(items[i].progress, new_progress, 0.1 if _is_inserting else 1)
+				items[i].progress = lerpf(items[i].progress, new_progress, 0.2 if _should_interpolate_progress else 1)
 
 			if next_group != null and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
 				merge_next_group()

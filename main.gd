@@ -38,8 +38,9 @@ func _check_first_group():
 		first_group = first_group.next_group
 		first_group.state = FollowGroup.State.FORWARDS
 
-func _add_follow(frame = null, index = null, group = first_group, ignore_check = false):
+func _add_follow(frame = null, index = null, group = first_group, ignore_check = false, ball_global_position = null):
 	var follow: FollowingBall = FollowingBall.new(frame)
+	follow.origin_position = ball_global_position
 	path_2d.add_child.call_deferred(follow)
 	group.add_item(follow, index, ignore_check)
 
@@ -57,7 +58,7 @@ func _on_ball_spawner_collided(ball, collider, normal):
 				
 				
 				var insert_index = i if normal.x < 0 else i + 1
-				_add_follow(ball.frame, insert_index, group)
+				_add_follow(ball.frame, insert_index, group, false, ball.global_position)
 				
 				break
 		group = group.next_group
