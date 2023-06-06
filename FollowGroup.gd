@@ -33,32 +33,7 @@ func split_group(a, b):
 		
 
 
-func _check_for_matches():
-	if not _follows_to_delete.is_empty():
-		return
-	for i in items.size():
-		var consecutive = []
-		var x = i
-		while x < items.size() and items[x].ball.frame == items[i].ball.frame:
-			consecutive.append(items[x])
-			x += 1
-		if consecutive.size() >= 3:
-			_follows_to_delete.append_array(consecutive)
-			Globals.shake_camera()
-			
-				
-			var starting_index = x - consecutive.size()
-			if starting_index > 0 and x < items.size():
-				var group = split_group(starting_index, x)
-				group.state = FollowGroup.State.WAITING
-				
-				
-			for follow in consecutive:
-				follow.kill_ball()
-				items.erase(follow)
-				_follows_to_delete.erase(follow)
-			
-			break
+
 
 func add_item(item: FollowingBall, index):
 #	item.ball.died.connect(_on_ball_died)
@@ -90,7 +65,7 @@ func merge_next_group():
 
 func physics_process(delta):
 	_check_for_matches()
-	if prev_group and first_item().ball.frame == prev_group.last_item().ball.frame:
+	if prev_group and first_item().frame == prev_group.last_item().frame:
 		state = State.BACKWARDS
 	match state:
 		State.FORWARDS:
@@ -106,7 +81,7 @@ func physics_process(delta):
 		State.BACKWARDS:
 			for item in items:
 				item.progress -= Globals.BACKWARDS_SPEED * delta
-			if prev_group != null and first_item().progress <= prev_group.last_item().progress and prev_group.state != State.FORWARDS:
+			if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
 				prev_group.merge_next_group()
 				
 		State.WAITING:
@@ -122,3 +97,29 @@ func first_item() -> FollowingBall:
 func last_item() -> FollowingBall:
 	return items.back()
 	
+func _check_for_matches():
+	if not _follows_to_delete.is_empty():
+		return
+	for i in items.size():
+		var consecutive = []
+		var x = i
+		while x < items.size() and items[x].frame == items[i].frame:
+			consecutive.append(items[x])
+			x += 1
+		if consecutive.size() >= 3:
+			_follows_to_delete.append_array(consecutive)
+			Globals.shake_camera()
+			
+				
+			var starting_index = x - consecutive.size()
+			if starting_index > 0 and x < items.size():
+				var group = split_group(starting_index, x)
+				group.state = FollowGroup.State.WAITING
+				
+				
+			for follow in consecutive:
+				follow.kill_ball()
+				items.erase(follow)
+				_follows_to_delete.erase(follow)
+			
+			break

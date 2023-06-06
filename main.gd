@@ -20,7 +20,7 @@ func _ready():
 #	for i in [0]:
 		var b = BallScene.instantiate()
 #		b.frame = i
-		_add_follow(b)
+		_add_follow()
 		
 	
 		
@@ -31,9 +31,8 @@ func _physics_process(delta):
 		next = next.next_group
 
 
-func _add_follow(ball, index = null, group = first_group):
-	var follow = FollowingBall.new()
-	follow.add_ball(ball)
+func _add_follow(frame = null, index = null, group = first_group):
+	var follow: FollowingBall = FollowingBall.new(frame)
 	path_2d.add_child.call_deferred(follow)
 	group.add_item(follow, index)
 
@@ -48,12 +47,10 @@ func _on_ball_spawner_collided(ball, collider, normal):
 		for i in group.items.size():
 			var current_ball = group.items[i].ball
 			if current_ball == collider:
-				var new_ball = ball.duplicate()
-				new_ball.position *= 0
-				new_ball.frame = ball.frame
+				
 				
 				var insert_index = i if normal.x < 0 else i + 1
-				_add_follow(new_ball, insert_index, group)
+				_add_follow(ball.frame, insert_index, group)
 				
 				break
 		group = group.next_group

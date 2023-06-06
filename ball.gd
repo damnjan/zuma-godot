@@ -10,6 +10,9 @@ var follow_to_remove
 func _ready():
 	$Sprite.frame = frame
 	
+func _process(delta):
+	$Sprite.frame = frame
+	
 func die(follow):
 	follow_to_remove = follow
 	$AnimationPlayer.play("die")
