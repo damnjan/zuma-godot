@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=8 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
@@ -10,6 +10,16 @@ _data = {
 "points": PackedVector2Array(-890.073, 79.2854, 890.073, -79.2854, 556.086, 421.424, -181.224, -192.55, 181.224, 192.55, 2527.09, 516.424, -17.9336, -100.995, 17.9336, 100.995, 2731.09, 939.424, 210.484, -44.3621, -210.484, 44.3621, 2493.09, 1363.42, 213.316, 216.147, -213.316, -216.147, 741.086, 1246.42, -242.576, 111.377, 242.576, -111.377, 902.086, 628.424, -177.448, -354.897, 177.448, 354.897, 2356.09, 839.424, 253.902, 16.0459, -253.902, -16.0459, 1935.09, 1216.42, 0, 0, 0, 0, 1068.09, 1112.42)
 }
 point_count = 9
+
+[sub_resource type="Gradient" id="Gradient_nepga"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_grrga"]
+gradient = SubResource("Gradient_nepga")
+width = 300
+height = 300
+fill_from = Vector2(0.519417, 0.538835)
+fill_to = Vector2(0.509709, 0)
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wdpau")
@@ -37,8 +47,11 @@ script = ExtResource("2_cpssc")
 
 [node name="RayCast2D" type="RayCast2D" parent="BallSpawner"]
 
-[node name="Line2D" type="Line2D" parent="BallSpawner"]
-default_color = Color(1, 1, 1, 0.470588)
+[node name="Polygon2D" type="Polygon2D" parent="BallSpawner"]
+color = Color(0.980392, 1, 0, 0.396078)
+texture = SubResource("GradientTexture2D_grrga")
+texture_offset = Vector2(2.08165e-12, 200)
+polygon = PackedVector2Array(75, -1, -72, 8, 8, -401)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(1497, 847)

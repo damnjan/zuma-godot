@@ -1,9 +1,12 @@
-[gd_scene load_steps=15 format=3 uid="uid://cs0g6j0rmm486"]
+[gd_scene load_steps=18 format=3 uid="uid://cs0g6j0rmm486"]
 
 [ext_resource type="Script" path="res://ball.gd" id="1_cmi47"]
 [ext_resource type="Texture2D" uid="uid://bc4vugfwmyg38" path="res://ball.png" id="1_x31f7"]
 [ext_resource type="Texture2D" uid="uid://cuki8wkf7edkr" path="res://ball_orange.png" id="2_i1cv2"]
 [ext_resource type="Texture2D" uid="uid://chi0mvlrflppb" path="res://ball_blue.png" id="3_0ar6v"]
+[ext_resource type="Texture2D" uid="uid://wupqdorj3ve2" path="res://ball_teal.png" id="3_al7ge"]
+[ext_resource type="Texture2D" uid="uid://beuaextpspexh" path="res://ball_beige.png" id="4_4vcxn"]
+[ext_resource type="Texture2D" uid="uid://dbfiatss2rsyb" path="res://ball_dark_yellow.png" id="4_6v2nw"]
 [ext_resource type="Texture2D" uid="uid://cw66ymm4r15dw" path="res://ball_green.png" id="4_eow4n"]
 [ext_resource type="Texture2D" uid="uid://djtqce3pd4g7c" path="res://ball_purple.png" id="5_vyxwv"]
 
@@ -11,10 +14,10 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_i1cv2")
+"texture": ExtResource("3_0ar6v")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_0ar6v")
+"texture": ExtResource("4_eow4n")
 }, {
 "duration": 1.0,
 "texture": ExtResource("1_x31f7")
@@ -23,7 +26,16 @@ animations = [{
 "texture": ExtResource("5_vyxwv")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_eow4n")
+"texture": ExtResource("2_i1cv2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_4vcxn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_al7ge")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_6v2nw")
 }],
 "loop": false,
 "name": &"default",
@@ -153,12 +165,10 @@ self_modulate = Color(0, 0, 0, 1)
 script = ExtResource("1_cmi47")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(-3.09426, -0.652313)
-rotation = -0.113971
 sprite_frames = SubResource("SpriteFrames_fgvwj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-4, 2)
+position = Vector2(-1, 1)
 shape = SubResource("CircleShape2D_2fy1i")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

@@ -7,17 +7,35 @@ var ShootingBallScene = preload("res://ShootingBall.tscn")
 var shooting_ball: ShootingBall
 var shooting_direction: Vector2
 
-@onready var line_2d = $"Line2D"
+@onready var ray_cast_2d: RayCast2D = $RayCast2D
+@onready var polygon_2d: Polygon2D = $Polygon2D
+
+const color_dict = {
+	0: Color8(28,105,253, 100),
+	1: Color8(0, 156, 76, 100),
+	2: Color8(255,193,2, 100),
+	3: Color8(216,42,87, 100)
+}
+
 
 func _ready():
 	spawn_shooting_ball()
-	line_2d.add_point(Vector2.ZERO)
-	line_2d.add_point(get_global_mouse_position())
+	ray_cast_2d.add_exception(shooting_ball.ball)
+	ray_cast_2d.collide_with_areas = true
+	
 
 
 func _process(delta):
 	shooting_direction = global_position.direction_to(get_global_mouse_position()).normalized()
-	line_2d.set_point_position(1, shooting_direction * 4000 )
+	ray_cast_2d.target_position = shooting_direction * 4000
+	var collision_point =  ray_cast_2d.get_collision_point()
+	var point_position = collision_point - position if ray_cast_2d.is_colliding() else shooting_direction * 4000
+
+	var mouse_rotation = Vector2.UP.angle_to(point_position)
+	polygon_2d.polygon = [Vector2(0, -point_position.length()), Vector2(-30, 0), Vector2(30, 0)]
+	polygon_2d.rotation = mouse_rotation
+	if shooting_ball:
+		polygon_2d.color = color_dict[shooting_ball.ball.frame]
 
 func _input(event):
 	if shooting_ball == null:
