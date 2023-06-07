@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=13 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
@@ -6,11 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://mouth.png" id="4_1hjie"]
 [ext_resource type="Texture2D" uid="uid://bbp5b7yhd8vnk" path="res://toad.png" id="4_677pa"]
 [ext_resource type="Texture2D" uid="uid://6yn7bgnrwxmq" path="res://zuma_bg3.png" id="4_gu86m"]
-[ext_resource type="AudioStream" uid="uid://cx41v31pulmqi" path="res://shoot.mp3" id="6_shs2v"]
-[ext_resource type="AudioStream" uid="uid://bbl2modj0rqn8" path="res://insert.mp3" id="8_wjfhe"]
-[ext_resource type="AudioStream" uid="uid://bxfw5gqheltk8" path="res://popping.mp3" id="9_wh07i"]
-[ext_resource type="AudioStream" uid="uid://x1lcasidcc2o" path="res://merge.mp3" id="10_0iq3a"]
-[ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://music.mp3" id="11_1orrj"]
 
 [sub_resource type="Curve2D" id="Curve2D_osee1"]
 _data = {
@@ -27,33 +22,6 @@ width = 300
 height = 300
 fill_from = Vector2(0.519417, 0.538835)
 fill_to = Vector2(0.509709, 0)
-
-[sub_resource type="Animation" id="Animation_dxbgw"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Mouth:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
 
 [sub_resource type="Animation" id="Animation_h47lw"]
 resource_name = "shoot"
@@ -82,6 +50,33 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector2(0, 0), Vector2(-0.44458, 21), Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_dxbgw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mouth:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_cylvb"]
@@ -118,6 +113,7 @@ script = ExtResource("2_cpssc")
 
 [node name="RayCast2D" type="RayCast2D" parent="BallSpawner/Toad"]
 position = Vector2(0, -188)
+scale = Vector2(1, 1)
 
 [node name="Polygon2D" type="Polygon2D" parent="BallSpawner/Toad"]
 position = Vector2(1.99988, -186)
@@ -132,6 +128,7 @@ texture = ExtResource("4_1hjie")
 
 [node name="SpawnPoint" type="Marker2D" parent="BallSpawner/Toad"]
 position = Vector2(3.99988, -186)
+scale = Vector2(1, 1)
 
 [node name="Body" type="Sprite2D" parent="BallSpawner/Toad"]
 scale = Vector2(0.77037, 0.77037)
@@ -141,9 +138,6 @@ texture = ExtResource("4_677pa")
 libraries = {
 "": SubResource("AnimationLibrary_cylvb")
 }
-
-[node name="ShootingSound" type="AudioStreamPlayer" parent="BallSpawner"]
-stream = ExtResource("6_shs2v")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(1497, 847)
@@ -155,19 +149,5 @@ target_property = &"offset"
 max_value = 10.0
 constant = true
 duration = 0.2
-
-[node name="InsertSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("8_wjfhe")
-
-[node name="PoppingSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("9_wh07i")
-
-[node name="MergeSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("10_0iq3a")
-
-[node name="Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("11_1orrj")
-volume_db = -2.811
-autoplay = true
 
 [connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_collided"]

@@ -11,9 +11,4 @@ const SHOOTING_SPEED = 60.0
 const MIN_CONSECUTIVE_MATCH = 3
 
 func shake_camera():
-	var first_node = get_tree().root.get_node("Node2D")
-	first_node.get_node('PoppingSound').play()
-	first_node.get_node("Shaker").start()
-
-func play_merge_sound():
-	get_tree().root.get_node("Node2D").get_node("MergeSound").play()
+	get_tree().root.get_node("Node2D").get_node("Shaker").start()

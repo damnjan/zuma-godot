@@ -49,7 +49,7 @@ func add_item(item: FollowingBall, index, ignore_check = false):
 		global_progress -= Globals.BALL_WIDTH
 	item.progress = index * Globals.BALL_WIDTH + global_progress
 	if !ignore_check:
-		GlobalTimer.create_async(func(): _check_for_matches_from(index), 0.1)
+		GlobalTimer.create_async(func(): _check_for_matches_from(index), 0.2)
 		
 
 func change_state(next_state: State):
@@ -69,7 +69,6 @@ func merge_next_group():
 	_should_interpolate_progress = false
 	next_group.remove()
 	_check_for_matches_from(last_index, true)
-	Globals.play_merge_sound()
 
 var curve_time: float = 0.0
 var last_speed = current_speed

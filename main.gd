@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var path_2d: Path2D = $Path2D
-@onready var insert_sound = $InsertSound
 
 const BALL_WIDTH = Globals.BALL_WIDTH
 const BallScene = preload("res://Ball.tscn")
@@ -50,7 +49,6 @@ func _add_follow(frame = null, index = null, group = first_group, ignore_check =
 func _on_ball_spawner_collided(ball, collider, normal):
 	if !collider:
 		return
-	insert_sound.play()
 	var group = first_group
 	while group:
 		for i in group.items.size():

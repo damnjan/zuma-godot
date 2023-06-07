@@ -12,7 +12,6 @@ var shooting_direction: Vector2
 @onready var toad = $Toad
 @onready var spawn_point = $Toad/SpawnPoint
 @onready var animation_player = $Toad/AnimationPlayer
-@onready var shooting_sound = $ShootingSound
 
 
 const color_dict = {
@@ -58,7 +57,6 @@ func _input(event):
 			shooting_ball = null
 			GlobalTimer.create_async(spawn_shooting_ball, 0.2)
 			animation_player.play("shoot")
-			shooting_sound.play()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			shooting_ball.change_color()
 

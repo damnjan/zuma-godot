@@ -24,7 +24,6 @@ Globals="*res://Globals.gd"
 
 window/size/viewport_width=3000
 window/size/viewport_height=1700
-window/stretch/mode="canvas_items"
 
 [editor]
 
@@ -33,7 +32,3 @@ movie_writer/movie_file="/Users/damnjan/Documents/Godot/zuma/movie.avi"
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/shaker/plugin.cfg")
-
-[rendering]
-
-renderer/rendering_method="gl_compatibility"
