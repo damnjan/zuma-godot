@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var path_2d: Path2D = $Path2D
 @onready var insert_sound = $InsertSound
+@onready var seed_label = $SeedLabel
 
 const BALL_WIDTH = Globals.BALL_WIDTH
 const BallScene = preload("res://Ball.tscn")
@@ -13,23 +14,14 @@ var _split_pointers: Array[int] # points where split started (index of first ite
 var _going_backwards = false
 
 func _ready():
-	var n = randi_range(0,99999)
+	var n = randi()
+	seed(n)	
 	print("Seed : ", n)
-	seed(n)
-	seed(55036)
-#	seed(5234234)
-#	for i in [0,0,1,1,0,0]:
-#	for i in 50:
-#	for i in [0,1,3,2,3,0,0,1,1,0,0,3,3,0,0,1,1,3,0,1,0,1,2,0,0,1,3,1,0,0,1,2,3]:
-#	for i in [0]:
-#	for i in [0,0,1,2,2,1,3,3,1,0,0,1,2,2,1,3,3,1]:
-#	for i in [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,2,2,2]:
-	for i in [0,0,1,2,3,0,1,1,1,1,1,1,1,1,1,2,3,0,1,2,1,1,1,1,1,1,1,1,1,2,0,2,3]:
-		var b = BallScene.instantiate()
-#		b.frame = i
-		_add_follow(i, null, first_group, true)
-		
+	seed_label.text = str(n)
 	
+	for i in 50:
+		_add_follow(null, null, first_group, true)
+		
 		
 func _physics_process(delta):
 	_check_first_group()

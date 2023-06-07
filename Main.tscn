@@ -10,7 +10,7 @@
 [ext_resource type="AudioStream" path="res://insert.mp3" id="8_wjfhe"]
 [ext_resource type="AudioStream" path="res://popping.mp3" id="9_wh07i"]
 [ext_resource type="AudioStream" path="res://merge.mp3" id="10_0iq3a"]
-[ext_resource type="AudioStream" path="res://music.mp3" id="11_1orrj"]
+[ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://music.mp3" id="11_1orrj"]
 
 [sub_resource type="Curve2D" id="Curve2D_osee1"]
 _data = {
@@ -169,5 +169,12 @@ stream = ExtResource("10_0iq3a")
 stream = ExtResource("11_1orrj")
 volume_db = -2.811
 autoplay = true
+
+[node name="SeedLabel" type="Label" parent="."]
+offset_left = 2894.0
+offset_top = 1647.0
+offset_right = 2934.0
+offset_bottom = 1673.0
+text = "Seed"
 
 [connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_collided"]
