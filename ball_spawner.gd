@@ -31,17 +31,21 @@ func _ready():
 
 
 func _process(delta):
+#	shooting_direction = global_position.direction_to(get_global_mouse_position()).normalized()
 	shooting_direction = Vector2.UP
 	ray_cast_2d.target_position = shooting_direction * 4000
 	var collision_point =  ray_cast_2d.get_collision_point()
 	var point_position = collision_point if ray_cast_2d.is_colliding() else shooting_direction * 4000
+	print(ray_cast_2d.position)
 
+#	var mouse_rotation = Vector2.UP.angle_to(point_position)
 	var mouse_rotation = Vector2.UP.angle_to(get_local_mouse_position().normalized())
 	
 	
 	
 	var local_point_position = to_local(point_position)
 	polygon_2d.polygon = [Vector2(0, -local_point_position.length() - ray_cast_2d.position.y), Vector2(-30, 0), Vector2(30, 0)]
+#	polygon_2d.rotation = mouse_rotation
 	toad.rotation = mouse_rotation
 	if shooting_ball:
 		shooting_ball.global_position = spawn_point.global_position	
