@@ -13,7 +13,7 @@ var _split_pointers: Array[int] # points where split started (index of first ite
 var _going_backwards = false
 
 func _ready():
-	seed(123)
+	seed(5234234)
 #	for i in [0,0,1,1,0,0]:
 	for i in 50:
 #	for i in [0,1,3,2,3,0,0,1,1,0,0,3,3,0,0,1,1,3,0,1,0,1,2,0,0,1,3,1,0,0,1,2,3]:
