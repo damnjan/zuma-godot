@@ -36,7 +36,6 @@ func _process(delta):
 	ray_cast_2d.target_position = shooting_direction * 4000
 	var collision_point =  ray_cast_2d.get_collision_point()
 	var point_position = collision_point if ray_cast_2d.is_colliding() else shooting_direction * 4000
-	print(ray_cast_2d.position)
 
 #	var mouse_rotation = Vector2.UP.angle_to(point_position)
 	var mouse_rotation = Vector2.UP.angle_to(get_local_mouse_position().normalized())

@@ -14,13 +14,17 @@ var _split_pointers: Array[int] # points where split started (index of first ite
 var _going_backwards = false
 
 func _ready():
-	seed(5234234)
+	var n = randi_range(0,99999)
+	print("Seed : ", n)
+	seed(n)
+	seed(55036)
+#	seed(5234234)
 #	for i in [0,0,1,1,0,0]:
 	for i in 50:
 #	for i in [0,1,3,2,3,0,0,1,1,0,0,3,3,0,0,1,1,3,0,1,0,1,2,0,0,1,3,1,0,0,1,2,3]:
 #	for i in [0]:
 #	for i in [0,0,1,2,2,1,3,3,1,0,0,1,2,2,1,3,3,1]:
-#	for i in [2,2,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,2,2,2]:
+#	for i in [2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,2,2,2]:
 		var b = BallScene.instantiate()
 #		b.frame = i
 		_add_follow(null, null, first_group, true)
@@ -29,11 +33,14 @@ func _ready():
 		
 func _physics_process(delta):
 	_check_first_group()
+	var groups = []
 	var next: FollowGroup = first_group
+	
 	while next:
+		groups.append(next)
 		next.physics_process(delta)
 		next = next.next_group
-
+	
 func _check_first_group():
 	if first_group and first_group.is_removed and first_group.next_group:
 		first_group = first_group.next_group

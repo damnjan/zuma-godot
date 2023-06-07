@@ -24,9 +24,9 @@ func shoot(direction: Vector2):
 	ball.area_entered.connect(_on_ball_area_entered)
 	
 func change_color():
-	var prev_frame = ball.frame
-	while ball.frame == prev_frame:
-		ball.set_random_color()
+	ball.frame += 1
+	if ball.frame == 4:
+		ball.frame = 0
 
 
 func _on_ball_area_entered(area):

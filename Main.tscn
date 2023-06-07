@@ -6,11 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://mouth.png" id="4_1hjie"]
 [ext_resource type="Texture2D" uid="uid://bbp5b7yhd8vnk" path="res://toad.png" id="4_677pa"]
 [ext_resource type="Texture2D" uid="uid://6yn7bgnrwxmq" path="res://zuma_bg3.png" id="4_gu86m"]
-[ext_resource type="AudioStream" uid="uid://cx41v31pulmqi" path="res://shoot.mp3" id="6_shs2v"]
-[ext_resource type="AudioStream" uid="uid://bbl2modj0rqn8" path="res://insert.mp3" id="8_wjfhe"]
-[ext_resource type="AudioStream" uid="uid://bxfw5gqheltk8" path="res://popping.mp3" id="9_wh07i"]
-[ext_resource type="AudioStream" uid="uid://x1lcasidcc2o" path="res://merge.mp3" id="10_0iq3a"]
-[ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://music.mp3" id="11_1orrj"]
+[ext_resource type="AudioStream" path="res://shoot.mp3" id="6_shs2v"]
+[ext_resource type="AudioStream" path="res://insert.mp3" id="8_wjfhe"]
+[ext_resource type="AudioStream" path="res://popping.mp3" id="9_wh07i"]
+[ext_resource type="AudioStream" path="res://merge.mp3" id="10_0iq3a"]
+[ext_resource type="AudioStream" path="res://music.mp3" id="11_1orrj"]
 
 [sub_resource type="Curve2D" id="Curve2D_osee1"]
 _data = {

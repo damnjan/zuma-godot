@@ -40,15 +40,42 @@ func split_group(a, b):
 
 
 func add_item(item: FollowingBall, index, ignore_check = false):
+	print("ADDING ITEM ", item.frame)
 	_should_interpolate_progress = true
 	if index != null:
 		items.insert(index, item)
 	else:
 		items.append(item)
 		index = items.size() - 1
+		
+	
+	if index == 0 and !ignore_check:
+		if prev_group and global_progress - Globals.BALL_WIDTH > prev_group.last_item().progress + Globals.BALL_WIDTH:
+			global_progress -= Globals.BALL_WIDTH
+		else:
+			global_progress -= Globals.BALL_WIDTH
+			pass
+			
 	item.progress = index * Globals.BALL_WIDTH + global_progress
+	
+	if ignore_check:
+		item.is_ready = true
+	
 	if !ignore_check:
-		GlobalTimer.create_async(func(): _check_for_matches_from(index), 0.1)
+		print("Hey ?")
+		item.scheduled_for_check = true		
+		await GlobalTimer.create(0.2).timeout
+		print("Hey ;)")
+		_check_for_matches_from_item(item) if is_instance_valid(item) else print("Instance invalid :)))");
+			
+		
+#		GlobalTimer.create_async(func(): 
+#			item.is_ready = true
+#			item.scheduled_for_check = true
+#			_check_for_matches_from_item(item) if is_instance_valid(item) else print("Instance invalid :)))");
+#			print("Hey ;)")
+#		, 5.1)
+
 		
 
 func change_state(next_state: State):
@@ -62,56 +89,48 @@ func remove():
 	is_removed = true
 
 func merge_next_group():
-	var last_index = items.size() - 1
+	var last_item = items.back()
 	items.append_array(next_group.items)
 	current_speed += next_group.current_speed	
 	_should_interpolate_progress = false
 	next_group.remove()
-	_check_for_matches_from(last_index, true)
+	_check_for_matches_from_item(last_item, true)
+	for item in items:
+		if item.scheduled_for_check:
+			_check_for_matches_from_item(item)
 	Globals.play_merge_sound()
 
 var curve_time: float = 0.0
 var last_speed = current_speed
 
+
+
 func physics_process(delta):
 	match state:
 		State.FORWARDS:
-			
 			if (last_speed <= 0 and current_speed > 0):
 				curve_time = 0
-				
 			last_speed = current_speed
 			curve_time += delta
-			
 			var acceleration = acceleration_curve.sample(curve_time) * 1000 if current_speed >= 0 else 4000
-			
 			current_speed = min(current_speed + acceleration * delta, Globals.FORWARDS_SPEED)
-				
 			global_progress += current_speed * delta
-			for i in items.size():
-				var new_progress = global_progress + i * Globals.BALL_WIDTH
-				items[i].progress = lerpf(items[i].progress, new_progress, 0.2 if _should_interpolate_progress else 1)
+			_update_items_progress()
 
-			if next_group != null and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
-				merge_next_group()
-		
 		State.BACKWARDS:
-#			if current_speed > -Globals.BACKWARDS_SPEED:
-#				current_speed -= 1500 * delta
 			current_speed = -Globals.BACKWARDS_SPEED	
 			global_progress += current_speed * delta
-			for i in items.size():
-				var new_progress = global_progress + i * Globals.BALL_WIDTH
-				items[i].progress = lerpf(items[i].progress, new_progress, 0.1)
+			_update_items_progress()
 
-			if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
-				prev_group.merge_next_group()
-				
 		State.WAITING:
-			for i in items.size():
-				var new_progress = global_progress + i * Globals.BALL_WIDTH
-				items[i].progress = lerpf(items[i].progress, new_progress, 0.1)
-	
+			_update_items_progress()
+				
+	if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
+		prev_group.merge_next_group()
+		prev_group.state = State.FORWARDS
+				
+	elif next_group != null and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
+		merge_next_group()
 	
 
 func first_item() -> FollowingBall:
@@ -119,8 +138,26 @@ func first_item() -> FollowingBall:
 	
 func last_item() -> FollowingBall:
 	return items.back()
+	
+func _update_items_progress():
+	for i in items.size():
+		var new_progress = global_progress + i * Globals.BALL_WIDTH
+		if true:
+#		if true:
+			items[i].progress = lerpf(items[i].progress, new_progress, 0.2)
+		else: 
+			items[i].progress = new_progress
 		
-func _check_for_matches_from(index: int, is_merge = false):
+func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
+	if item._is_dying:
+		print("no no, this is dying")
+		return
+#	if !item.is_ready:
+#		print("item not ready heheh")
+#		return
+	print("Checking item ", item.frame)
+	print("Is merge? ", is_merge)
+	var index = items.find(item)
 	if index >= items.size():
 		print("THIS IS BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD")
 		return
@@ -136,6 +173,7 @@ func _check_for_matches_from(index: int, is_merge = false):
 			print("Skipping check")
 			return
 		_explode_balls(start, end)
+	
 
 
 func _explode_balls(start: int, end: int):

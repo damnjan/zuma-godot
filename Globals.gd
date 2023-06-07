@@ -2,7 +2,7 @@ extends Node
 
 const BALL_WIDTH := 92.0
 
-const FORWARDS_SPEED := 100.0
+const FORWARDS_SPEED := 50.0
 
 const BACKWARDS_SPEED := 1500.0
 
