@@ -33,7 +33,6 @@ func split_group(a, b):
 		
 	next_group = new_group
 	
-	
 	new_group.global_progress = new_group.items[0].progress
 		
 	return new_group
@@ -46,6 +45,8 @@ func add_item(item: FollowingBall, index, ignore_check = false):
 	else:
 		items.append(item)
 		index = items.size() - 1
+	if index == 0 and !ignore_check:
+		global_progress -= Globals.BALL_WIDTH
 	item.progress = index * Globals.BALL_WIDTH + global_progress
 	if !ignore_check:
 		GlobalTimer.create_async(func(): _check_for_matches_from(index), 0.1)
@@ -96,8 +97,6 @@ func physics_process(delta):
 				merge_next_group()
 		
 		State.BACKWARDS:
-#			if current_speed > -Globals.BACKWARDS_SPEED:
-#				current_speed -= 1500 * delta
 			current_speed = -Globals.BACKWARDS_SPEED	
 			global_progress += current_speed * delta
 			for i in items.size():

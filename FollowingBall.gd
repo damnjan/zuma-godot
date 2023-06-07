@@ -10,7 +10,10 @@ var _is_dying = false
 
 var frame:
 	get:
-		return ball.frame
+		if !_is_dying:
+			return ball.frame
+		else:
+			print("BALL DED")
 	set(value):
 		ball.frame = value
 
