@@ -84,6 +84,7 @@ func physics_process(delta):
 				curve_time = 0
 			last_speed = current_speed
 			curve_time += delta
+			# TODO: Magic numbers
 			var acceleration = acceleration_curve.sample(curve_time) * 1000 if current_speed >= 0 else 4000
 			current_speed = min(current_speed + acceleration * delta, Globals.FORWARDS_SPEED)
 			global_progress += current_speed * delta
@@ -95,6 +96,10 @@ func physics_process(delta):
 			_update_items_progress()
 
 		State.WAITING:
+			# if being pushed back
+			if current_speed < 0:
+				current_speed += Globals.FORWARDS_SPEED
+				global_progress += current_speed * delta
 			_update_items_progress()
 				
 	if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
