@@ -2,6 +2,8 @@ extends PathFollow2D
 
 class_name FollowingBall
 
+signal ready_for_checking
+
 var BallScene = preload("res://Ball.tscn")
 
 var origin_position
@@ -13,7 +15,8 @@ var origin_position
 
 var _is_dying = false
 
-var is_ready = false
+var is_ready_for_checking = false
+var group: FollowGroup
 
 # in rare cases when a ball is merged to another group but didn't have time to check itself
 var scheduled_for_check = false
@@ -36,6 +39,10 @@ func _init(frame):
 	ball.died.connect(_on_ball_died)
 	
 func _ready():
+	get_tree().create_timer(Globals.CHECKING_DELAY).timeout.connect(func(): 
+		is_ready_for_checking = true
+		ready_for_checking.emit()
+	)
 	if origin_position:
 		ball.global_position = origin_position
 	
@@ -50,9 +57,7 @@ func _on_ball_died():
 #	queue_free()
 	pass
 
-#func add_ball(ball: Ball):
-#	self.ball = ball
-#	add_child(ball)
+
 	
 func kill_ball():
 	_is_dying = true

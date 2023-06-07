@@ -9,7 +9,6 @@ const BallScene = preload("res://Ball.tscn")
 var first_group = FollowGroup.new()
 var follows: Array[FollowingBall]
 var global_progress = 0.0
-var _follows_to_delete: Array[FollowingBall] = []
 var _split_pointers: Array[int] # points where split started (index of first item for deletion)
 var _going_backwards = false
 

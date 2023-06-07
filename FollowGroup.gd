@@ -14,11 +14,6 @@ var global_progress = 0
 var current_speed: float
 var acceleration_curve: Curve = preload("res://acceleration_curve.tres")
 
-var _follows_to_delete: Array[FollowingBall]
-var _should_interpolate_progress = false
-
-
-
 
 # a and b are indexes of first and last marble that explodes
 func split_group(a, b):
@@ -32,51 +27,33 @@ func split_group(a, b):
 		next_group.prev_group = new_group
 		
 	next_group = new_group
-	
-	
 	new_group.global_progress = new_group.items[0].progress
-		
+	
 	return new_group
 
 
 func add_item(item: FollowingBall, index, ignore_check = false):
-	print("ADDING ITEM ", item.frame)
-	_should_interpolate_progress = true
-	if index != null:
-		items.insert(index, item)
-	else:
-		items.append(item)
-		index = items.size() - 1
-		
+	if index == null:
+		index = items.size()
+
+	items.insert(index, item)
+	item.group = self		
 	
+	# if adding at the beginning, don't push others (actually, move everything back)
 	if index == 0 and !ignore_check:
-		if prev_group and global_progress - Globals.BALL_WIDTH > prev_group.last_item().progress + Globals.BALL_WIDTH:
-			global_progress -= Globals.BALL_WIDTH
-		else:
-			global_progress -= Globals.BALL_WIDTH
-			pass
-			
+		global_progress -= Globals.BALL_WIDTH
+		
 	item.progress = index * Globals.BALL_WIDTH + global_progress
 	
 	if ignore_check:
-		item.is_ready = true
-	
-	if !ignore_check:
-		print("Hey ?")
-		item.scheduled_for_check = true		
-		await GlobalTimer.create(0.2).timeout
-		print("Hey ;)")
-		_check_for_matches_from_item(item) if is_instance_valid(item) else print("Instance invalid :)))");
-			
+		item.is_ready_for_checking = true
+	else:
+		## TODO: This is ugly, find a better way
+		item.ready_for_checking.connect(func(): 
+			item.group._check_for_matches_from_item(item)
+		)
 		
-#		GlobalTimer.create_async(func(): 
-#			item.is_ready = true
-#			item.scheduled_for_check = true
-#			_check_for_matches_from_item(item) if is_instance_valid(item) else print("Instance invalid :)))");
-#			print("Hey ;)")
-#		, 5.1)
 
-		
 
 func change_state(next_state: State):
 	state = next_state
@@ -92,17 +69,12 @@ func merge_next_group():
 	var last_item = items.back()
 	items.append_array(next_group.items)
 	current_speed += next_group.current_speed	
-	_should_interpolate_progress = false
 	next_group.remove()
 	_check_for_matches_from_item(last_item, true)
-	for item in items:
-		if item.scheduled_for_check:
-			_check_for_matches_from_item(item)
 	Globals.play_merge_sound()
 
 var curve_time: float = 0.0
 var last_speed = current_speed
-
 
 
 func physics_process(delta):
@@ -127,7 +99,6 @@ func physics_process(delta):
 				
 	if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
 		prev_group.merge_next_group()
-		prev_group.state = State.FORWARDS
 				
 	elif next_group != null and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
 		merge_next_group()
@@ -141,37 +112,36 @@ func last_item() -> FollowingBall:
 	
 func _update_items_progress():
 	for i in items.size():
+		items[i].group = self
 		var new_progress = global_progress + i * Globals.BALL_WIDTH
-		if true:
-#		if true:
-			items[i].progress = lerpf(items[i].progress, new_progress, 0.2)
-		else: 
-			items[i].progress = new_progress
 		
+		# when being hit from a group that moves backwards, don't interpolate because it looks weird
+		if state == State.FORWARDS and current_speed < 0:
+			items[i].progress = new_progress
+		else:
+			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)
+
 func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 	if item._is_dying:
-		print("no no, this is dying")
+		print("Dying, skipping.")
 		return
-#	if !item.is_ready:
-#		print("item not ready heheh")
-#		return
-	print("Checking item ", item.frame)
-	print("Is merge? ", is_merge)
 	var index = items.find(item)
-	if index >= items.size():
-		print("THIS IS BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD")
-		return
 	var start = index
 	var end = index # end is non inclusive
+	
 	while start -1 >= 0 and items[start - 1].frame == items[index].frame:
 		start -= 1
 	while end < items.size() and items[end].frame == items[index].frame:
 		end += 1
 #	print({ "index": index, "start": start, "end": end})
 	if end - start >= Globals.MIN_CONSECUTIVE_MATCH:
-		if is_merge and end == index + 1:
-			print("Skipping check")
+		if items.slice(start, end).any(func(item): return !item.is_ready_for_checking):
+			print("Not ready for checking, skipping.")
 			return
+		if is_merge and end == index + 1:
+			print("is_merge and end == index + 1, skipping.")
+			return
+			
 		_explode_balls(start, end)
 	
 
@@ -184,12 +154,11 @@ func _explode_balls(start: int, end: int):
 		var group = split_group(start, end)
 		group.state = FollowGroup.State.WAITING
 		if group.prev_group and group.first_item().frame == group.prev_group.last_item().frame:
-			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, 0.5)
+			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, Globals.GOING_BACKWARDS_DELAY)
 	elif start == 0:
-		print("Removing from the start")
+		# offset progress to avoid the whole group moving back
 		global_progress += items_to_remove.size() * Globals.BALL_WIDTH
-	else:
-		print("This is probably a whole group removed :)")
+
 		
 	for follow in items_to_remove:
 		follow.kill_ball()
