@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6yn7bgnrwxmq"
-path="res://.godot/imported/zuma_bg3.png-4c991d405a5dc7b2e7efddf87d433179.ctex"
+uid="uid://cjeu22dnnw1ml"
+path="res://.godot/imported/zuma_bg.png-dac5a0f0163e7396e0760a234f022de2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://zuma_bg3.png"
-dest_files=["res://.godot/imported/zuma_bg3.png-4c991d405a5dc7b2e7efddf87d433179.ctex"]
+source_file="res://zuma_bg.png"
+dest_files=["res://.godot/imported/zuma_bg.png-dac5a0f0163e7396e0760a234f022de2.ctex"]
 
 [params]
 

@@ -116,7 +116,11 @@ func last_item() -> FollowingBall:
 	return items.back()
 	
 func _update_items_progress():
+	var to_remove = []
 	for i in items.size():
+		if items[i].progress_ratio > 1 or items[i].progress_ratio < 0:
+			to_remove.append(items[i])
+			
 		items[i].group = self
 		var new_progress = global_progress + i * Globals.BALL_WIDTH
 		
@@ -125,9 +129,11 @@ func _update_items_progress():
 			items[i].progress = new_progress
 		else:
 			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)
+			
+	
 
 func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
-	if item._is_dying:
+	if item.is_dying:
 		print("Dying, skipping.")
 		return
 	var index = items.find(item)
@@ -153,7 +159,7 @@ func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 
 func _explode_balls(start: int, end: int):
 	Globals.shake_camera()
-	var items_to_remove = items.slice(start, end)
+	var items_to_remove: Array[FollowingBall] = items.slice(start, end)
 	
 	if start > 0 and end < items.size():
 		var group = split_group(start, end)

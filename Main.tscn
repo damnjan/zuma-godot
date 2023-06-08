@@ -1,15 +1,16 @@
-[gd_scene load_steps=18 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=19 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
+[ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://zuma_bg.png" id="2_yddoi"]
+[ext_resource type="Script" path="res://Path2D.gd" id="3_7x4g3"]
 [ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="3_r5c63"]
 [ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://mouth.png" id="4_1hjie"]
 [ext_resource type="Texture2D" uid="uid://bbp5b7yhd8vnk" path="res://toad.png" id="4_677pa"]
-[ext_resource type="Texture2D" uid="uid://6yn7bgnrwxmq" path="res://zuma_bg3.png" id="4_gu86m"]
-[ext_resource type="AudioStream" path="res://shoot.mp3" id="6_shs2v"]
-[ext_resource type="AudioStream" path="res://insert.mp3" id="8_wjfhe"]
-[ext_resource type="AudioStream" path="res://popping.mp3" id="9_wh07i"]
-[ext_resource type="AudioStream" path="res://merge.mp3" id="10_0iq3a"]
+[ext_resource type="AudioStream" uid="uid://cx41v31pulmqi" path="res://shoot.mp3" id="6_shs2v"]
+[ext_resource type="AudioStream" uid="uid://bbl2modj0rqn8" path="res://insert.mp3" id="8_wjfhe"]
+[ext_resource type="AudioStream" uid="uid://bxfw5gqheltk8" path="res://popping.mp3" id="9_wh07i"]
+[ext_resource type="AudioStream" uid="uid://x1lcasidcc2o" path="res://merge.mp3" id="10_0iq3a"]
 [ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://music.mp3" id="11_1orrj"]
 
 [sub_resource type="Curve2D" id="Curve2D_osee1"]
@@ -96,7 +97,7 @@ script = ExtResource("1_wdpau")
 [node name="ZumaBg3" type="Sprite2D" parent="."]
 position = Vector2(1493, 854)
 scale = Vector2(1.659, 1.659)
-texture = ExtResource("4_gu86m")
+texture = ExtResource("2_yddoi")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false
@@ -109,6 +110,7 @@ color = Color(0, 0.137756, 0.144531, 1)
 [node name="Path2D" type="Path2D" parent="."]
 position = Vector2(-94.0856, -8.42374)
 curve = SubResource("Curve2D_osee1")
+script = ExtResource("3_7x4g3")
 
 [node name="BallSpawner" type="Node2D" parent="."]
 position = Vector2(1498, 850)
@@ -168,7 +170,6 @@ stream = ExtResource("10_0iq3a")
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_1orrj")
 volume_db = -2.811
-autoplay = true
 
 [node name="SeedLabel" type="Label" parent="."]
 offset_left = 2894.0

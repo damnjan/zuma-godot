@@ -2,7 +2,7 @@ extends Area2D
 
 class_name Ball
 
-signal died()
+signal exploded()
 
 var frame
 
@@ -18,12 +18,15 @@ func _ready():
 func _process(delta):
 	$Sprite.frame = frame
 	
-func die():
+func explode():
 	self.set_collision_layer_value(1, false)
-	$AnimationPlayer.play("die")
+	$AnimationPlayer.play("explode")
 
 
 func _on_animation_player_animation_finished(anim_name):
-	if anim_name == "die":
-		died.emit()
+	if anim_name == "explode":
+		exploded.emit()
+		$AnimationPlayer.play("RESET")
+		modulate = Color(1,1,1,0.3)
+		
 #		queue_free()

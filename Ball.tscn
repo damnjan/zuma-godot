@@ -85,7 +85,7 @@ tracks/2/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_5at2x"]
-resource_name = "die"
+resource_name = "explode"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -124,7 +124,7 @@ tracks/2/keys = {
 }
 tracks/3/type = "method"
 tracks/3/imported = false
-tracks/3/enabled = true
+tracks/3/enabled = false
 tracks/3/path = NodePath(".")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
@@ -140,7 +140,7 @@ tracks/3/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2lata"]
 _data = {
 "RESET": SubResource("Animation_t2jj0"),
-"die": SubResource("Animation_5at2x")
+"explode": SubResource("Animation_5at2x")
 }
 
 [sub_resource type="Gradient" id="Gradient_41kfw"]
