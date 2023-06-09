@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=22 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
@@ -12,6 +12,7 @@
 [ext_resource type="AudioStream" uid="uid://bxfw5gqheltk8" path="res://popping.mp3" id="9_wh07i"]
 [ext_resource type="AudioStream" uid="uid://x1lcasidcc2o" path="res://merge.mp3" id="10_0iq3a"]
 [ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://music.mp3" id="11_1orrj"]
+[ext_resource type="PackedScene" uid="uid://d1dy2877qub2" path="res://FloatingLabel.tscn" id="13_2s6s6"]
 
 [sub_resource type="Curve2D" id="Curve2D_osee1"]
 _data = {
@@ -91,15 +92,14 @@ _data = {
 "shoot": SubResource("Animation_h47lw")
 }
 
-[sub_resource type="FontVariation" id="FontVariation_weu1d"]
+[sub_resource type="FontVariation" id="FontVariation_4pc07"]
 variation_embolden = 0.42
 spacing_glyph = 4
 spacing_space = -11
 
-[sub_resource type="LabelSettings" id="LabelSettings_miysv"]
-font = SubResource("FontVariation_weu1d")
+[sub_resource type="LabelSettings" id="LabelSettings_30xgq"]
+font = SubResource("FontVariation_4pc07")
 font_size = 61
-font_color = Color(0.662745, 0.513726, 0.0470588, 1)
 shadow_size = 0
 shadow_color = Color(0, 0, 0, 0.541176)
 
@@ -190,36 +190,21 @@ offset_right = 2934.0
 offset_bottom = 1673.0
 text = "Seed"
 
-[node name="HiddenCountLabel" type="Label" parent="."]
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = 753.0
-offset_top = 1044.0
-offset_right = 876.0
-offset_bottom = 1143.0
-grow_horizontal = 0
-grow_vertical = 2
-size_flags_horizontal = 8
-label_settings = SubResource("LabelSettings_miysv")
-horizontal_alignment = 2
+[node name="StartCountLabel" parent="." instance=ExtResource("13_2s6s6")]
+visible = false
+offset_left = 213.0
+offset_top = 370.0
+offset_right = 401.0
+offset_bottom = 457.0
+text = "Start"
 
-[node name="HiddenCountLabel2" type="Label" parent="."]
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = 224.0
-offset_top = 363.0
-offset_right = 347.0
-offset_bottom = 462.0
-grow_horizontal = 0
-grow_vertical = 2
-size_flags_horizontal = 8
-label_settings = SubResource("LabelSettings_miysv")
-horizontal_alignment = 2
+[node name="EndCountLabel" parent="." instance=ExtResource("13_2s6s6")]
+offset_left = 684.0
+offset_top = 1048.0
+offset_right = 872.0
+offset_bottom = 1135.0
+text = "End
+"
+label_settings = SubResource("LabelSettings_30xgq")
 
 [connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_collided"]

@@ -4,6 +4,8 @@ signal hidden_follows_updated(value)
 
 enum { START, END }
 
+const TOTAL_NUMBER_OF_BALLS = 200
+const INITIAL_NUMBER_OF_BALLS = 50
 const BALL_WIDTH := 92.0
 const FORWARDS_SPEED := 100.0
 const BACKWARDS_SPEED := 1500.0

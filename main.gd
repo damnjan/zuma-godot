@@ -3,6 +3,8 @@ extends Node2D
 @onready var path_2d: Path2D = $Path2D
 @onready var insert_sound = $InsertSound
 @onready var seed_label = $SeedLabel
+@onready var start_count_label = $StartCountLabel
+@onready var end_count_label = $EndCountLabel
 
 const BALL_WIDTH = Globals.BALL_WIDTH
 const BallScene = preload("res://Ball.tscn")
@@ -24,22 +26,22 @@ func _ready():
 	print("Seed : ", n)
 	seed_label.text = str(n)
 	
-#	for i in 10:
-#		_add_follow(null, null, first_group, true)
-		
-	for i in [0,0,1,0,1,0,1,2,3,3,3,3,3,3,3,3,2,2,1,3,3,1,2]:
-		_add_follow(i, null, first_group, true)
+	
+	first_group.global_progress = -(Globals.TOTAL_NUMBER_OF_BALLS - Globals.INITIAL_NUMBER_OF_BALLS) * Globals.BALL_WIDTH
+	for i in Globals.TOTAL_NUMBER_OF_BALLS:
+		_add_follow(null, null, first_group, true)
+#
+#	for i in [0,0,1,0,1,0,1,2,3,3,3,3,3,3,3,3,2,2,1,3,3,1,2]:
+#		_add_follow(i, null, first_group, true)
 		
 	Globals.hidden_follows_updated.connect(func(hidden_count):
 		print("Hidden count ", hidden_count)
 		var hidden_start = hidden_count[Globals.START]
 		var hidden_end = hidden_count[Globals.END]
-		$HiddenCountLabel.text = "" if hidden_end == 0 else "+" + str(hidden_end)
-		$HiddenCountLabel2.text = "" if hidden_start == 0 else "+" + str(hidden_start)
-		
+		start_count_label.set_value(hidden_start)
+		end_count_label.set_value(hidden_end)
 	)
-		
-		
+
 		
 		
 func _physics_process(delta):
