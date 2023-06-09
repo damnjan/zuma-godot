@@ -15,6 +15,9 @@ var is_dying = false
 var is_ready_for_checking = false
 var group: FollowGroup
 
+var _last_progress_ratio = null
+var is_hidden = false
+
 var frame:
 	get:
 		return ball.frame
@@ -39,6 +42,7 @@ func _ready():
 		
 	
 func _physics_process(delta):
+	_update_visibility()
 	if origin_position:
 		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT)
 
@@ -47,22 +51,24 @@ func _physics_process(delta):
 	if is_settled and !is_ready_for_checking:
 		# the ball has settled in the chain visually (approximately) so it means it is ready
 		_set_ready_for_checking()
-
-func _on_ball_exploded():
-	queue_free()
-
+	
+		
+# hides/shows the ball and disables/enables collision if outside the path
+func _update_visibility():
+	var old_value = is_hidden
+	var new_value = progress_ratio >= 1 or progress <= 0
+	if new_value == old_value:
+		return
+	is_hidden = new_value
+	hide() if is_hidden else show()
+	if ball.collision_shape:
+		ball.collision_shape.disabled = is_hidden
+	Globals.on_follow_hidden(self) if is_hidden else Globals.on_follow_shown(self)
+	
 	
 func kill_ball():
 	is_dying = true
 	ball.explode()
 	
-func hide_and_disable():
-	hide()
-	if ball.collision_shape:
-		ball.collision_shape.disabled = true
-	
-func show_and_enable():
-	show()
-	if ball.collision_shape:
-		ball.collision_shape.disabled = false
-	
+func _on_ball_exploded():
+	queue_free()

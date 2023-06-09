@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=21 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
@@ -91,6 +91,18 @@ _data = {
 "shoot": SubResource("Animation_h47lw")
 }
 
+[sub_resource type="FontVariation" id="FontVariation_weu1d"]
+variation_embolden = 0.42
+spacing_glyph = 4
+spacing_space = -11
+
+[sub_resource type="LabelSettings" id="LabelSettings_miysv"]
+font = SubResource("FontVariation_weu1d")
+font_size = 61
+font_color = Color(0.662745, 0.513726, 0.0470588, 1)
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 0.541176)
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wdpau")
 
@@ -177,5 +189,37 @@ offset_top = 1647.0
 offset_right = 2934.0
 offset_bottom = 1673.0
 text = "Seed"
+
+[node name="HiddenCountLabel" type="Label" parent="."]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 753.0
+offset_top = 1044.0
+offset_right = 876.0
+offset_bottom = 1143.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+label_settings = SubResource("LabelSettings_miysv")
+horizontal_alignment = 2
+
+[node name="HiddenCountLabel2" type="Label" parent="."]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 224.0
+offset_top = 363.0
+offset_right = 347.0
+offset_bottom = 462.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+label_settings = SubResource("LabelSettings_miysv")
+horizontal_alignment = 2
 
 [connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_collided"]

@@ -24,8 +24,21 @@ func _ready():
 	print("Seed : ", n)
 	seed_label.text = str(n)
 	
-	for i in 50:
-		_add_follow(null, null, first_group, true)
+#	for i in 10:
+#		_add_follow(null, null, first_group, true)
+		
+	for i in [0,0,1,0,1,0,1,2,3,3,3,3,3,3,3,3,2,2,1,3,3,1,2]:
+		_add_follow(i, null, first_group, true)
+		
+	Globals.hidden_follows_updated.connect(func(hidden_count):
+		print("Hidden count ", hidden_count)
+		var hidden_start = hidden_count[Globals.START]
+		var hidden_end = hidden_count[Globals.END]
+		$HiddenCountLabel.text = "" if hidden_end == 0 else "+" + str(hidden_end)
+		$HiddenCountLabel2.text = "" if hidden_start == 0 else "+" + str(hidden_start)
+		
+	)
+		
 		
 		
 		
