@@ -116,10 +116,11 @@ func last_item() -> FollowingBall:
 	return items.back()
 	
 func _update_items_progress():
-	var to_remove = []
 	for i in items.size():
-		if items[i].progress_ratio > 1 or items[i].progress_ratio < 0:
-			to_remove.append(items[i])
+		if items[i].progress_ratio >= 1 or items[i].progress_ratio <= 0:
+			items[i].hide()
+		else:
+			items[i].show()
 			
 		items[i].group = self
 		var new_progress = global_progress + i * Globals.BALL_WIDTH
