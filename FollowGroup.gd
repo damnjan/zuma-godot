@@ -118,9 +118,9 @@ func last_item() -> FollowingBall:
 func _update_items_progress():
 	for i in items.size():
 		if items[i].progress_ratio >= 1 or items[i].progress_ratio <= 0:
-			items[i].hide()
+			items[i].hide_and_disable()
 		else:
-			items[i].show()
+			items[i].show_and_enable()
 			
 		items[i].group = self
 		var new_progress = global_progress + i * Globals.BALL_WIDTH
@@ -132,11 +132,18 @@ func _update_items_progress():
 			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)
 			
 	
+func _should_rush_backwards(group):
+	return group.prev_group and group.first_item().frame == group.prev_group.last_item().frame
 
 func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 	if item.is_dying:
 		print("Dying, skipping.")
 		return
+		
+	if _should_rush_backwards(self):
+		state = State.BACKWARDS
+	elif next_group and _should_rush_backwards(next_group):
+		next_group.state = State.BACKWARDS
 	var index = items.find(item)
 	var start = index
 	var end = index # end is non inclusive
@@ -165,7 +172,7 @@ func _explode_balls(start: int, end: int):
 	if start > 0 and end < items.size():
 		var group = split_group(start, end)
 		group.state = FollowGroup.State.WAITING
-		if group.prev_group and group.first_item().frame == group.prev_group.last_item().frame:
+		if _should_rush_backwards(group):
 			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, Globals.GOING_BACKWARDS_DELAY)
 	elif start == 0:
 		# offset progress to avoid the whole group moving back

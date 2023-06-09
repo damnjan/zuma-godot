@@ -4,6 +4,8 @@ class_name Ball
 
 signal exploded()
 
+@onready var collision_shape = $CollisionShape2D
+
 var frame
 
 func set_random_color():
