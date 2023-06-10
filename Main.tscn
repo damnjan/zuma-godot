@@ -168,7 +168,6 @@ target_node = NodePath("../Camera2D")
 target_property = &"offset"
 max_value = 10.0
 constant = true
-duration = 0.2
 
 [node name="InsertSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_wjfhe")
@@ -207,4 +206,4 @@ text = "End
 "
 label_settings = SubResource("LabelSettings_30xgq")
 
-[connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_collided"]
+[connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_shooting_ball_collided"]

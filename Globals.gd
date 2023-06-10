@@ -1,9 +1,11 @@
 extends Node
 
 signal hidden_follows_updated(value)
+signal balls_exploded(balls)
 
 enum { START, END }
 
+const NUMBER_OF_COLORS = 4
 const TOTAL_NUMBER_OF_BALLS = 200
 const INITIAL_NUMBER_OF_BALLS = 50
 const BALL_WIDTH := 92.0
@@ -16,6 +18,7 @@ const CHECKING_DELAY = 0.15 # time to animate insertion of a ball
 const PROGRESS_LERP_WEIGHT = 0.2
 
 var hidden_follows = {}
+var combo = 0
 
 func _emit_hidden_count():
 	var hidden_count = {
@@ -44,11 +47,6 @@ func on_follow_shown(follow: FollowingBall):
 	var location = hidden_follows[follow]
 	hidden_follows.erase(follow)	
 	_emit_hidden_count()
-
-func shake_camera():
-	var first_node = get_tree().root.get_node("Node2D")
-	first_node.get_node('PoppingSound').play()
-	first_node.get_node("Shaker").start()
 	
 func play_merge_sound():
 	get_tree().root.get_node("Node2D").get_node("MergeSound").play()

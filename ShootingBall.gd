@@ -17,6 +17,10 @@ var _velocity: Vector2
 func _physics_process(delta):
 	if state == State.SHOOTING:
 		position += _direction * Globals.SHOOTING_SPEED
+		
+	if position.distance_to(Vector2.ZERO) > 10000:
+		print("Removing shooting ball")
+		queue_free()
 
 func shoot(direction: Vector2):
 	_direction = direction
@@ -25,7 +29,7 @@ func shoot(direction: Vector2):
 	
 func change_color():
 	ball.frame += 1
-	if ball.frame == 4:
+	if ball.frame == Globals.NUMBER_OF_COLORS:
 		ball.frame = 0
 
 

@@ -1,0 +1,36 @@
+[gd_scene load_steps=4 format=3 uid="uid://tc83emjt0j5h"]
+
+[ext_resource type="Script" path="res://Combo.gd" id="1_esuli"]
+
+[sub_resource type="FontVariation" id="FontVariation_frmku"]
+variation_embolden = 0.61
+
+[sub_resource type="LabelSettings" id="LabelSettings_woj45"]
+font = SubResource("FontVariation_frmku")
+font_size = 150
+font_color = Color(0.972549, 0.262745, 0, 1)
+outline_size = 10
+shadow_size = 14
+shadow_color = Color(0, 0, 0, 0.54902)
+
+[node name="Combo" type="Node2D"]
+position = Vector2(816, 599)
+script = ExtResource("1_esuli")
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -392.5
+offset_top = -158.0
+offset_right = 392.5
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 0.25)
+pivot_offset = Vector2(401, 98)
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "COMBO x2"
+label_settings = SubResource("LabelSettings_woj45")

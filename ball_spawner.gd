@@ -38,7 +38,7 @@ func _process(delta):
 	toad.rotation = mouse_rotation
 	if shooting_ball:
 		shooting_ball.global_position = spawn_point.global_position	
-		polygon_2d.color = color_dict[shooting_ball.ball.frame]
+		polygon_2d.color = color_dict[shooting_ball.ball.frame] if color_dict.has(shooting_ball.ball.frame) else Color(1,1,1,0.5)
 		
 
 func _input(event):

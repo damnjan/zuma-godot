@@ -32,14 +32,9 @@ func _init(frame):
 	add_child(ball)
 	ball.exploded.connect(_on_ball_exploded)
 	
-func _set_ready_for_checking():
-	is_ready_for_checking = true
-	ready_for_checking.emit()
-	
 func _ready():
 	if origin_position:
-		ball.global_position = origin_position
-		
+		ball.global_position = origin_position	
 	
 func _physics_process(delta):
 	_update_visibility()
@@ -52,6 +47,9 @@ func _physics_process(delta):
 		# the ball has settled in the chain visually (approximately) so it means it is ready
 		_set_ready_for_checking()
 	
+func _set_ready_for_checking():
+	is_ready_for_checking = true
+	ready_for_checking.emit()
 		
 # hides/shows the ball and disables/enables collision if outside the path
 func _update_visibility():

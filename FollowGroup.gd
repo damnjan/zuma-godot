@@ -32,7 +32,8 @@ func split_group(a, b):
 	return new_group
 
 
-func add_item(item: FollowingBall, index, ignore_check = false):
+func add_item(item: FollowingBall, index, instant_ready = false):
+	Globals.combo = 0
 	if index == null:
 		index = items.size()
 
@@ -40,12 +41,12 @@ func add_item(item: FollowingBall, index, ignore_check = false):
 	item.group = self		
 	
 	# if adding at the beginning, don't push others (actually, move everything back)
-	if index == 0 and !ignore_check:
+	if index == 0 and !instant_ready:
 		global_progress -= Globals.BALL_WIDTH
 		
 	item.progress = index * Globals.BALL_WIDTH + global_progress
 	
-	if ignore_check:
+	if instant_ready:
 		item.is_ready_for_checking = true
 	else:
 		## TODO: This is ugly, find a better way
@@ -157,12 +158,16 @@ func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 			return
 			
 		_explode_balls(start, end)
+		
+		
+		
 	
 
 
 func _explode_balls(start: int, end: int):
-	Globals.shake_camera()
 	var items_to_remove: Array[FollowingBall] = items.slice(start, end)
+	Globals.balls_exploded.emit(items_to_remove)
+	
 	
 	if start > 0 and end < items.size():
 		var group = split_group(start, end)
