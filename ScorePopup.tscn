@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://qc0er2rthjh"]
+
+[ext_resource type="Script" path="res://ScorePopup.gd" id="1_qbi5a"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cs3ok"]
+font_size = 30
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 0.486275)
+
+[node name="ScorePopup" type="Node2D"]
+position = Vector2(292, 305)
+script = ExtResource("1_qbi5a")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -16.0
+offset_top = -74.0
+offset_right = 18.0
+offset_bottom = -29.0
+pivot_offset = Vector2(18, 41)
+size_flags_horizontal = 4
+text = "30"
+label_settings = SubResource("LabelSettings_cs3ok")
+horizontal_alignment = 1

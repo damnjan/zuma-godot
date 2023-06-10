@@ -1,11 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://d1dy2877qub2"]
+[gd_scene load_steps=4 format=3 uid="uid://bv668oj6kh2u8"]
 
-[ext_resource type="Script" path="res://FloatingLabel.gd" id="1_k2bbq"]
+[ext_resource type="Script" path="res://EndCountLabel.gd" id="1_uyw12"]
 
 [sub_resource type="FontVariation" id="FontVariation_weu1d"]
 variation_embolden = 0.42
 spacing_glyph = 4
-spacing_space = -11
+spacing_space = -3
 
 [sub_resource type="LabelSettings" id="LabelSettings_miysv"]
 font = SubResource("FontVariation_weu1d")
@@ -26,4 +26,4 @@ size_flags_horizontal = 8
 text = "Label"
 label_settings = SubResource("LabelSettings_miysv")
 horizontal_alignment = 2
-script = ExtResource("1_k2bbq")
+script = ExtResource("1_uyw12")

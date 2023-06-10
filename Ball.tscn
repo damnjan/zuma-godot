@@ -1,46 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://cs0g6j0rmm486"]
+[gd_scene load_steps=10 format=3 uid="uid://cs0g6j0rmm486"]
 
 [ext_resource type="Script" path="res://ball.gd" id="1_cmi47"]
-[ext_resource type="Texture2D" uid="uid://bc4vugfwmyg38" path="res://ball.png" id="1_x31f7"]
-[ext_resource type="Texture2D" uid="uid://cuki8wkf7edkr" path="res://ball_orange.png" id="2_i1cv2"]
-[ext_resource type="Texture2D" uid="uid://chi0mvlrflppb" path="res://ball_blue.png" id="3_0ar6v"]
-[ext_resource type="Texture2D" uid="uid://wupqdorj3ve2" path="res://ball_teal.png" id="3_al7ge"]
-[ext_resource type="Texture2D" uid="uid://beuaextpspexh" path="res://ball_beige.png" id="4_4vcxn"]
-[ext_resource type="Texture2D" uid="uid://dbfiatss2rsyb" path="res://ball_dark_yellow.png" id="4_6v2nw"]
-[ext_resource type="Texture2D" uid="uid://cw66ymm4r15dw" path="res://ball_green.png" id="4_eow4n"]
-[ext_resource type="Texture2D" uid="uid://djtqce3pd4g7c" path="res://ball_purple.png" id="5_vyxwv"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_fgvwj"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_0ar6v")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_eow4n")
-}, {
-"duration": 1.0,
-"texture": ExtResource("1_x31f7")
-}, {
-"duration": 1.0,
-"texture": ExtResource("5_vyxwv")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_i1cv2")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_4vcxn")
-}, {
-"duration": 1.0,
-"texture": ExtResource("3_al7ge")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_6v2nw")
-}],
-"loop": false,
-"name": &"default",
-"speed": 5.0
-}]
+[ext_resource type="PackedScene" uid="uid://do1coluqet8qu" path="res://BallSprite.tscn" id="2_aw8a5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2fy1i"]
 radius = 46.0
@@ -164,8 +125,7 @@ point_count = 2
 self_modulate = Color(0, 0, 0, 1)
 script = ExtResource("1_cmi47")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_fgvwj")
+[node name="Sprite" parent="." instance=ExtResource("2_aw8a5")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-1, 1)

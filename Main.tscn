@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=24 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
@@ -12,7 +12,8 @@
 [ext_resource type="AudioStream" uid="uid://bxfw5gqheltk8" path="res://popping.mp3" id="9_wh07i"]
 [ext_resource type="AudioStream" uid="uid://x1lcasidcc2o" path="res://merge.mp3" id="10_0iq3a"]
 [ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://music.mp3" id="11_1orrj"]
-[ext_resource type="PackedScene" uid="uid://d1dy2877qub2" path="res://FloatingLabel.tscn" id="13_2s6s6"]
+[ext_resource type="Script" path="res://EndCountLabel.gd" id="13_j3a3c"]
+[ext_resource type="Script" path="res://ScoreLabel.gd" id="14_4nb6k"]
 
 [sub_resource type="Curve2D" id="Curve2D_osee1"]
 _data = {
@@ -92,16 +93,20 @@ _data = {
 "shoot": SubResource("Animation_h47lw")
 }
 
-[sub_resource type="FontVariation" id="FontVariation_4pc07"]
-variation_embolden = 0.42
-spacing_glyph = 4
-spacing_space = -11
+[sub_resource type="LabelSettings" id="LabelSettings_s6xxj"]
+font_size = 50
+font_color = Color(0.2, 0.188235, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_30xgq"]
-font = SubResource("FontVariation_4pc07")
-font_size = 61
-shadow_size = 0
-shadow_color = Color(0, 0, 0, 0.541176)
+[sub_resource type="FontVariation" id="FontVariation_e5vd8"]
+variation_embolden = 1.2
+spacing_glyph = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_qjwhu"]
+font = SubResource("FontVariation_e5vd8")
+font_size = 74
+font_color = Color(0.878431, 0.784314, 0.00784314, 1)
+shadow_size = 11
+shadow_color = Color(0, 0, 0, 1)
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wdpau")
@@ -189,21 +194,22 @@ offset_right = 2934.0
 offset_bottom = 1673.0
 text = "Seed"
 
-[node name="StartCountLabel" parent="." instance=ExtResource("13_2s6s6")]
-visible = false
-offset_left = 213.0
-offset_top = 370.0
-offset_right = 401.0
-offset_bottom = 457.0
-text = "Start"
+[node name="EndCountLabel" type="Label" parent="."]
+offset_left = 769.0
+offset_top = 1055.0
+offset_right = 890.0
+offset_bottom = 1127.0
+text = "← 56"
+label_settings = SubResource("LabelSettings_s6xxj")
+script = ExtResource("13_j3a3c")
 
-[node name="EndCountLabel" parent="." instance=ExtResource("13_2s6s6")]
-offset_left = 684.0
-offset_top = 1048.0
-offset_right = 872.0
-offset_bottom = 1135.0
-text = "End
-"
-label_settings = SubResource("LabelSettings_30xgq")
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 43.0
+offset_top = 35.0
+offset_right = 130.0
+offset_bottom = 107.0
+text = "51300"
+label_settings = SubResource("LabelSettings_qjwhu")
+script = ExtResource("14_4nb6k")
 
 [connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_shooting_ball_collided"]

@@ -4,14 +4,12 @@ var value: int = 2
 
 @onready var label: Label = $Label
 
-
-
 func _ready():
 	play()
 
 
 func play():
-	var duration = 0.6 + (value - 2) * 0.1
+	var duration = 1 + (value - 2) * 0.2
 	var red = min(value * 0.4, 1)
 	var green = min(1.25/value, 1)
 	var colors = {
@@ -28,7 +26,7 @@ func play():
 	
 	var tween = create_tween()
 	tween.set_parallel()
-	tween.tween_property(label, 'scale', Vector2.ONE * (0.25 * value), duration)
+	tween.tween_property(label, 'scale', (0.5 + (value - 2) * 0.5)  * Vector2.ONE, duration)
 	tween.tween_property(label, 'modulate', Color(1,1,1,0), duration)
 	tween.set_parallel(false)
 	tween.tween_callback(queue_free)

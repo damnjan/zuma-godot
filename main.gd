@@ -3,14 +3,14 @@ extends Node2D
 @onready var path_2d: Path2D = $Path2D
 @onready var insert_sound = $InsertSound
 @onready var seed_label = $SeedLabel
-@onready var start_count_label = $StartCountLabel
 @onready var end_count_label = $EndCountLabel
 @onready var popping_sound = $PoppingSound
 @onready var shaker = $Shaker
 
 const BALL_WIDTH = Globals.BALL_WIDTH
 const BallScene = preload("res://Ball.tscn")
-var ComboScene = preload("res://Combo.tscn")
+const ComboScene = preload("res://Combo.tscn")
+const ScorePopupScene = preload("res://ScorePopup.tscn")
 
 var first_group = FollowGroup.new()
 var follows: Array[FollowingBall]
@@ -32,13 +32,12 @@ func _ready():
 	for i in Globals.TOTAL_NUMBER_OF_BALLS:
 		_add_follow(null, null, first_group, true)
 #
-#	for i in [0,0,1,0,1,0,1,2,3,3,3,3,3,3,3,3,2,2,1,3,3,1,2]:
+#	for i in [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,0,0,0,0,0,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1]:
 #		_add_follow(i, null, first_group, true)
 		
 	Globals.hidden_follows_updated.connect(func(hidden_count):
 		var hidden_start = hidden_count[Globals.START]
 		var hidden_end = hidden_count[Globals.END]
-		start_count_label.set_value(hidden_start)
 		end_count_label.set_value(hidden_end)
 	)
 		
@@ -82,7 +81,18 @@ func _on_ball_spawner_shooting_ball_collided(ball, collider, normal):
 		
 		
 func _on_balls_exploded(balls):
+	var middle_ball = balls[balls.size() / 2]
 	Globals.combo += 1
+	var score = 10 * balls.size() * Globals.combo
+	Globals.score += score
+	$ScoreLabel.set_value(Globals.score)
+	
+	var score_popup = ScorePopupScene.instantiate()
+	score_popup.value = score
+	add_child(score_popup)
+	score_popup.global_position = middle_ball.global_position
+	
+	
 	shaker.stop()
 	shaker.max_value = 0 + (Globals.combo - 1) * 10
 	shaker.duration = 0.2 + (Globals.combo - 1) * 0.1
@@ -91,9 +101,9 @@ func _on_balls_exploded(balls):
 	popping_sound.play()
 	
 	if Globals.combo > 1:
-		var ball = balls[balls.size() / 2]
+		
 		var combo: Node2D = ComboScene.instantiate()
 		combo.value = (Globals.combo)
 		add_child(combo)
-		combo.global_position = ball.global_position
+		combo.global_position = middle_ball.global_position
 	
