@@ -59,7 +59,10 @@ func _check_first_group():
 		first_group.state = FollowGroup.State.FORWARDS
 
 func _add_follow(frame = null, index = null, group = first_group, instant_ready = false, ball_global_position = null):
+	if frame == null and !group.items.is_empty() and randf() < Globals.SAME_CONSECUTIVE_BALL_CHANCE:
+		frame = group.items.back().frame
 	var follow: FollowingBall = FollowingBall.new(frame)
+
 	follow.origin_position = ball_global_position
 	group.add_item(follow, index, instant_ready)
 	path_2d.add_child(follow) # try add_child.call_deferred(follow) if run into weird bugs

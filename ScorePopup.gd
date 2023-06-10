@@ -16,7 +16,7 @@ func play():
 			
 		
 	label.label_settings.font_color = color	
-	label.text = str(value)
+	label.text = "+" + str(value)
 	label.modulate = Color.WHITE
 	label.scale = Vector2.ONE
 	
@@ -31,7 +31,5 @@ func play():
 	tween.tween_property(label, 'modulate', Color(1,1,1,0), duration)
 	tween.set_parallel(false)
 	tween.tween_callback(func():
-#		value += 20
-#		play()	
 		queue_free()
 	)
