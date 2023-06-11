@@ -46,7 +46,11 @@ func _input(event):
 		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT :
-			shooting_ball.shoot(shooting_direction)
+			var glob = shooting_ball.global_position
+			spawn_point.remove_child(shooting_ball)
+			get_tree().root.add_child(shooting_ball)
+			shooting_ball.global_position = glob
+			shooting_ball.shoot(get_local_mouse_position().normalized())
 			shooting_ball = null
 			GlobalTimer.create_async(spawn_shooting_ball, 0.2)
 			animation_player.play("shoot")
