@@ -6,6 +6,7 @@ var value: int = 2
 
 func _ready():
 	play()
+	print("Root name: ",  get_tree().root)
 
 
 func play():

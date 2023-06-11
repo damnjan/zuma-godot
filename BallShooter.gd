@@ -1,6 +1,6 @@
 extends Node2D
 
-signal collided(ball: Ball, collider, normal)
+signal shooting_ball_collided(ball: Ball, collider, normal)
 
 var ShootingBallScene = preload("res://ShootingBall.tscn")
 
@@ -12,7 +12,6 @@ const shooting_direction = Vector2.UP
 @onready var toad = $Toad
 @onready var spawn_point = $Toad/SpawnPoint
 @onready var animation_player = $Toad/AnimationPlayer
-@onready var shooting_sound = $ShootingSound
 
 
 const color_dict = {
@@ -54,7 +53,7 @@ func _input(event):
 			shooting_ball = null
 			GlobalTimer.create_async(spawn_shooting_ball, 0.2)
 			animation_player.play("shoot")
-			shooting_sound.play()
+			AudioManager.play(AudioManager.shooting_sound)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			shooting_ball.change_color()
 
@@ -62,7 +61,3 @@ func spawn_shooting_ball():
 	shooting_ball = ShootingBallScene.instantiate()
 	spawn_point.add_child(shooting_ball)
 	ray_cast_2d.add_exception(shooting_ball.ball)
-	shooting_ball.collided.connect(_on_ball_collided)
-
-func _on_ball_collided(ball, area, normal):
-	collided.emit(ball, area, normal)

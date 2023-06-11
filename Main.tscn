@@ -1,17 +1,10 @@
-[gd_scene load_steps=24 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=12 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
-[ext_resource type="Script" path="res://ball_spawner.gd" id="2_cpssc"]
 [ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://zuma_bg.png" id="2_yddoi"]
 [ext_resource type="Script" path="res://Path2D.gd" id="3_7x4g3"]
 [ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="3_r5c63"]
-[ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://mouth.png" id="4_1hjie"]
-[ext_resource type="Texture2D" uid="uid://bbp5b7yhd8vnk" path="res://toad.png" id="4_677pa"]
-[ext_resource type="AudioStream" uid="uid://cx41v31pulmqi" path="res://shoot.mp3" id="6_shs2v"]
-[ext_resource type="AudioStream" uid="uid://bbl2modj0rqn8" path="res://insert.mp3" id="8_wjfhe"]
-[ext_resource type="AudioStream" uid="uid://bxfw5gqheltk8" path="res://popping.mp3" id="9_wh07i"]
-[ext_resource type="AudioStream" uid="uid://x1lcasidcc2o" path="res://merge.mp3" id="10_0iq3a"]
-[ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://music.mp3" id="11_1orrj"]
+[ext_resource type="PackedScene" uid="uid://12fhuuwwpgh2" path="res://BallShooter.tscn" id="4_4kumu"]
 [ext_resource type="Script" path="res://EndCountLabel.gd" id="13_j3a3c"]
 [ext_resource type="Script" path="res://ScoreLabel.gd" id="14_4nb6k"]
 
@@ -20,78 +13,6 @@ _data = {
 "points": PackedVector2Array(-890.073, 79.2854, 890.073, -79.2854, 556.086, 421.424, -181.224, -192.55, 181.224, 192.55, 2527.09, 516.424, -17.9336, -100.995, 17.9336, 100.995, 2731.09, 939.424, 210.484, -44.3621, -210.484, 44.3621, 2493.09, 1363.42, 213.316, 216.147, -213.316, -216.147, 741.086, 1246.42, -242.576, 111.377, 242.576, -111.377, 902.086, 628.424, -177.448, -354.897, 177.448, 354.897, 2356.09, 839.424, 253.902, 16.0459, -253.902, -16.0459, 1935.09, 1216.42, 0, 0, 0, 0, 1068.09, 1112.42)
 }
 point_count = 9
-
-[sub_resource type="Gradient" id="Gradient_nepga"]
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_grrga"]
-gradient = SubResource("Gradient_nepga")
-width = 300
-height = 300
-fill_from = Vector2(0.519417, 0.538835)
-fill_to = Vector2(0.509709, 0)
-
-[sub_resource type="Animation" id="Animation_dxbgw"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Mouth:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-
-[sub_resource type="Animation" id="Animation_h47lw"]
-resource_name = "shoot"
-length = 0.2
-step = 0.025
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Body:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.025, 0.15),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(-0.44458, 21), Vector2(0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Mouth:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.025, 0.15),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector2(0, 0), Vector2(-0.44458, 21), Vector2(0, 0)]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_cylvb"]
-_data = {
-"RESET": SubResource("Animation_dxbgw"),
-"shoot": SubResource("Animation_h47lw")
-}
 
 [sub_resource type="LabelSettings" id="LabelSettings_s6xxj"]
 font_size = 50
@@ -111,58 +32,18 @@ shadow_color = Color(0, 0, 0, 1)
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_wdpau")
 
-[node name="ZumaBg3" type="Sprite2D" parent="."]
+[node name="Background" type="Sprite2D" parent="."]
 position = Vector2(1493, 854)
 scale = Vector2(1.659, 1.659)
 texture = ExtResource("2_yddoi")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-visible = false
-offset_left = -84.0
-offset_top = -63.0
-offset_right = 3170.0
-offset_bottom = 1804.0
-color = Color(0, 0.137756, 0.144531, 1)
 
 [node name="Path2D" type="Path2D" parent="."]
 position = Vector2(-94.0856, -8.42374)
 curve = SubResource("Curve2D_osee1")
 script = ExtResource("3_7x4g3")
 
-[node name="BallSpawner" type="Node2D" parent="."]
-position = Vector2(1498, 850)
-script = ExtResource("2_cpssc")
-
-[node name="Toad" type="Node2D" parent="BallSpawner"]
-
-[node name="RayCast2D" type="RayCast2D" parent="BallSpawner/Toad"]
-position = Vector2(0, -188)
-
-[node name="Polygon2D" type="Polygon2D" parent="BallSpawner/Toad"]
-position = Vector2(1.99988, -186)
-color = Color(0.980392, 1, 0, 0.396078)
-texture = SubResource("GradientTexture2D_grrga")
-texture_offset = Vector2(2.08165e-12, 200)
-polygon = PackedVector2Array(75, -1, -72, 8, 8, -401)
-
-[node name="Mouth" type="Sprite2D" parent="BallSpawner/Toad"]
-scale = Vector2(0.77, 0.77)
-texture = ExtResource("4_1hjie")
-
-[node name="SpawnPoint" type="Marker2D" parent="BallSpawner/Toad"]
-position = Vector2(3.99988, -186)
-
-[node name="Body" type="Sprite2D" parent="BallSpawner/Toad"]
-scale = Vector2(0.77037, 0.77037)
-texture = ExtResource("4_677pa")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="BallSpawner/Toad"]
-libraries = {
-"": SubResource("AnimationLibrary_cylvb")
-}
-
-[node name="ShootingSound" type="AudioStreamPlayer" parent="BallSpawner"]
-stream = ExtResource("6_shs2v")
+[node name="BallShooter" parent="." instance=ExtResource("4_4kumu")]
+position = Vector2(1886, 933)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(1497, 847)
@@ -173,20 +54,6 @@ target_node = NodePath("../Camera2D")
 target_property = &"offset"
 max_value = 10.0
 constant = true
-
-[node name="InsertSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("8_wjfhe")
-
-[node name="PoppingSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("9_wh07i")
-
-[node name="MergeSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("10_0iq3a")
-
-[node name="Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("11_1orrj")
-volume_db = -2.811
-autoplay = true
 
 [node name="SeedLabel" type="Label" parent="."]
 offset_left = 2894.0
@@ -212,5 +79,3 @@ offset_bottom = 107.0
 text = "51300"
 label_settings = SubResource("LabelSettings_qjwhu")
 script = ExtResource("14_4nb6k")
-
-[connection signal="collided" from="BallSpawner" to="." method="_on_ball_spawner_shooting_ball_collided"]

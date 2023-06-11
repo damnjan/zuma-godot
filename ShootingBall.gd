@@ -8,8 +8,9 @@ enum State {
 	IDLE, SHOOTING
 }
 
-@onready var ball: Ball = $Ball
 var state = State.IDLE
+
+@onready var ball: Ball = $Ball
 
 var _direction: Vector2
 var _velocity: Vector2
@@ -35,6 +36,7 @@ func change_color():
 
 func _on_ball_area_entered(area):
 	var normal = (ball.global_position - area.global_position).normalized().rotated(-area.get_global_transform().get_rotation())
+	Events.shooting_ball_collided.emit(ball, area, normal)
 	collided.emit(ball, area, normal)	
 	ball.area_entered.disconnect(_on_ball_area_entered)
 	queue_free()

@@ -11,7 +11,7 @@ var is_removed = false
 var state = State.FORWARDS
 var items: Array[FollowingBall]
 var global_progress = 0
-var current_speed: float
+var current_speed: float = Globals.MAX_FORWARDS_SPEED
 var acceleration_curve: Curve = preload("res://acceleration_curve.tres")
 
 
@@ -73,27 +73,22 @@ func merge_next_group():
 	current_speed += next_group.current_speed
 	next_group.remove()
 	_check_for_matches_from_item(last_item, true)
-	Globals.play_merge_sound()
+	AudioManager.play(AudioManager.merge_sound)
 
 var curve_time: float = 0.0
 var last_speed = current_speed
 
-
 func physics_process(delta):
 	match state:
 		State.FORWARDS:
-			if (last_speed < 0 and current_speed >= 0 or last_speed > 0 and current_speed <= 0):
-				curve_time = 0
-			last_speed = current_speed
-			curve_time += delta
-			# TODO: Magic numbers
-#			var acceleration = max(0, acceleration_curve.sample(curve_time)) * (1000 if current_speed >= 0 else 5000)
-#			var acceleration = 4000
-			current_speed = lerpf(current_speed, Globals.FORWARDS_SPEED, min(curve_time, 1))
-#			current_speed = min(current_speed + acceleration * delta, Globals.FORWARDS_SPEED)
+			
+			var displacement = Globals.MAX_FORWARDS_SPEED - current_speed  # Displacement from the resting position
+			var acceleration = Globals.SPRING_CONSTANT * displacement  # Hooke's law
+
+			current_speed = clampf(current_speed + acceleration * delta, -Globals.MAX_BACKWARDS_SPEED, Globals.MAX_FORWARDS_SPEED)
 			global_progress += current_speed * delta
 			_update_items_progress()
-
+			
 		State.BACKWARDS:
 			current_speed -= Globals.BACKWARDS_ACCELERATION * delta
 			current_speed = max(current_speed, -Globals.MAX_BACKWARDS_SPEED)
@@ -103,7 +98,7 @@ func physics_process(delta):
 		State.WAITING:
 			# if being pushed back
 			if current_speed < 0:
-				current_speed += Globals.FORWARDS_SPEED
+				current_speed += Globals.MAX_FORWARDS_SPEED
 				global_progress += current_speed * delta
 			_update_items_progress()
 				
@@ -169,7 +164,7 @@ func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 
 func _explode_balls(start: int, end: int):
 	var items_to_remove: Array[FollowingBall] = items.slice(start, end)
-	Globals.balls_exploded.emit(items_to_remove)
+	Events.balls_exploded.emit(items_to_remove)
 
 	for follow in items_to_remove:
 		follow.kill_ball()

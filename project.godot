@@ -19,6 +19,8 @@ config/icon="res://icon.svg"
 
 GlobalTimer="*res://Timer.gd"
 Globals="*res://Globals.gd"
+Events="*res://Events.gd"
+AudioManager="*res://AudioManager.tscn"
 
 [display]
 

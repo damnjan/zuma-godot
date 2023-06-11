@@ -4,7 +4,6 @@ extends Node2D
 @onready var insert_sound = $InsertSound
 @onready var seed_label = $SeedLabel
 @onready var end_count_label = $EndCountLabel
-@onready var popping_sound = $PoppingSound
 @onready var shaker = $Shaker
 
 const BALL_WIDTH = Globals.BALL_WIDTH
@@ -13,17 +12,14 @@ const ComboScene = preload("res://Combo.tscn")
 const ScorePopupScene = preload("res://ScorePopup.tscn")
 
 var first_group = FollowGroup.new()
-var follows: Array[FollowingBall]
-var global_progress = 0.0
-var _split_pointers: Array[int] # points where split started (index of first item for deletion)
-var _going_backwards = false
 
 func _init():
-	Globals.balls_exploded.connect(_on_balls_exploded)
+	Events.balls_exploded.connect(_on_balls_exploded)
+	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 
 func _ready():
 	var n = randi()
-	seed(n)	
+	seed(2335218679)	
 	print("Seed : ", n)
 	seed_label.text = str(n)
 	
@@ -38,7 +34,7 @@ func _ready():
 #	for i in [1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]:
 #		_add_follow(i, null, first_group, true)
 		
-	Globals.hidden_follows_updated.connect(func(hidden_count):
+	Events.hidden_follows_updated.connect(func(hidden_count):
 		var hidden_start = hidden_count[Globals.START]
 		var hidden_end = hidden_count[Globals.END]
 		end_count_label.set_value(hidden_end)
@@ -73,11 +69,11 @@ func _add_follow(frame = null, index = null, group = first_group, instant_ready 
 	return follow
 
 
-func _on_ball_spawner_shooting_ball_collided(ball, collider, normal):
+func _on_shooting_ball_collided(ball, collider, normal):
 	if !collider:
 		print("no collider")
 		return
-	insert_sound.play()
+	AudioManager.play(AudioManager.insert_sound)
 	var follow = collider.get_parent()
 	var group = follow.group
 	var i = group.items.find(follow)
@@ -103,8 +99,8 @@ func _on_balls_exploded(balls):
 	shaker.max_value = 0 + (Globals.combo - 1) * 10
 	shaker.duration = 0.2 + (Globals.combo - 1) * 0.1
 	shaker.start()
-	popping_sound.pitch_scale = 1 + (Globals.combo - 1) * 0.1
-	popping_sound.play()
+	AudioManager.popping_sound.pitch_scale = 1 + (Globals.combo - 1) * 0.1
+	AudioManager.play(AudioManager.popping_sound)
 	
 	if Globals.combo > 1:
 		
