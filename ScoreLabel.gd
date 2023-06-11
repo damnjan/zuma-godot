@@ -25,4 +25,3 @@ func _physics_process(delta):
 	if value != ceil(display_value):
 		display_value = lerpf(display_value, value, delta * 3)
 		text = str(ceil(display_value))
-		print({"value": value, "display_value": display_value})

@@ -16,12 +16,13 @@ var acceleration_curve: Curve = preload("res://acceleration_curve.tres")
 
 
 # a and b are indexes of first and last marble that explodes
-func split_group(a, b):
+func split_group(index):
+	assert(index > 0 and index < items.size(), "Invalid index")
 	var new_group = FollowGroup.new()
 	new_group.prev_group = self
 	new_group.next_group = next_group
-	new_group.items = items.slice(b)	
-	items = items.slice(0, a)
+	new_group.items = items.slice(index)	
+	items = items.slice(0, index)
 	
 	if next_group:
 		next_group.prev_group = new_group
@@ -136,10 +137,10 @@ func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 		print("Dying, skipping.")
 		return
 		
-	if _should_rush_backwards(self):
-		state = State.BACKWARDS
-	elif next_group and _should_rush_backwards(next_group):
-		next_group.state = State.BACKWARDS
+	for group in [self, next_group]:
+		if group and _should_rush_backwards(group):
+			group.state = State.BACKWARDS
+		
 	var index = items.find(item)
 	var start = index
 	var end = index # end is non inclusive
@@ -148,39 +149,41 @@ func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 		start -= 1
 	while end < items.size() and items[end].frame == items[index].frame:
 		end += 1
-#	print({ "index": index, "start": start, "end": end})
-	if end - start >= Globals.MIN_CONSECUTIVE_MATCH:
-		if items.slice(start, end).any(func(item): return !item.is_ready_for_checking):
+#	
+	if is_merge and end == index + 1:
+		# this means that two groups are merging, and one of them has consecutive balls but the other doesn't, so skip
+		print("is_merge and end == index + 1, skipping.")
+		return
+		
+	if items.slice(start, end).any(func(item): return !item.is_ready_for_checking):
 			print("Not ready for checking, skipping.")
 			return
-		if is_merge and end == index + 1:
-			print("is_merge and end == index + 1, skipping.")
-			return
-			
+
+	if end - start >= Globals.MIN_CONSECUTIVE_MATCH:
 		_explode_balls(start, end)
 		
-		
-		
-	
 
 
 func _explode_balls(start: int, end: int):
 	var items_to_remove: Array[FollowingBall] = items.slice(start, end)
 	Globals.balls_exploded.emit(items_to_remove)
-	
-	
-	if start > 0 and end < items.size():
-		var group = split_group(start, end)
-		group.state = FollowGroup.State.WAITING
-		if _should_rush_backwards(group):
-			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, Globals.GOING_BACKWARDS_DELAY)
-	elif start == 0:
-		# offset progress to avoid the whole group moving back
-		global_progress += items_to_remove.size() * Globals.BALL_WIDTH
 
-		
 	for follow in items_to_remove:
 		follow.kill_ball()
 		items.erase(follow)
-		if items.is_empty():
-			remove()
+	
+	if items.is_empty():
+		print("Items empty ,removing")
+		remove()
+	
+	if start > 0 and start < items.size():
+		split_group(start)
+		next_group.state = State.WAITING
+		
+	if start == 0:
+		# offset progress to avoid the whole group moving back
+		global_progress += items_to_remove.size() * Globals.BALL_WIDTH
+		
+	for group in [self, next_group]:
+		if group and !group.is_removed and _should_rush_backwards(group):
+			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, Globals.GOING_BACKWARDS_DELAY)

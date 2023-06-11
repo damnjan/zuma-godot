@@ -33,6 +33,9 @@ func _ready():
 		_add_follow(null, null, first_group, true)
 #
 #	for i in [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,0,0,0,0,0,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1]:
+#	for i in [0,1,1,1,1,1,1,1,1,1,1,1,1,3,3,2,2,1,1,1,1,1,1,1,1,1,1,1,3]:
+#	for i in [1,2,3,0,0,0,0,0,1,2,3,0,0,0,0,0,1,1,1,1,1,3,3,1,2,3]:
+#	for i in [1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]:
 #		_add_follow(i, null, first_group, true)
 		
 	Globals.hidden_follows_updated.connect(func(hidden_count):
@@ -65,7 +68,7 @@ func _add_follow(frame = null, index = null, group = first_group, instant_ready 
 
 	follow.origin_position = ball_global_position
 	group.add_item(follow, index, instant_ready)
-	path_2d.add_child(follow) # try add_child.call_deferred(follow) if run into weird bugs
+	path_2d.add_child.call_deferred(follow) # not sure if call deferred is needed, but errors are logged otherwise
 
 	return follow
 
