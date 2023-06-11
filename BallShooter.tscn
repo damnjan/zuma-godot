@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://BallShooter.gd" id="1_m4q6o"]
 [ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://mouth.png" id="2_8in5a"]
-[ext_resource type="Texture2D" uid="uid://bbp5b7yhd8vnk" path="res://toad.png" id="3_q6svq"]
+[ext_resource type="Texture2D" uid="uid://dueyn0nftpj0r" path="res://toad2.png" id="3_7l3jx"]
 
 [sub_resource type="Gradient" id="Gradient_nepga"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
@@ -101,7 +101,7 @@ position = Vector2(3.99988, -186)
 
 [node name="Body" type="Sprite2D" parent="Toad"]
 scale = Vector2(0.77037, 0.77037)
-texture = ExtResource("3_q6svq")
+texture = ExtResource("3_7l3jx")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Toad"]
 libraries = {
