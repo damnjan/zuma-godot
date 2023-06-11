@@ -6,6 +6,8 @@ signal exploded()
 
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var sprite: AnimatedSprite2D = $Sprite
+@onready var color_particles = $ColorParticles
+@onready var white_particles = $WhiteParticles
 
 var frame
 
@@ -17,14 +19,26 @@ func _init():
 	
 func _ready():
 	scale = Globals.BALL_WIDTH / Globals.ORIGINAL_BALL_WIDTH * Vector2.ONE
+	color_particles.emitting = false
+	color_particles.one_shot = true
+	white_particles.emitting = false	
+	white_particles.one_shot = true
+	
+	
+	
 	
 func _process(delta):
+	assert(Globals.NUMBER_OF_COLORS <= sprite.sprite_frames.get_frame_count("default"), "Number of colors exceedes number of frames")	
 	sprite.frame = frame
-	if Globals.NUMBER_OF_COLORS > sprite.sprite_frames.get_frame_count("default"):
-		assert(false, "Number of colors exceedes number of frames")
 	
 func explode():
-	self.set_collision_layer_value(1, false)
+	var color1: Color = Globals.color_dict[frame] if Globals.color_dict[frame] else Color.WHITE
+	var color2 = color1
+	color1.a = 1
+	color2.a = 0
+	color_particles.texture.gradient.set_color(0, color1)
+	color_particles.texture.gradient.set_color(1, color2)	
+	self.set_collision_layer_value(1, false) # is this needed since animation player disables collision shape?
 	$AnimationPlayer.play("explode")
 
 

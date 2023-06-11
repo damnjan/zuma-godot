@@ -14,12 +14,7 @@ const shooting_direction = Vector2.UP
 @onready var animation_player = $Toad/AnimationPlayer
 
 
-const color_dict = {
-	0: Color8(28,105,253, 100),
-	1: Color8(0, 156, 76, 100),
-	2: Color8(255,193,2, 100),
-	3: Color8(216,42,87, 100)
-}
+
 
 
 func _ready():
@@ -37,7 +32,7 @@ func _process(delta):
 	toad.rotation = mouse_rotation
 	if shooting_ball:
 		shooting_ball.global_position = spawn_point.global_position	
-		polygon_2d.color = color_dict[shooting_ball.ball.frame] if color_dict.has(shooting_ball.ball.frame) else Color(1,1,1,0.5)
+		polygon_2d.color = Globals.color_dict[shooting_ball.ball.frame] if Globals.color_dict.has(shooting_ball.ball.frame) else Color(1,1,1,0.5)
 		
 
 func _input(event):

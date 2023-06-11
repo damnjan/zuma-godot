@@ -21,6 +21,13 @@ var hidden_follows = {}
 var score = 0
 var combo = 0
 
+const color_dict = {
+	0: Color8(28,105,253, 100),
+	1: Color8(0, 156, 76, 100),
+	2: Color8(255,193,2, 100),
+	3: Color8(216,42,87, 100)
+}
+
 func _emit_hidden_count():
 	var hidden_count = {
 		START: 0,

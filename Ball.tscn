@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cs0g6j0rmm486"]
+[gd_scene load_steps=13 format=3 uid="uid://cs0g6j0rmm486"]
 
 [ext_resource type="Script" path="res://ball.gd" id="1_cmi47"]
 [ext_resource type="PackedScene" uid="uid://do1coluqet8qu" path="res://BallSprite.tscn" id="2_aw8a5"]
@@ -11,7 +11,7 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CPUParticles2D:emitting")
+tracks/0/path = NodePath("ColorParticles:emitting")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -50,7 +50,7 @@ resource_name = "explode"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CPUParticles2D:emitting")
+tracks/0/path = NodePath("ColorParticles:emitting")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -97,6 +97,18 @@ tracks/3/keys = {
 "method": &"queue_free"
 }]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("WhiteParticles:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2lata"]
 _data = {
@@ -104,13 +116,13 @@ _data = {
 "explode": SubResource("Animation_5at2x")
 }
 
-[sub_resource type="Gradient" id="Gradient_41kfw"]
+[sub_resource type="Gradient" id="Gradient_7b4mv"]
 interpolation_mode = 2
-offsets = PackedFloat32Array(0.293706, 0.758741, 1)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.0279525, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0.269231, 1)
+colors = PackedColorArray(0, 0.265106, 0.929688, 1, 0, 0.167969, 1, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_km62n"]
-gradient = SubResource("Gradient_41kfw")
+gradient = SubResource("Gradient_7b4mv")
 width = 5
 height = 5
 fill = 1
@@ -119,6 +131,23 @@ fill_to = Vector2(0.5, 1)
 
 [sub_resource type="Curve" id="Curve_dm7wg"]
 _data = [Vector2(0.0701254, 0.888311), 0.0, 0.0, 0, 0, Vector2(0.968453, 0.139099), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_gv615"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.269231, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_n7635"]
+gradient = SubResource("Gradient_gv615")
+width = 5
+height = 5
+fill = 1
+fill_from = Vector2(0.490291, 0.466019)
+fill_to = Vector2(0.5, 1)
+
+[sub_resource type="Curve" id="Curve_bi1yi"]
+_data = [Vector2(0, 0.326402), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [node name="Ball" type="Area2D"]
@@ -136,20 +165,33 @@ libraries = {
 "": SubResource("AnimationLibrary_2lata")
 }
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+[node name="ColorParticles" type="CPUParticles2D" parent="."]
 emitting = false
 amount = 500
 lifetime = 0.2
-one_shot = true
 texture = SubResource("GradientTexture2D_km62n")
 emission_shape = 1
 emission_sphere_radius = 50.0
 direction = Vector2(2.08165e-12, -1)
 spread = 180.0
 gravity = Vector2(2.08165e-12, 2.08165e-12)
-initial_velocity_min = 191.92
-initial_velocity_max = 474.74
+initial_velocity_min = 318.18
+initial_velocity_max = 636.36
 scale_amount_max = 5.0
 scale_amount_curve = SubResource("Curve_dm7wg")
+
+[node name="WhiteParticles" type="CPUParticles2D" parent="."]
+amount = 500
+lifetime = 0.2
+texture = SubResource("GradientTexture2D_n7635")
+emission_shape = 1
+emission_sphere_radius = 50.0
+direction = Vector2(2.08165e-12, -1)
+spread = 180.0
+gravity = Vector2(2.08165e-12, 2.08165e-12)
+initial_velocity_min = 489.9
+initial_velocity_max = 489.9
+scale_amount_max = 5.0
+scale_amount_curve = SubResource("Curve_bi1yi")
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
