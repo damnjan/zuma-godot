@@ -48,6 +48,7 @@ func _input(event):
 			var glob = shooting_ball.global_position
 			spawn_point.remove_child(shooting_ball)
 			get_tree().root.add_child(shooting_ball)
+			shooting_ball.global_scale = Vector2.ONE
 			shooting_ball.global_position = glob
 			shooting_ball.shoot(get_local_mouse_position().normalized())
 			shooting_ball = null
@@ -60,4 +61,5 @@ func _input(event):
 func spawn_shooting_ball():
 	shooting_ball = ShootingBallScene.instantiate()
 	spawn_point.add_child(shooting_ball)
+	shooting_ball.global_scale = Vector2.ONE
 	ray_cast_2d.add_exception(shooting_ball.ball)

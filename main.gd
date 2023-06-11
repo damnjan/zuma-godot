@@ -19,7 +19,7 @@ func _init():
 
 func _ready():
 	var n = randi()
-	seed(2335218679)	
+	seed(n)	
 	print("Seed : ", n)
 	seed_label.text = str(n)
 	

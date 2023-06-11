@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=13 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
 [ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://zuma_bg.png" id="2_yddoi"]
@@ -8,11 +8,14 @@
 [ext_resource type="Script" path="res://EndCountLabel.gd" id="13_j3a3c"]
 [ext_resource type="Script" path="res://ScoreLabel.gd" id="14_4nb6k"]
 
-[sub_resource type="Curve2D" id="Curve2D_osee1"]
+[sub_resource type="Curve2D" id="Curve2D_x5r2q"]
 _data = {
-"points": PackedVector2Array(-890.073, 79.2854, 890.073, -79.2854, 556.086, 421.424, -181.224, -192.55, 181.224, 192.55, 2527.09, 516.424, -17.9336, -100.995, 17.9336, 100.995, 2731.09, 939.424, 210.484, -44.3621, -210.484, 44.3621, 2493.09, 1363.42, 213.316, 216.147, -213.316, -216.147, 741.086, 1246.42, -242.576, 111.377, 242.576, -111.377, 902.086, 628.424, -177.448, -354.897, 177.448, 354.897, 2356.09, 839.424, 253.902, 16.0459, -253.902, -16.0459, 1935.09, 1216.42, 0, 0, 0, 0, 1068.09, 1112.42)
+"points": PackedVector2Array(0, 0, 0, 0, 480, 431, -308.005, -372.222, 308.005, 372.222, 2976, 488, 372.222, -236.652, -372.222, 236.652, 2986, 1509, 242.598, 215.246, -242.598, -215.246, 718, 1402, -268.761, 134.38, 268.761, -134.38, 840, 689, -292.545, -271.139, 292.545, 271.139, 2712, 637, 248.544, -255.679, -248.544, 255.679, 2835, 1313, 0, 0, 0, 0, 927, 1204)
 }
-point_count = 9
+point_count = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_qgwiq"]
+font_size = 21
 
 [sub_resource type="LabelSettings" id="LabelSettings_s6xxj"]
 font_size = 50
@@ -33,20 +36,20 @@ shadow_color = Color(0, 0, 0, 1)
 script = ExtResource("1_wdpau")
 
 [node name="Background" type="Sprite2D" parent="."]
-position = Vector2(1493, 854)
-scale = Vector2(1.659, 1.659)
+position = Vector2(1653.22, 972)
+scale = Vector2(1.88356, 2.11667)
 texture = ExtResource("2_yddoi")
 
 [node name="Path2D" type="Path2D" parent="."]
-position = Vector2(-94.0856, -8.42374)
-curve = SubResource("Curve2D_osee1")
+position = Vector2(-180, 38)
+curve = SubResource("Curve2D_x5r2q")
 script = ExtResource("3_7x4g3")
 
 [node name="BallShooter" parent="." instance=ExtResource("4_4kumu")]
-position = Vector2(1886, 933)
+position = Vector2(1860, 1028)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(1497, 847)
+position = Vector2(1678, 952)
 
 [node name="Shaker" type="Node" parent="." node_paths=PackedStringArray("target_node")]
 script = ExtResource("3_r5c63")
@@ -56,17 +59,18 @@ max_value = 10.0
 constant = true
 
 [node name="SeedLabel" type="Label" parent="."]
-offset_left = 2894.0
-offset_top = 1647.0
-offset_right = 2934.0
-offset_bottom = 1673.0
+offset_left = 3197.0
+offset_top = 1823.0
+offset_right = 3246.0
+offset_bottom = 1856.0
 text = "Seed"
+label_settings = SubResource("LabelSettings_qgwiq")
 
 [node name="EndCountLabel" type="Label" parent="."]
-offset_left = 769.0
-offset_top = 1055.0
-offset_right = 890.0
-offset_bottom = 1127.0
+offset_left = 709.0
+offset_top = 1030.0
+offset_right = 830.0
+offset_bottom = 1102.0
 text = "← 56"
 label_settings = SubResource("LabelSettings_s6xxj")
 script = ExtResource("13_j3a3c")

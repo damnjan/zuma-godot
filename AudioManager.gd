@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var muted = false
-@export var music_while_debug = true
+@export var music_while_debug = false
 
 @onready var insert_sound = $InsertSound
 @onready var popping_sound = $PoppingSound

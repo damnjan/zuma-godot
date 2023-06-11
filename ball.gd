@@ -15,6 +15,9 @@ func set_random_color():
 func _init():
 	set_random_color()
 	
+func _ready():
+	scale = Globals.BALL_WIDTH / Globals.ORIGINAL_BALL_WIDTH * Vector2.ONE
+	
 func _process(delta):
 	sprite.frame = frame
 	if Globals.NUMBER_OF_COLORS > sprite.sprite_frames.get_frame_count("default"):
