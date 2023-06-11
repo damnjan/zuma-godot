@@ -85,7 +85,7 @@ func physics_process(delta):
 			if (last_speed < 0 and current_speed >= 0 or last_speed > 0 and current_speed <= 0):
 				curve_time = 0
 			last_speed = current_speed
-			curve_time += delta / 2
+			curve_time += delta
 			# TODO: Magic numbers
 #			var acceleration = max(0, acceleration_curve.sample(curve_time)) * (1000 if current_speed >= 0 else 5000)
 #			var acceleration = 4000

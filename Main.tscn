@@ -186,6 +186,7 @@ stream = ExtResource("10_0iq3a")
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("11_1orrj")
 volume_db = -2.811
+autoplay = true
 
 [node name="SeedLabel" type="Label" parent="."]
 offset_left = 2894.0
