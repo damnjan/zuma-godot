@@ -12,8 +12,9 @@ var state = State.FORWARDS
 var items: Array[FollowingBall]
 var global_progress = 0
 var current_speed: float = Globals.MAX_FORWARDS_SPEED
-var acceleration_curve: Curve = preload("res://acceleration_curve.tres")
+var is_inserting = false # a ball is currently being inserted (added but not ready)
 
+var _balls_being_inserted = []
 
 # a and b are indexes of first and last marble that explodes
 func split_group(index):
@@ -33,6 +34,7 @@ func split_group(index):
 	return new_group
 
 
+
 func add_item(item: FollowingBall, index, instant_ready = false):
 	Globals.combo = 0
 	if index == null:
@@ -50,9 +52,16 @@ func add_item(item: FollowingBall, index, instant_ready = false):
 	if instant_ready:
 		item.is_ready_for_checking = true
 	else:
+		assert(!_balls_being_inserted.has(item), "Item already in array, this is a bug")
+		_balls_being_inserted.append(item)
+		is_inserting = true
 		## TODO: This is ugly, find a better way
 		item.ready_for_checking.connect(func(): 
+			assert(_balls_being_inserted.has(item), "Item doesn't exist in array, this is a bug")			
+			_balls_being_inserted.erase(item)
 			item.group._check_for_matches_from_item(item)
+			if _balls_being_inserted.is_empty():
+				is_inserting = false
 		)
 		
 
@@ -98,7 +107,13 @@ func physics_process(delta):
 		State.WAITING:
 			# if being pushed back
 			if current_speed < 0:
-				current_speed += Globals.MAX_FORWARDS_SPEED
+				# old behavior:
+#				current_speed += Globals.MAX_FORWARDS_SPEED
+#				global_progress += current_speed * delta
+				# new behavior:
+				var displacement = 0 - current_speed  # Displacement from the resting position
+				var acceleration = Globals.SPRING_CONSTANT * displacement  # Hooke's law
+				current_speed = clampf(current_speed + acceleration * delta, -Globals.MAX_BACKWARDS_SPEED, 0)
 				global_progress += current_speed * delta
 			_update_items_progress()
 				
@@ -119,9 +134,8 @@ func _update_items_progress():
 	for i in items.size():	
 		items[i].group = self
 		var new_progress = global_progress + i * Globals.BALL_WIDTH
-		
 		# when being hit from a group that moves backwards, don't interpolate because it looks weird
-		if state == State.FORWARDS and current_speed < 0:
+		if !is_inserting and state == State.FORWARDS and current_speed < 0:
 			items[i].progress = new_progress
 		else:
 			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)

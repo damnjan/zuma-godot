@@ -12,34 +12,22 @@ const ComboScene = preload("res://Combo.tscn")
 const ScorePopupScene = preload("res://ScorePopup.tscn")
 
 var first_group = FollowGroup.new()
+var game_ready = false
 
 func _init():
 	Events.balls_exploded.connect(_on_balls_exploded)
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
-
-func _ready():
-	var n = randi()
-	seed(n)	
-	print("Seed : ", n)
-	seed_label.text = str(n)
-	
-	
-	first_group.global_progress = -(Globals.TOTAL_NUMBER_OF_BALLS - Globals.INITIAL_NUMBER_OF_BALLS) * Globals.BALL_WIDTH
-	for i in Globals.TOTAL_NUMBER_OF_BALLS:
-		_add_follow(null, null, first_group, true)
-#
-#	for i in [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,0,0,0,0,0,3,3,3,3,3,3,3,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1]:
-#	for i in [0,1,1,1,1,1,1,1,1,1,1,1,1,3,3,2,2,1,1,1,1,1,1,1,1,1,1,1,3]:
-#	for i in [1,2,3,0,0,0,0,0,1,2,3,0,0,0,0,0,1,1,1,1,1,3,3,1,2,3]:
-#	for i in [1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]:
-#		_add_follow(i, null, first_group, true)
-		
 	Events.hidden_follows_updated.connect(func(hidden_count):
 		var hidden_start = hidden_count[Globals.START]
 		var hidden_end = hidden_count[Globals.END]
 		end_count_label.set_value(hidden_end)
 	)
-		
+
+func _ready():
+	_seed()
+	_generate_balls(
+#		[1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]
+	)
 		
 func _physics_process(delta):
 	_check_first_group()
@@ -51,6 +39,24 @@ func _physics_process(delta):
 		next.physics_process(delta)
 		next = next.next_group
 		
+func _seed():
+	var n = randi()
+	seed(n)	
+	seed_label.text = str(n)
+	print("Seed : ", n)	
+		
+func _generate_balls(test_data = null):
+	var total_number = test_data.size() if test_data else Globals.TOTAL_NUMBER_OF_BALLS
+	var initial_number = test_data.size() if test_data else Globals.INITIAL_NUMBER_OF_BALLS
+	var target_global_progress = -(total_number - initial_number) * Globals.BALL_WIDTH
+	first_group.global_progress = -total_number * Globals.BALL_WIDTH	
+	
+	for i in total_number:
+		_add_follow(test_data[i] if test_data else null, null, first_group, true)
+		
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE)	
+	tween.tween_property(first_group, "global_progress", target_global_progress, 2)
 	
 func _check_first_group():
 	if first_group and first_group.is_removed and first_group.next_group:
