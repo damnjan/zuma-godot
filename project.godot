@@ -36,6 +36,11 @@ movie_writer/movie_file="/Users/damnjan/Documents/Godot/zuma/movie.avi"
 
 enabled=PackedStringArray("res://addons/shaker/plugin.cfg")
 
+[layer_names]
+
+2d_physics/layer_1="balls"
+2d_physics/layer_2="shooting_ball"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

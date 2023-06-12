@@ -1,3 +1,5 @@
+## Balls don't have a collision mask becaue they don't need it and it is a HUGE performance impact
+
 extends Area2D
 
 class_name Ball
