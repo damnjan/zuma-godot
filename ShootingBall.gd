@@ -17,7 +17,7 @@ var _velocity: Vector2
 
 func _physics_process(delta):
 	if state == State.SHOOTING:
-		position += _direction * Globals.SHOOTING_SPEED
+		position += _direction * Globals.SHOOTING_SPEED * delta
 		
 	if position.distance_to(Vector2.ZERO) > 10000:
 		print("Removing shooting ball")
