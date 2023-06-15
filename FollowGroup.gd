@@ -59,7 +59,7 @@ func add_item(item: FollowingBall, index, instant_ready = false):
 		item.ready_for_checking.connect(func(): 
 			assert(_balls_being_inserted.has(item), "Item doesn't exist in array, this is a bug")			
 			_balls_being_inserted.erase(item)
-			item.group._check_for_matches_from_item(item)
+			item.group.check_for_matches_from_item(item)
 			if _balls_being_inserted.is_empty():
 				is_inserting = false
 		)
@@ -83,7 +83,7 @@ func merge_next_group():
 	items.append_array(next_group.items)
 	current_speed += next_group.current_speed
 	next_group.remove()
-	_check_for_matches_from_item(last_item, true)
+	check_for_matches_from_item(last_item, true)
 	AudioManager.play(AudioManager.merge_sound)
 
 var curve_time: float = 0.0
@@ -132,28 +132,25 @@ func first_item() -> FollowingBall:
 func last_item() -> FollowingBall:
 	return items.back()
 	
-func _update_items_progress():
-	for i in items.size():	
-		items[i].group = self
-		var new_progress = global_progress + i * Globals.BALL_WIDTH
-		# when being hit from a group that moves backwards, don't interpolate because it looks weird
-		if !is_inserting and state == State.FORWARDS and current_speed < 0:
-			items[i].progress = new_progress
-		else:
-			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)
-			
 	
-func _should_rush_backwards():
-	return prev_group and first_item().frame == prev_group.last_item().frame
+func rush_backwards_if_needed(delay = false):
+	if _should_rush_backwards():
+		if delay:
+			GlobalTimer.create_async(rush_backwards, Globals.GOING_BACKWARDS_DELAY)
+		else:
+			rush_backwards()
+	
+func rush_backwards():
+	state = State.BACKWARDS
 
-func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
+func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 	if item.is_dying:
 		print("Dying, skipping.")
 		return
 		
 	for group in [self, next_group]:
-		if group and group._should_rush_backwards():
-			group.state = State.BACKWARDS
+		if group:
+			group.rush_backwards_if_needed()
 		
 	var index = items.find(item)
 	var start = index
@@ -199,5 +196,18 @@ func _explode_balls(start: int, end: int):
 		global_progress += items_to_remove.size() * Globals.BALL_WIDTH
 		
 	for group in [self, next_group]:
-		if group and !group.is_removed and group._should_rush_backwards():
-			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, Globals.GOING_BACKWARDS_DELAY)
+		if group and !group.is_removed:
+			group.rush_backwards_if_needed(true)
+
+func _update_items_progress():
+	for i in items.size():	
+		items[i].group = self
+		var new_progress = global_progress + i * Globals.BALL_WIDTH
+		# when being hit from a group that moves backwards, don't interpolate because it looks weird
+		if !is_inserting and state == State.FORWARDS and current_speed < 0:
+			items[i].progress = new_progress
+		else:
+			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)
+	
+func _should_rush_backwards():
+	return prev_group and first_item().frame == prev_group.last_item().frame
