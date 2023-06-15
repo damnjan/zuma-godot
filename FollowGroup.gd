@@ -30,7 +30,7 @@ func split_group(index):
 		
 	next_group = new_group
 	new_group.global_progress = new_group.items[0].progress
-	
+	new_group.state = State.WAITING
 	return new_group
 
 
@@ -75,6 +75,8 @@ func remove():
 	if next_group:
 		next_group.prev_group = prev_group
 	is_removed = true
+	
+
 
 func merge_next_group():
 	var last_item = items.back()
@@ -141,8 +143,8 @@ func _update_items_progress():
 			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)
 			
 	
-func _should_rush_backwards(group):
-	return group.prev_group and group.first_item().frame == group.prev_group.last_item().frame
+func _should_rush_backwards():
+	return prev_group and first_item().frame == prev_group.last_item().frame
 
 func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 	if item.is_dying:
@@ -150,7 +152,7 @@ func _check_for_matches_from_item(item: FollowingBall, is_merge = false):
 		return
 		
 	for group in [self, next_group]:
-		if group and _should_rush_backwards(group):
+		if group and group._should_rush_backwards():
 			group.state = State.BACKWARDS
 		
 	var index = items.find(item)
@@ -197,5 +199,5 @@ func _explode_balls(start: int, end: int):
 		global_progress += items_to_remove.size() * Globals.BALL_WIDTH
 		
 	for group in [self, next_group]:
-		if group and !group.is_removed and _should_rush_backwards(group):
+		if group and !group.is_removed and group._should_rush_backwards():
 			GlobalTimer.create_async(func(): group.state = State.BACKWARDS, Globals.GOING_BACKWARDS_DELAY)

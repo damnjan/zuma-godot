@@ -63,6 +63,21 @@ func _update_visibility():
 		ball.collision_shape.disabled = is_hidden
 	Globals.on_follow_hidden(self) if is_hidden else Globals.on_follow_shown(self)
 	
+func remove_self():
+	var index = group.items.find(self)
+	is_dying = true	
+	group.items.erase(self)
+	
+	var next_group = group.next_group
+	if index > 0 and index < group.items.size():
+		next_group = group.split_group(index)	
+	if group._should_rush_backwards():
+		group.state = group.State.BACKWARDS
+	if next_group and next_group._should_rush_backwards():
+		next_group.state = group.State.BACKWARDS
+		
+	queue_free()	
+	
 	
 func kill_ball():
 	is_dying = true

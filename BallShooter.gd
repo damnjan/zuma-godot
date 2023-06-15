@@ -51,6 +51,11 @@ func _input(event):
 			animation_player.play("shoot")
 			AudioManager.play(AudioManager.shooting_sound)
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			var colider: Ball = ray_cast_2d.get_collider()
+			if colider:
+				var follow = colider.get_parent()
+				if follow is FollowingBall:
+					follow.remove_self()
 			shooting_ball.change_color()
 
 func spawn_shooting_ball():
