@@ -136,6 +136,7 @@ func last_item() -> FollowingBall:
 func rush_backwards_if_needed(delay = false):
 	if _should_rush_backwards():
 		if delay:
+			print("Yes delay")
 			GlobalTimer.create_async(rush_backwards, Globals.GOING_BACKWARDS_DELAY)
 		else:
 			rush_backwards()
@@ -150,6 +151,7 @@ func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 		
 	for group in [self, next_group]:
 		if group:
+			print("AAA")
 			group.rush_backwards_if_needed()
 		
 	var index = items.find(item)
@@ -166,26 +168,31 @@ func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 		print("is_merge and end == index + 1, skipping.")
 		return
 		
-	if items.slice(start, end).any(func(item): return !item.is_ready_for_checking):
+	var items_to_explode = items.slice(start, end)
+		
+	if items_to_explode.any(func(item): return !item.is_ready_for_checking):
 			print("Not ready for checking, skipping.")
 			return
 
-	if end - start >= Globals.MIN_CONSECUTIVE_MATCH:
-		_explode_balls(start, end)
+	if items_to_explode.size() >= Globals.MIN_CONSECUTIVE_MATCH:
+#		for x in items_to_explode:
+#			explode_balls([x])
+		explode_balls(items_to_explode)
 		
 
 
-func _explode_balls(start: int, end: int):
-	var items_to_remove: Array[FollowingBall] = items.slice(start, end)
-	Events.balls_exploded.emit(items_to_remove)
+func explode_balls(items_to_explode: Array[FollowingBall]):
+	Events.balls_exploding.emit(items_to_explode)
+	var start = items.find(items_to_explode[0])
 
-	for follow in items_to_remove:
+	for follow in items_to_explode:
 		follow.kill_ball()
 		items.erase(follow)
 	
 	if items.is_empty():
 		print("Items empty ,removing")
 		remove()
+		
 	
 	if start > 0 and start < items.size():
 		split_group(start)
@@ -193,7 +200,7 @@ func _explode_balls(start: int, end: int):
 		
 	if start == 0:
 		# offset progress to avoid the whole group moving back
-		global_progress += items_to_remove.size() * Globals.BALL_WIDTH
+		global_progress += items_to_explode.size() * Globals.BALL_WIDTH
 		
 	for group in [self, next_group]:
 		if group and !group.is_removed:

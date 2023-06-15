@@ -15,7 +15,7 @@ var first_group = FollowGroup.new()
 var game_ready = false
 
 func _init():
-	Events.balls_exploded.connect(_on_balls_exploded)
+	Events.balls_exploding.connect(_on_balls_exploding)
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	Events.hidden_follows_updated.connect(func(hidden_count):
 		var hidden_start = hidden_count[Globals.START]
@@ -88,7 +88,7 @@ func _on_shooting_ball_collided(ball, collider, normal):
 
 		
 		
-func _on_balls_exploded(balls):
+func _on_balls_exploding(balls):
 	var middle_ball = balls[balls.size() / 2]
 	Globals.combo += 1
 	var score = 10 * balls.size() * Globals.combo
