@@ -16,6 +16,12 @@ var is_inserting = false # a ball is currently being inserted (added but not rea
 
 var _balls_being_inserted = []
 
+func _init():
+	# keep active reference to groups because godot's garbage collector seems to have some weird bug
+	# i know it makes no sense but after many hours of hunting for the bug, this is the only thing that works
+	Globals.all_groups.append(self)
+	pass
+
 # a and b are indexes of first and last marble that explodes
 func split_group(index):
 	assert(index > 0 and index < items.size(), "Invalid index")
@@ -77,6 +83,7 @@ func remove():
 		prev_group.next_group = next_group
 	if next_group:
 		next_group.prev_group = prev_group
+	items.clear()
 	is_removed = true
 
 func merge_next_group():
@@ -103,13 +110,13 @@ func physics_process(delta):
 
 			current_speed = clampf(current_speed + acceleration * delta, -Globals.MAX_BACKWARDS_SPEED, Globals.MAX_FORWARDS_SPEED)
 			global_progress += current_speed * delta
-			_update_items_progress()
+			_update_items_progress(delta)
 			
 		State.BACKWARDS:
 			current_speed -= Globals.BACKWARDS_ACCELERATION * delta
 			current_speed = max(current_speed, -Globals.MAX_BACKWARDS_SPEED)
 			global_progress += current_speed * delta
-			_update_items_progress()
+			_update_items_progress(delta)
 
 		State.WAITING:
 			# if being pushed back
@@ -122,8 +129,8 @@ func physics_process(delta):
 				var acceleration = Globals.SPRING_CONSTANT * displacement  # Hooke's law
 				current_speed = clampf(current_speed + acceleration * delta, -Globals.MAX_BACKWARDS_SPEED, 0)
 				global_progress += current_speed * delta
-			_update_items_progress()
-				
+			_update_items_progress(delta)
+		
 	if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
 		prev_group.merge_next_group()
 				
@@ -152,6 +159,7 @@ func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 	if item.is_dying:
 		print("Dying, skipping.")
 		return
+	assert(items.has(item), "Item doesn't belong here anymore")
 		
 	for group in [self, next_group]:
 		if group:
@@ -173,11 +181,9 @@ func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 	var items_to_explode = items.slice(start, end)
 		
 	if items_to_explode.any(func(item): return !item.is_ready_for_checking):
-			return
+		return
 
 	if items_to_explode.size() >= Globals.MIN_CONSECUTIVE_MATCH:
-#		for x in items_to_explode:
-#			explode_balls([x])
 		explode_balls(items_to_explode)
 		
 
@@ -189,9 +195,9 @@ func explode_balls(items_to_explode: Array[FollowingBall]):
 	for follow in items_to_explode:
 		items.erase(follow)
 		follow.kill_ball()
+	update_items_index_and_group()
 	
 	if items.is_empty():
-		print("Items empty ,removing")
 		remove()
 		
 	
@@ -207,7 +213,8 @@ func explode_balls(items_to_explode: Array[FollowingBall]):
 		if group and !group.is_removed:
 			group.rush_backwards_if_needed(true)
 
-func _update_items_progress():
+func _update_items_progress(delta):
+	assert(!is_removed, "This should not happen")
 	for i in items.size():	
 		assert(is_instance_valid(items[i]), "AAAAAAA INVALID!!!!!11111")
 		var new_progress = global_progress + i * Globals.BALL_WIDTH
@@ -215,12 +222,13 @@ func _update_items_progress():
 		if !is_inserting and state == State.FORWARDS and current_speed < 0:
 			items[i].progress = new_progress
 		else:
-			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT)
+			items[i].progress = lerpf(items[i].progress, new_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
 	
 func _should_rush_backwards():
 	return prev_group and first_item().frame == prev_group.last_item().frame
 	
 func update_items_index_and_group():
 	for i in items.size():
-		items[i].index = i
-		items[i].group = self
+		var item = items[i]
+		item.index = i
+		item.group = self

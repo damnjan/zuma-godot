@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://tff4a122fuut"]
+[gd_scene load_steps=5 format=3 uid="uid://d06qy6up6csy5"]
 
 [ext_resource type="Script" path="res://Tongue.gd" id="1_moohi"]
 [ext_resource type="PackedScene" uid="uid://do1coluqet8qu" path="res://BallSprite.tscn" id="2_irvlf"]

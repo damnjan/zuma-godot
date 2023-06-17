@@ -10,7 +10,7 @@ var BallScene = preload("res://Ball.tscn")
 
 var ball: Ball
 var origin_position
-var index
+var index: int
 
 var is_dying = false
 var is_ready_for_checking = false
@@ -36,18 +36,30 @@ func _ready():
 	if origin_position:
 		ball.global_position = origin_position	
 	
-func _physics_process(_delta):
+func _physics_process(delta):
 	if is_dying:
 		return
+#	_move(delta)
+	
 	_update_visibility()
 	if origin_position:
-		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT)
+		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT * delta)
 
 	var distance = ball.global_position.distance_to(global_position)
 	var is_settled = distance < DISTANCE_TOLERANCE
 	if is_settled and !is_ready_for_checking:
 		# the ball has settled in the chain visually (approximately) so it means it is ready
 		_set_ready_for_checking()
+		
+	
+		
+#func _move(delta):
+#	var new_progress = group.global_progress + index * Globals.BALL_WIDTH
+#	# when being hit from a group that moves backwards, don't interpolate because it looks weird
+#	if !group.is_inserting and group.state == FollowGroup.State.FORWARDS and group.current_speed < 0:
+#		progress = new_progress
+#	else:
+#		progress = lerpf(progress, new_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
 	
 func _set_ready_for_checking():
 	is_ready_for_checking = true
@@ -68,7 +80,7 @@ func _update_visibility():
 func remove_self():
 	is_dying = true	
 	group.items.erase(self)
-	
+
 	if !group.items.is_empty():
 		var next_group = group.next_group
 		if index > 0 and index < group.items.size():
@@ -79,7 +91,7 @@ func remove_self():
 			next_group.state = group.State.BACKWARDS
 	else:
 		group.remove()
-		
+
 	queue_free()	
 	
 	

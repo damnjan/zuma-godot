@@ -13,7 +13,7 @@ const BACKWARDS_ACCELERATION = MAX_FORWARDS_SPEED * 40
 const SHOOTING_SPEED = 3600.0
 const MIN_CONSECUTIVE_MATCH = 3
 const GOING_BACKWARDS_DELAY = 0.5
-const PROGRESS_LERP_WEIGHT = 0.2
+const PROGRESS_LERP_WEIGHT = 12
 const SAME_CONSECUTIVE_BALL_CHANCE = 0.3
 const SPRING_CONSTANT = 5
 const TONGUE_SPEED = 3600.0
@@ -28,6 +28,18 @@ const color_dict = {
 	2: Color8(255,193,2, 100),
 	3: Color8(216,42,87, 100)
 }
+
+#var item_group_map = {}
+#
+#func set_item_group(item: FollowingBall, group: FollowGroup):
+#	item_group_map[item.get_instance_id()] = weakref(group)
+#
+#func get_item_group(item):
+#	var id = item.get_instance_id()
+#	assert(item_group_map.has(id), "Item not found")
+#	return item_group_map[id].get_ref()
+	
+var all_groups = []
 
 func _emit_hidden_count():
 	var hidden_count = {

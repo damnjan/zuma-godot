@@ -25,16 +25,16 @@ func _init():
 func _ready():
 	_seed()
 	_generate_balls(
-#		[1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]
+##		[1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]
 	)
 		
 func _physics_process(delta):
 	_check_first_group()
-	var groups = []
+#	var groups = []
 	var next: FollowGroup = first_group
 	
 	while next:
-		groups.append(next)
+#		groups.append(next)
 		next.physics_process(delta)
 		next = next.next_group
 		
@@ -80,6 +80,14 @@ func _on_shooting_ball_collided(ball, collider, normal):
 		return
 	AudioManager.play(AudioManager.insert_sound)
 	var follow = collider.get_parent()
+	
+#	var group: FollowGroup = first_group
+#	while group:
+#		if group.items.has(follow):
+#			break
+#		group = group.next_group
+	
+#	var group = Globals.get_item_group(follow)
 	var group = follow.group
 	var i = group.items.find(follow)
 	var insert_index = i if normal.x < 0 else i + 1

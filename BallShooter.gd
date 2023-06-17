@@ -45,6 +45,21 @@ func _physics_process(_delta):
 		polygon_2d.color = Globals.color_dict[shooting_ball.ball.frame] if Globals.color_dict.has(shooting_ball.ball.frame) else Color(1,1,1,0.5)
 	else:
 		polygon_2d.color = Color(1,1,1,0.5)
+		
+#func _process(delta):
+#	if Input.is_action_pressed("shoot"):
+#		var glob = shooting_ball.global_position
+#		spawn_point.remove_child(shooting_ball)
+#		get_tree().root.add_child(shooting_ball)
+#		shooting_ball.global_scale = Vector2.ONE
+#		shooting_ball.global_position = glob
+#		shooting_ball.shoot(get_local_mouse_position().normalized())
+#		shooting_ball = null
+#		animation_player.play("shoot")
+#		AudioManager.play(AudioManager.shooting_sound)
+#		if mode == Modes.NORMAL:
+#			spawn_shooting_ball()
+##			GlobalTimer.create_async(spawn_shooting_ball, 0.2)
 
 func _input(event):
 	if event.is_action_pressed("shoot") and shooting_ball:

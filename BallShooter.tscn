@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://BallShooter.gd" id="1_m4q6o"]
 [ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://mouth.png" id="2_8in5a"]
 [ext_resource type="Texture2D" uid="uid://dueyn0nftpj0r" path="res://toad2.png" id="3_7l3jx"]
-[ext_resource type="PackedScene" uid="uid://tff4a122fuut" path="res://Tongue.tscn" id="3_t83m8"]
+[ext_resource type="PackedScene" uid="uid://d06qy6up6csy5" path="res://Tongue.tscn" id="3_t83m8"]
 
 [sub_resource type="Gradient" id="Gradient_nepga"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
