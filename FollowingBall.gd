@@ -10,12 +10,12 @@ var BallScene = preload("res://Ball.tscn")
 
 var ball: Ball
 var origin_position
+var index
 
 var is_dying = false
 var is_ready_for_checking = false
 var group: FollowGroup
 
-var _last_progress_ratio = null
 var is_hidden = false
 
 var frame:
@@ -24,11 +24,11 @@ var frame:
 	set(value):
 		ball.frame = value
 
-func _init(frame):
+func _init(_frame):
 	loop = false
 	ball = BallScene.instantiate()
-	if frame != null:
-		ball.frame = frame
+	if _frame != null:
+		ball.frame = _frame
 	add_child(ball)
 	ball.exploded.connect(_on_ball_exploded)
 	
@@ -36,7 +36,9 @@ func _ready():
 	if origin_position:
 		ball.global_position = origin_position	
 	
-func _physics_process(delta):
+func _physics_process(_delta):
+	if is_dying:
+		return
 	_update_visibility()
 	if origin_position:
 		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT)
@@ -64,17 +66,19 @@ func _update_visibility():
 	Globals.on_follow_hidden(self) if is_hidden else Globals.on_follow_shown(self)
 	
 func remove_self():
-	var index = group.items.find(self)
 	is_dying = true	
 	group.items.erase(self)
 	
-	var next_group = group.next_group
-	if index > 0 and index < group.items.size():
-		next_group = group.split_group(index)	
-	if group._should_rush_backwards():
-		group.state = group.State.BACKWARDS
-	if next_group and next_group._should_rush_backwards():
-		next_group.state = group.State.BACKWARDS
+	if !group.items.is_empty():
+		var next_group = group.next_group
+		if index > 0 and index < group.items.size():
+			next_group = group.split_group(index)	
+		if group._should_rush_backwards():
+			group.state = group.State.BACKWARDS
+		if next_group and next_group._should_rush_backwards():
+			next_group.state = group.State.BACKWARDS
+	else:
+		group.remove()
 		
 	queue_free()	
 	

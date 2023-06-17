@@ -20,7 +20,7 @@ func play():
 	label.modulate = Color.WHITE
 	label.scale = Vector2.ONE
 	
-	var duration = 1 + value/100
+	var duration = 1 + value/100.0
 	
 	var new_scale = 2 + (value - 30) * 0.01
 	

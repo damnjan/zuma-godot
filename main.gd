@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var path_2d: Path2D = $Path2D
-@onready var insert_sound = $InsertSound
 @onready var seed_label = $SeedLabel
 @onready var end_count_label = $EndCountLabel
 @onready var shaker = $Shaker
@@ -18,7 +17,7 @@ func _init():
 	Events.balls_exploding.connect(_on_balls_exploding)
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	Events.hidden_follows_updated.connect(func(hidden_count):
-		var hidden_start = hidden_count[Globals.START]
+#		var hidden_start = hidden_count[Globals.START]
 		var hidden_end = hidden_count[Globals.END]
 		end_count_label.set_value(hidden_end)
 	)

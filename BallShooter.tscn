@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://12fhuuwwpgh2"]
+[gd_scene load_steps=10 format=3 uid="uid://12fhuuwwpgh2"]
 
 [ext_resource type="Script" path="res://BallShooter.gd" id="1_m4q6o"]
 [ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://mouth.png" id="2_8in5a"]
 [ext_resource type="Texture2D" uid="uid://dueyn0nftpj0r" path="res://toad2.png" id="3_7l3jx"]
+[ext_resource type="PackedScene" uid="uid://tff4a122fuut" path="res://Tongue.tscn" id="3_t83m8"]
 
 [sub_resource type="Gradient" id="Gradient_nepga"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
@@ -98,6 +99,14 @@ texture = ExtResource("2_8in5a")
 
 [node name="SpawnPoint" type="Marker2D" parent="Toad"]
 position = Vector2(3.99988, -186)
+
+[node name="TongueMask" type="Polygon2D" parent="Toad"]
+clip_children = 1
+position = Vector2(0, -147)
+polygon = PackedVector2Array(-43, 230, 60, 221, 140, -35, 126, -2778, -91, -2774, -98, 21)
+
+[node name="Tongue" parent="Toad/TongueMask" instance=ExtResource("3_t83m8")]
+position = Vector2(0, -14)
 
 [node name="Body" type="Sprite2D" parent="Toad"]
 scale = Vector2(0.77037, 0.77037)

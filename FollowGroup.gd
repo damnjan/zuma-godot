@@ -23,7 +23,10 @@ func split_group(index):
 	new_group.prev_group = self
 	new_group.next_group = next_group
 	new_group.items = items.slice(index)	
+	new_group.update_items_index_and_group()
+	
 	items = items.slice(0, index)
+	update_items_index_and_group()
 	
 	if next_group:
 		next_group.prev_group = new_group
@@ -41,7 +44,7 @@ func add_item(item: FollowingBall, index, instant_ready = false):
 		index = items.size()
 
 	items.insert(index, item)
-	item.group = self		
+	update_items_index_and_group()	
 	
 	# if adding at the beginning, don't push others (actually, move everything back)
 	if index == 0 and !instant_ready:
@@ -75,21 +78,23 @@ func remove():
 	if next_group:
 		next_group.prev_group = prev_group
 	is_removed = true
-	
-
 
 func merge_next_group():
-	var last_item = items.back()
+	var item_to_check_from = last_item()
 	items.append_array(next_group.items)
+	update_items_index_and_group()
 	current_speed += next_group.current_speed
 	next_group.remove()
-	check_for_matches_from_item(last_item, true)
+	check_for_matches_from_item(item_to_check_from, true)
 	AudioManager.play(AudioManager.merge_sound)
 
 var curve_time: float = 0.0
 var last_speed = current_speed
 
 func physics_process(delta):
+	if is_removed:
+		print("this is removed , no point")
+		return
 	match state:
 		State.FORWARDS:
 			
@@ -136,7 +141,6 @@ func last_item() -> FollowingBall:
 func rush_backwards_if_needed(delay = false):
 	if _should_rush_backwards():
 		if delay:
-			print("Yes delay")
 			GlobalTimer.create_async(rush_backwards, Globals.GOING_BACKWARDS_DELAY)
 		else:
 			rush_backwards()
@@ -151,7 +155,6 @@ func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 		
 	for group in [self, next_group]:
 		if group:
-			print("AAA")
 			group.rush_backwards_if_needed()
 		
 	var index = items.find(item)
@@ -165,13 +168,11 @@ func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 #	
 	if is_merge and end == index + 1:
 		# this means that two groups are merging, and one of them has consecutive balls but the other doesn't, so skip
-		print("is_merge and end == index + 1, skipping.")
 		return
 		
 	var items_to_explode = items.slice(start, end)
 		
 	if items_to_explode.any(func(item): return !item.is_ready_for_checking):
-			print("Not ready for checking, skipping.")
 			return
 
 	if items_to_explode.size() >= Globals.MIN_CONSECUTIVE_MATCH:
@@ -186,8 +187,8 @@ func explode_balls(items_to_explode: Array[FollowingBall]):
 	var start = items.find(items_to_explode[0])
 
 	for follow in items_to_explode:
-		follow.kill_ball()
 		items.erase(follow)
+		follow.kill_ball()
 	
 	if items.is_empty():
 		print("Items empty ,removing")
@@ -208,7 +209,7 @@ func explode_balls(items_to_explode: Array[FollowingBall]):
 
 func _update_items_progress():
 	for i in items.size():	
-		items[i].group = self
+		assert(is_instance_valid(items[i]), "AAAAAAA INVALID!!!!!11111")
 		var new_progress = global_progress + i * Globals.BALL_WIDTH
 		# when being hit from a group that moves backwards, don't interpolate because it looks weird
 		if !is_inserting and state == State.FORWARDS and current_speed < 0:
@@ -218,3 +219,8 @@ func _update_items_progress():
 	
 func _should_rush_backwards():
 	return prev_group and first_item().frame == prev_group.last_item().frame
+	
+func update_items_index_and_group():
+	for i in items.size():
+		items[i].index = i
+		items[i].group = self

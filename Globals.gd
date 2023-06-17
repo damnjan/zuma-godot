@@ -7,7 +7,7 @@ const TOTAL_NUMBER_OF_BALLS = 200
 const INITIAL_NUMBER_OF_BALLS = 100
 const ORIGINAL_BALL_WIDTH := 92.0
 const BALL_WIDTH := ORIGINAL_BALL_WIDTH
-const MAX_FORWARDS_SPEED := 120.0
+const MAX_FORWARDS_SPEED := 190.0
 const MAX_BACKWARDS_SPEED := MAX_FORWARDS_SPEED * 40
 const BACKWARDS_ACCELERATION = MAX_FORWARDS_SPEED * 40
 const SHOOTING_SPEED = 3600.0
@@ -16,6 +16,7 @@ const GOING_BACKWARDS_DELAY = 0.5
 const PROGRESS_LERP_WEIGHT = 0.2
 const SAME_CONSECUTIVE_BALL_CHANCE = 0.3
 const SPRING_CONSTANT = 5
+const TONGUE_SPEED = 3600.0
 
 var hidden_follows = {}
 var score = 0
@@ -52,7 +53,6 @@ func on_follow_hidden(follow: FollowingBall):
 func on_follow_shown(follow: FollowingBall):
 	if !hidden_follows.has(follow):
 		return
-	var location = hidden_follows[follow]
 	hidden_follows.erase(follow)	
 	_emit_hidden_count()
 	

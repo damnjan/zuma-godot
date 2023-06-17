@@ -10,8 +10,6 @@ func _ready():
 
 func play():
 	var duration = 1 + (value - 2) * 0.2
-	var red = min(value * 0.4, 1)
-	var green = min(1.25/value, 1)
 	var colors = {
 		2: Color.GREEN_YELLOW,
 		3: Color.ORANGE,

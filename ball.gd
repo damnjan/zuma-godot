@@ -55,6 +55,8 @@ func explode():
 #	self.set_collision_layer_value(1, false) 
 	sprite.queue_free()
 	collision_shape.queue_free()
+#	sprite.hide()
+#	collision_shape.disabled = true
 	
 	await get_tree().create_timer(1).timeout
 	exploded.emit()
