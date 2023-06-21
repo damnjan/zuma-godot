@@ -101,6 +101,10 @@ func physics_process(delta):
 	if is_removed:
 		print("this is removed , no point")
 		return
+				
+	if next_group and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
+		merge_next_group()
+		
 	match state:
 		State.FORWARDS:
 			
@@ -127,11 +131,7 @@ func physics_process(delta):
 				current_speed = clampf(current_speed + acceleration * delta, -Globals.MAX_BACKWARDS_SPEED, 0)
 				global_progress += current_speed * delta
 		
-	if prev_group != null and first_item().progress <= prev_group.last_item().progress + Globals.BALL_WIDTH and prev_group.state != State.FORWARDS:
-		prev_group.merge_next_group()
-				
-	elif next_group != null and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
-		merge_next_group()
+
 	
 
 func first_item() -> FollowingBall:

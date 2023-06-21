@@ -80,14 +80,6 @@ func _on_shooting_ball_collided(ball, collider, normal):
 		return
 	AudioManager.play(AudioManager.insert_sound)
 	var follow = collider
-	
-#	var group: FollowGroup = first_group
-#	while group:
-#		if group.items.has(follow):
-#			break
-#		group = group.next_group
-	
-#	var group = Globals.get_item_group(follow)
 	var group = follow.group
 	var i = group.items.find(follow)
 	var insert_index = i if normal.x < 0 else i + 1
