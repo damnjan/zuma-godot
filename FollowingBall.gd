@@ -18,6 +18,8 @@ var group: FollowGroup
 
 var is_hidden = false
 
+var curve_length := 0.0
+
 var frame:
 	get:
 		return ball.frame
@@ -34,14 +36,14 @@ func _init(_frame):
 	
 func _ready():
 	if origin_position:
-		ball.global_position = origin_position	
+		ball.global_position = origin_position
+	curve_length = get_parent().curve.get_baked_length()
 	
 func _physics_process(delta):
 	if is_dying:
 		return
-#	_move(delta)
+	_move(delta)
 	
-	_update_visibility()
 	if origin_position:
 		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT * delta)
 
@@ -53,22 +55,26 @@ func _physics_process(delta):
 		
 	
 		
-#func _move(delta):
-#	var new_progress = group.global_progress + index * Globals.BALL_WIDTH
-#	# when being hit from a group that moves backwards, don't interpolate because it looks weird
-#	if !group.is_inserting and group.state == FollowGroup.State.FORWARDS and group.current_speed < 0:
-#		progress = new_progress
-#	else:
-#		progress = lerpf(progress, new_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
+func _move(delta):
+	var next_progress = group.global_progress + index * Globals.BALL_WIDTH
+	_set_visibility(next_progress)
+	if is_hidden:
+		return
+		
+	# when being hit from a group that moves backwards, don't interpolate because it looks weird
+	if !group.is_inserting and group.state == FollowGroup.State.FORWARDS and group.current_speed < 0:
+		progress = next_progress
+	else:
+		progress = lerpf(progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
 	
 func _set_ready_for_checking():
 	is_ready_for_checking = true
 	ready_for_checking.emit()
 		
 # hides/shows the ball and disables/enables collision if outside the path
-func _update_visibility():
+func _set_visibility(next_progress):
 	var old_value = is_hidden
-	var new_value = progress_ratio >= 1 or progress <= 0
+	var new_value = next_progress >= curve_length or next_progress <= 0
 	if new_value == old_value:
 		return
 	is_hidden = new_value
