@@ -79,7 +79,7 @@ func _on_shooting_ball_collided(ball, collider, normal):
 		print("no collider")
 		return
 	AudioManager.play(AudioManager.insert_sound)
-	var follow = collider.get_parent()
+	var follow = collider
 	
 #	var group: FollowGroup = first_group
 #	while group:

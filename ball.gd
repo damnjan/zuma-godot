@@ -1,12 +1,11 @@
 ## Balls don't have a collision mask becaue they don't need it and it is a HUGE performance impact
 
-extends Area2D
+extends Node2D
 
 class_name Ball
 
 signal exploded()
 
-@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var sprite: AnimatedSprite2D = $Sprite
 
 var ExplosionScene = preload("res://explosion.tscn")
@@ -54,7 +53,6 @@ func explode():
 	color_particles.texture.gradient.set_color(1, color2)	
 #	self.set_collision_layer_value(1, false) 
 	sprite.queue_free()
-	collision_shape.queue_free()
 #	sprite.hide()
 #	collision_shape.disabled = true
 	

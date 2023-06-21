@@ -28,18 +28,8 @@ const color_dict = {
 	2: Color8(255,193,2, 100),
 	3: Color8(216,42,87, 100)
 }
-
-#var item_group_map = {}
-#
-#func set_item_group(item: FollowingBall, group: FollowGroup):
-#	item_group_map[item.get_instance_id()] = weakref(group)
-#
-#func get_item_group(item):
-#	var id = item.get_instance_id()
-#	assert(item_group_map.has(id), "Item not found")
-#	return item_group_map[id].get_ref()
 	
-var all_groups = []
+var all_groups: Array[FollowGroup] = []
 
 func _emit_hidden_count():
 	var hidden_count = {
@@ -49,6 +39,18 @@ func _emit_hidden_count():
 	for location in hidden_follows.values():
 		hidden_count[location] += 1
 	Events.hidden_follows_updated.emit(hidden_count)
+	
+# return true in callback if you want to exit early
+func for_each_visible_ball(callback: Callable):
+	for group in all_groups:
+		if group.is_removed:
+			continue
+		for ball in group.items:
+			if ball.is_hidden:
+				continue
+			var should_return = callback.call(ball)
+			if should_return:
+				return
 
 func on_follow_hidden(follow: FollowingBall):
 	var location

@@ -73,8 +73,7 @@ func _update_visibility():
 		return
 	is_hidden = new_value
 	hide() if is_hidden else show()
-	if ball.collision_shape:
-		ball.collision_shape.disabled = is_hidden
+
 	Globals.on_follow_hidden(self) if is_hidden else Globals.on_follow_shown(self)
 	
 func remove_self():
