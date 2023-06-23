@@ -83,11 +83,8 @@ script = ExtResource("1_m4q6o")
 
 [node name="Toad" type="Node2D" parent="."]
 
-[node name="RayCast2D" type="RayCast2D" parent="Toad"]
-position = Vector2(0, -188)
-
 [node name="Polygon2D" type="Polygon2D" parent="Toad"]
-position = Vector2(1.99988, -186)
+position = Vector2(2.08165e-12, -186)
 color = Color(0.980392, 1, 0, 0.396078)
 texture = SubResource("GradientTexture2D_grrga")
 texture_offset = Vector2(2.08165e-12, 200)

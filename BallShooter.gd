@@ -11,26 +11,19 @@ var ShootingBallScene = preload("res://ShootingBall.tscn")
 var shooting_ball: ShootingBall
 const shooting_direction = Vector2.UP
 
-@onready var ray_cast_2d: RayCast2D = $Toad/RayCast2D
 @onready var polygon_2d: Polygon2D = $Toad/Polygon2D
 @onready var toad = $Toad
 @onready var spawn_point = $Toad/SpawnPoint
 @onready var animation_player = $Toad/AnimationPlayer
 @onready var tongue = $Toad/TongueMask/Tongue
 
-
-
-
 func _ready():
 	if mode == Modes.NORMAL:
 		spawn_shooting_ball()
-	ray_cast_2d.collide_with_areas = true
-	ray_cast_2d.target_position = shooting_direction * 4000
-	ray_cast_2d.add_exception(tongue)
 	tongue.returned.connect(_on_tongue_returned)
 	tongue.collided.connect(_on_tongue_collided)
 	
-func ray_to_ball_intersection(ray_origin, ray_direction):
+func ray_to_ball_intersection(ray_origin: Vector2, ray_direction: Vector2):
 	var closest = {
 		"intersection": null,
 		"distance": INF
@@ -38,17 +31,17 @@ func ray_to_ball_intersection(ray_origin, ray_direction):
 	var ball_radius = Globals.BALL_WIDTH / 2  # Assuming you have a property for the ball's radius
 	
 	Globals.for_each_visible_ball(func (ball):
-		var ball_position = ball.global_position
-		var origin_to_ball = ball_position - ray_origin
-
-		# Projection of the ball's position onto the ray direction
-		var projection_length = origin_to_ball.dot(ray_direction.normalized())
+		var ball_position: Vector2 = ball.global_position
+		var origin_to_ball: Vector2 = ball_position - ray_origin
 		
+		# Projection of the ball's position onto the ray direction
+		var projection_length = origin_to_ball.dot(ray_direction)
+			
 		if projection_length < 0:
 			return
 
 		# Closest point on the ray to the center of the circle
-		var closest_point = ray_origin + ray_direction.normalized() * projection_length
+		var closest_point = ray_origin + ray_direction * projection_length
 
 		var distance_to_ball_center = closest_point.distance_to(ball_position)
 
@@ -57,11 +50,10 @@ func ray_to_ball_intersection(ray_origin, ray_direction):
 			# Distance from the closest point on the line to the intersection
 			var distance_to_intersection = sqrt(ball_radius * ball_radius - distance_to_ball_center * distance_to_ball_center)
 			
-			var intersection_point = closest_point - ray_direction.normalized() * distance_to_intersection
+			var intersection_point = closest_point - ray_direction* distance_to_intersection
 			var distance = ray_origin.distance_to(intersection_point)
 
 			if distance < closest.distance:
-				
 				closest.distance = distance
 				closest.intersection = intersection_point
 	)
@@ -74,8 +66,9 @@ func _physics_process(_delta):
 	
 	var point_position = collision_point if collision_point else shooting_direction * 4000
 	var local_point_position = to_local(point_position)
-	polygon_2d.visible = !!shooting_ball
-	polygon_2d.polygon = [Vector2(0, -local_point_position.length() - ray_cast_2d.position.y), Vector2(-30, 0), Vector2(30, 0)]
+	if mode == Modes.NORMAL:
+		polygon_2d.visible = !!shooting_ball
+	polygon_2d.polygon = [Vector2(0, -local_point_position.length() - polygon_2d.position.y), Vector2(-30, 0), Vector2(30, 0)]
 	toad.rotation = mouse_rotation
 	if shooting_ball:
 		shooting_ball.global_position = spawn_point.global_position	
@@ -110,14 +103,13 @@ func spawn_shooting_ball():
 	shooting_ball = ShootingBallScene.instantiate()
 	spawn_point.add_child(shooting_ball)
 	shooting_ball.global_scale = Vector2.ONE
-	ray_cast_2d.collide_with_bodies
+	
 func _on_tongue_returned():
 	polygon_2d.show()
 	if tongue.frame != null:
 		spawn_shooting_ball()
 		shooting_ball.ball.frame = tongue.frame
 		
-func _on_tongue_collided(colider):
-	var follow = colider.get_parent()
-	if follow is FollowingBall:
-		follow.remove_self()
+func _on_tongue_collided(follow):
+	assert(follow is FollowingBall, "Ball should be a FollowingBall")
+	follow.remove_self()

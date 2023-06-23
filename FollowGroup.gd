@@ -37,7 +37,7 @@ func split_group(index):
 		next_group.prev_group = new_group
 		
 	next_group = new_group
-	new_group.global_progress = new_group.items[0].progress
+	new_group.global_progress = new_group.items[0].current_progress
 	new_group.state = State.WAITING
 	return new_group
 
@@ -55,7 +55,7 @@ func add_item(item: FollowingBall, index, instant_ready = false):
 	if index == 0 and !instant_ready:
 		global_progress -= Globals.BALL_WIDTH
 		
-	item.progress = index * Globals.BALL_WIDTH + global_progress
+	item.current_progress = index * Globals.BALL_WIDTH + global_progress
 	
 	if instant_ready:
 		item.is_ready_for_checking = true
@@ -102,7 +102,7 @@ func physics_process(delta):
 		print("this is removed , no point")
 		return
 				
-	if next_group and last_item().progress >= next_group.first_item().progress - Globals.BALL_WIDTH:
+	if next_group and last_item().current_progress >= next_group.first_item().current_progress - Globals.BALL_WIDTH:
 		merge_next_group()
 		
 	match state:

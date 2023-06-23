@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://d06qy6up6csy5"]
+[gd_scene load_steps=4 format=3 uid="uid://d06qy6up6csy5"]
 
 [ext_resource type="Script" path="res://Tongue.gd" id="1_moohi"]
 [ext_resource type="PackedScene" uid="uid://do1coluqet8qu" path="res://BallSprite.tscn" id="2_irvlf"]
@@ -7,12 +7,7 @@
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kt40v"]
-radius = 11.0
-height = 128.0
-
-[node name="Tongue" type="Area2D"]
-collision_layer = 4
+[node name="Tongue" type="Node2D"]
 script = ExtResource("1_moohi")
 
 [node name="Line2D" type="Line2D" parent="."]
@@ -22,8 +17,5 @@ width_curve = SubResource("Curve_c27dh")
 default_color = Color(0.87451, 0.0901961, 0.0901961, 1)
 begin_cap_mode = 2
 end_cap_mode = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_kt40v")
 
 [node name="BallSprite" parent="." instance=ExtResource("2_irvlf")]

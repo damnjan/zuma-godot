@@ -1,4 +1,4 @@
-extends Area2D
+extends Node2D
 
 signal returned
 signal collided(ball: Ball)
@@ -22,7 +22,6 @@ func shoot():
 		return
 	frame = null
 	sprite.hide()
-	area_entered.connect(_on_area_entered)
 	velocity.y = -Globals.TONGUE_SPEED
 	state = State.SHOOTING
 
@@ -39,6 +38,7 @@ func _physics_process(delta):
 	match state:
 		State.SHOOTING:
 			velocity.y = -Globals.TONGUE_SPEED
+			Globals.check_collision_with_follows(self, _on_follow_collision)
 		State.RETURNING:
 			velocity.y = Globals.TONGUE_SPEED
 		State.IDLE:
@@ -48,15 +48,13 @@ func _physics_process(delta):
 	position += velocity * delta
 	
 
-func _on_area_entered(area):
-	if area is Ball and state == State.SHOOTING:
-		collided.emit(area)
-		sprite.position = to_local(area.global_position)
-		var tween = create_tween()
-		tween.tween_property(sprite, 'position', Vector2.ZERO, 0.1)
-		area_entered.disconnect(_on_area_entered)
-		frame = area.frame
-		sprite.frame = area.frame
-		sprite.show()
-		velocity.y = Globals.TONGUE_SPEED
-		state = State.RETURNING
+func _on_follow_collision(ball: FollowingBall):
+	collided.emit(ball)
+	sprite.position = to_local(ball.global_position)
+	var tween = create_tween()
+	tween.tween_property(sprite, 'position', Vector2.ZERO, 0.1)
+	frame = ball.frame
+	sprite.frame = ball.frame
+	sprite.show()
+	velocity.y = Globals.TONGUE_SPEED
+	state = State.RETURNING

@@ -17,13 +17,11 @@ var _direction: Vector2
 func _physics_process(delta):
 	if state == State.SHOOTING:
 		position += _direction * Globals.SHOOTING_SPEED * delta
-		Globals.for_each_visible_ball(func(ball):
-			var distance = ball.global_position.distance_to(global_position)
-			if distance <= Globals.BALL_WIDTH:
-				_on_ball_area_entered(ball)
-				set_physics_process(false)
-				return true
+		Globals.check_collision_with_follows(self, func(follow):
+			_on_follow_collided(follow)
+			set_physics_process(false)	
 		)
+		
 		
 		
 	if position.distance_to(Vector2.ZERO) > 10000:
@@ -39,9 +37,10 @@ func change_color():
 		ball.frame = 0
 
 
-func _on_ball_area_entered(area):
-	var normal = (ball.global_position - area.global_position).normalized().rotated(-area.get_global_transform().get_rotation())
-	Events.shooting_ball_collided.emit(ball, area, normal)
-	collided.emit(ball, area, normal)	
+# todo: refactor. why ball.global_position instead of global_position? why pass ball when emitting?
+func _on_follow_collided(follow: FollowingBall):
+	var normal = (ball.global_position - follow.global_position).normalized().rotated(-follow.get_global_transform().get_rotation())
+	Events.shooting_ball_collided.emit(ball, follow, normal)
+	collided.emit(ball, follow, normal)	
 	queue_free()
 	

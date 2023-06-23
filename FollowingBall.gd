@@ -20,6 +20,18 @@ var is_hidden = false
 
 var curve_length := 0.0
 
+# progress should only be updated when we want to visually move the ball
+# when the ball is outside of view, we don't need to move it, which impacts performance
+# forget that `progress` exists and only use `current_progress`
+var _current_progress := progress
+var current_progress: float:
+	get:
+		return _current_progress
+	set(value):
+		_current_progress = value
+		if !is_hidden:
+			progress = value
+
 var frame:
 	get:
 		return ball.frame
@@ -39,11 +51,14 @@ func _ready():
 		ball.global_position = origin_position
 	curve_length = get_parent().curve.get_baked_length()
 	
+	
 func _physics_process(delta):
 	if is_dying:
 		return
-	_move(delta)
-	
+		
+	_update_progress(delta)	
+	_update_visibility()
+
 	if origin_position:
 		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT * delta)
 
@@ -53,34 +68,36 @@ func _physics_process(delta):
 		# the ball has settled in the chain visually (approximately) so it means it is ready
 		_set_ready_for_checking()
 		
+
+		
 	
 		
-func _move(delta):
+func _update_progress(delta):
 	var next_progress = group.global_progress + index * Globals.BALL_WIDTH
-	_set_visibility(next_progress)
-	if is_hidden:
-		return
-		
 	# when being hit from a group that moves backwards, don't interpolate because it looks weird
 	if !group.is_inserting and group.state == FollowGroup.State.FORWARDS and group.current_speed < 0:
-		progress = next_progress
+		current_progress = next_progress
 	else:
-		progress = lerpf(progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
+		current_progress = lerpf(current_progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
+		
 	
 func _set_ready_for_checking():
 	is_ready_for_checking = true
 	ready_for_checking.emit()
 		
 # hides/shows the ball and disables/enables collision if outside the path
-func _set_visibility(next_progress):
-	var old_value = is_hidden
-	var new_value = next_progress >= curve_length or next_progress <= 0
-	if new_value == old_value:
-		return
-	is_hidden = new_value
-	hide() if is_hidden else show()
-
-	Globals.on_follow_hidden(self) if is_hidden else Globals.on_follow_shown(self)
+func _update_visibility():
+	var new_value = current_progress >= curve_length or current_progress <= 0
+	if new_value != is_hidden:
+		is_hidden = new_value
+		if is_hidden:
+			hide()
+			Globals.on_follow_hidden(self)
+		else:
+			show()
+			progress = current_progress # update visual progress now that visibility changed
+			Globals.on_follow_shown(self)
+		
 	
 func remove_self():
 	is_dying = true	

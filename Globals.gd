@@ -51,12 +51,19 @@ func for_each_visible_ball(callback: Callable):
 			var should_return = callback.call(ball)
 			if should_return:
 				return
+				
+func check_collision_with_follows(object: Node2D, callback: Callable):
+	for_each_visible_ball(func (ball):
+		if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2:
+			callback.call(ball)
+			return true	
+	)
 
 func on_follow_hidden(follow: FollowingBall):
 	var location
 	if follow.progress_ratio >= 1:
 		location = END
-	elif follow.progress <= 0:
+	elif follow.current_progress <= 0:
 		location = START
 	else:
 		return

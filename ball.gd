@@ -1,5 +1,3 @@
-## Balls don't have a collision mask becaue they don't need it and it is a HUGE performance impact
-
 extends Node2D
 
 class_name Ball
@@ -51,17 +49,8 @@ func explode():
 	color2.a = 0
 	color_particles.texture.gradient.set_color(0, color1)
 	color_particles.texture.gradient.set_color(1, color2)	
-#	self.set_collision_layer_value(1, false) 
 	sprite.queue_free()
-#	sprite.hide()
-#	collision_shape.disabled = true
 	
 	await get_tree().create_timer(1).timeout
 	exploded.emit()
 
-
-#func _on_animation_player_animation_finished(anim_name):
-#	if anim_name == "explode":
-#		exploded.emit()
-#		$AnimationPlayer.play("RESET")
-#		modulate = Color(1,1,1,0.3)

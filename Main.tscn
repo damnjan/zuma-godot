@@ -47,6 +47,7 @@ script = ExtResource("3_7x4g3")
 
 [node name="BallShooter" parent="." instance=ExtResource("4_4kumu")]
 position = Vector2(1860, 1028)
+mode = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(1678, 952)
