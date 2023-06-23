@@ -16,19 +16,19 @@ var is_inserting = false # a ball is currently being inserted (added but not rea
 
 var _balls_being_inserted = []
 
-func _init():
+func _init(initial_items: Array[FollowingBall]):
 	# keep active reference to groups because godot's garbage collector seems to have some weird bug
 	# i know it makes no sense but after many hours of hunting for the bug, this is the only thing that works
 	Globals.all_groups.append(self)
+	items = initial_items
+	update_items_index_and_group()
 
 # a and b are indexes of first and last marble that explodes
 func split_group(index):
 	assert(index > 0 and index < items.size(), "Invalid index")
-	var new_group = FollowGroup.new()
+	var new_group = FollowGroup.new(items.slice(index))
 	new_group.prev_group = self
 	new_group.next_group = next_group
-	new_group.items = items.slice(index)	
-	new_group.update_items_index_and_group()
 	
 	items = items.slice(0, index)
 	update_items_index_and_group()
@@ -37,14 +37,12 @@ func split_group(index):
 		next_group.prev_group = new_group
 		
 	next_group = new_group
-	new_group.global_progress = new_group.items[0].current_progress
+	new_group.global_progress = new_group.first_item().current_progress
 	new_group.state = State.WAITING
 	return new_group
+	
 
-
-
-func add_item(item: FollowingBall, index, instant_ready = false):
-	Globals.combo = 0
+func insert_item(item: FollowingBall, index = null):
 	if index == null:
 		index = items.size()
 
@@ -52,18 +50,15 @@ func add_item(item: FollowingBall, index, instant_ready = false):
 	update_items_index_and_group()	
 	
 	# if adding at the beginning, don't push others (actually, move everything back)
-	if index == 0 and !instant_ready:
+	if index == 0:
 		global_progress -= Globals.BALL_WIDTH
 		
-	item.current_progress = index * Globals.BALL_WIDTH + global_progress
-	
-	if instant_ready:
-		item.is_ready_for_checking = true
-	else:
+
+	## TODO: This is ugly, find a better way
+	if !item.is_ready_for_checking:
 		assert(!_balls_being_inserted.has(item), "Item already in array, this is a bug")
 		_balls_being_inserted.append(item)
 		is_inserting = true
-		## TODO: This is ugly, find a better way
 		item.ready_for_checking.connect(func(): 
 			assert(_balls_being_inserted.has(item), "Item doesn't exist in array, this is a bug")			
 			_balls_being_inserted.erase(item)
@@ -72,7 +67,6 @@ func add_item(item: FollowingBall, index, instant_ready = false):
 				is_inserting = false
 		)
 		
-
 
 func change_state(next_state: State):
 	state = next_state
@@ -98,9 +92,7 @@ var curve_time: float = 0.0
 var last_speed = current_speed
 
 func physics_process(delta):
-	if is_removed:
-		print("this is removed , no point")
-		return
+	assert(!is_removed, "Game over?")
 				
 	if next_group and last_item().current_progress >= next_group.first_item().current_progress - Globals.BALL_WIDTH:
 		merge_next_group()

@@ -10,18 +10,17 @@ const BallScene = preload("res://Ball.tscn")
 const ComboScene = preload("res://Combo.tscn")
 const ScorePopupScene = preload("res://ScorePopup.tscn")
 
-var first_group = FollowGroup.new()
+var first_group: FollowGroup
 var game_ready = false
 
 func _init():
 	Events.balls_exploding.connect(_on_balls_exploding)
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	Events.hidden_follows_updated.connect(func(hidden_count):
-#		var hidden_start = hidden_count[Globals.START]
 		var hidden_end = hidden_count[Globals.END]
 		end_count_label.set_value(hidden_end)
 	)
-
+	
 func _ready():
 	_seed()
 	_generate_balls(
@@ -48,10 +47,18 @@ func _generate_balls(test_data = null):
 	var total_number = test_data.size() if test_data else Globals.TOTAL_NUMBER_OF_BALLS
 	var initial_number = test_data.size() if test_data else Globals.INITIAL_NUMBER_OF_BALLS
 	var target_global_progress = -(total_number - initial_number) * Globals.BALL_WIDTH
-	first_group.global_progress = -total_number * Globals.BALL_WIDTH	
 	
+	var initial_follows: Array[FollowingBall] = []
 	for i in total_number:
-		_add_follow(test_data[i] if test_data else null, null, first_group, true)
+		var frame = test_data[i] if test_data else null # null means random
+		if frame == null and i > 0 and randf() < Globals.SAME_CONSECUTIVE_BALL_CHANCE:
+			frame = initial_follows[i - 1].frame
+		var follow = FollowingBall.new(frame)
+		initial_follows.append(follow)
+		path_2d.add_child.call_deferred(follow) # call deferred because we first want to set group items
+		
+	first_group = FollowGroup.new(initial_follows)
+	first_group.global_progress = -total_number * Globals.BALL_WIDTH
 		
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE)	
@@ -62,30 +69,16 @@ func _check_first_group():
 		first_group = first_group.next_group
 		first_group.state = FollowGroup.State.FORWARDS
 
-func _add_follow(frame = null, index = null, group = first_group, instant_ready = false, ball_global_position = null):
-	if frame == null and !group.items.is_empty() and randf() < Globals.SAME_CONSECUTIVE_BALL_CHANCE:
-		frame = group.items.back().frame
-	var follow: FollowingBall = FollowingBall.new(frame)
-
-	follow.origin_position = ball_global_position
-	group.add_item(follow, index, instant_ready)
-	path_2d.add_child.call_deferred(follow) # not sure if call deferred is needed, but errors are logged otherwise
-
-	return follow
-
-
-func _on_shooting_ball_collided(ball, collider, normal):
-	if !collider:
-		print("no collider")
-		return
+func _on_shooting_ball_collided(ball: Ball, collided_follow: FollowingBall, normal: Vector2):
 	AudioManager.play(AudioManager.insert_sound)
-	var follow = collider
-	var group = follow.group
-	var i = group.items.find(follow)
+	Globals.combo = 0
+	var group = collided_follow.group
+	var i = collided_follow.index
 	var insert_index = i if normal.x < 0 else i + 1
-	_add_follow(ball.frame, insert_index, group, false, ball.global_position)
+	var follow = FollowingBall.new(ball.frame, ball.global_position)
 
-		
+	group.insert_item(follow, insert_index)
+	path_2d.add_child(follow)		
 		
 func _on_balls_exploding(balls):
 	var middle_ball = balls[balls.size() / 2]
@@ -93,22 +86,17 @@ func _on_balls_exploding(balls):
 	var score = 10 * balls.size() * Globals.combo
 	Globals.score += score
 	$ScoreLabel.set_value(Globals.score)
-	
 	var score_popup = ScorePopupScene.instantiate()
 	score_popup.value = score
 	add_child(score_popup)
 	score_popup.global_position = middle_ball.global_position
-	
-	
 	shaker.stop()
 	shaker.max_value = 0 + (Globals.combo - 1) * 10
 	shaker.duration = 0.2 + (Globals.combo - 1) * 0.1
 	shaker.start()
 	AudioManager.popping_sound.pitch_scale = 1 + (Globals.combo - 1) * 0.1
 	AudioManager.play(AudioManager.popping_sound)
-	
 	if Globals.combo > 1:
-		
 		var combo: Node2D = ComboScene.instantiate()
 		combo.value = (Globals.combo)
 		add_child(combo)

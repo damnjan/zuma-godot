@@ -6,19 +6,19 @@ signal ready_for_checking
 
 const DISTANCE_TOLERANCE = 10
 
+
 var BallScene = preload("res://Ball.tscn")
 
-var ball: Ball
-var origin_position
-var index: int
+var ball: Ball = BallScene.instantiate()
+var index: int = -1
 
 var is_dying = false
-var is_ready_for_checking = false
+var is_ready_for_checking = true
 var group: FollowGroup
 
-var is_hidden = false
+var is_hidden = true # visually hidden and collision disabled
 
-var curve_length := 0.0
+var _curve_length := 0.0 # Path2D curve length
 
 # progress should only be updated when we want to visually move the ball
 # when the ball is outside of view, we don't need to move it, which impacts performance
@@ -37,19 +37,29 @@ var frame:
 		return ball.frame
 	set(value):
 		ball.frame = value
+		
+		
+var _origin_position = null # this is set when ball is being added from colliding, for animation purpose
 
-func _init(_frame):
+func _init(frame, origin_position = null):
 	loop = false
-	ball = BallScene.instantiate()
-	if _frame != null:
-		ball.frame = _frame
+	if frame != null:
+		self.frame = frame
+	if origin_position:
+		_origin_position = origin_position
+		is_ready_for_checking = false
 	add_child(ball)
 	ball.exploded.connect(_on_ball_exploded)
 	
+	
+
 func _ready():
-	if origin_position:
-		ball.global_position = origin_position
-	curve_length = get_parent().curve.get_baked_length()
+	assert(group and index >= 0, "Item must be in a group and have an index set")	
+	is_hidden = false
+	current_progress = index * Globals.BALL_WIDTH + group.global_progress
+	if _origin_position:
+		ball.global_position = _origin_position
+	_curve_length = get_parent().curve.get_baked_length()
 	
 	
 func _physics_process(delta):
@@ -59,7 +69,7 @@ func _physics_process(delta):
 	_update_progress(delta)	
 	_update_visibility()
 
-	if origin_position:
+	if _origin_position:
 		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT * delta)
 
 	var distance = ball.global_position.distance_to(global_position)
@@ -67,9 +77,6 @@ func _physics_process(delta):
 	if is_settled and !is_ready_for_checking:
 		# the ball has settled in the chain visually (approximately) so it means it is ready
 		_set_ready_for_checking()
-		
-
-		
 	
 		
 func _update_progress(delta):
@@ -87,7 +94,7 @@ func _set_ready_for_checking():
 		
 # hides/shows the ball and disables/enables collision if outside the path
 func _update_visibility():
-	var new_value = current_progress >= curve_length or current_progress <= 0
+	var new_value = current_progress >= _curve_length or current_progress <= 0
 	if new_value != is_hidden:
 		is_hidden = new_value
 		if is_hidden:
