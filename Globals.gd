@@ -52,9 +52,9 @@ func for_each_visible_ball(callback: Callable):
 			if should_return:
 				return
 				
-func check_collision_with_follows(object: Node2D, callback: Callable):
+func check_collision_with_follows(object: Node2D, self_radius: float, callback: Callable):
 	for_each_visible_ball(func (ball):
-		if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2:
+		if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2 + self_radius:
 			callback.call(ball)
 			return true	
 	)

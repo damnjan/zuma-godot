@@ -38,7 +38,7 @@ func _physics_process(delta):
 	match state:
 		State.SHOOTING:
 			velocity.y = -Globals.TONGUE_SPEED
-			Globals.check_collision_with_follows(self, _on_follow_collision)
+			Globals.check_collision_with_follows(self, 0, _on_follow_collision)
 		State.RETURNING:
 			velocity.y = Globals.TONGUE_SPEED
 		State.IDLE:

@@ -17,7 +17,7 @@ var _direction: Vector2
 func _physics_process(delta):
 	if state == State.SHOOTING:
 		position += _direction * Globals.SHOOTING_SPEED * delta
-		Globals.check_collision_with_follows(self, func(follow):
+		Globals.check_collision_with_follows(self, Globals.BALL_WIDTH / 2, func(follow):
 			_on_follow_collided(follow)
 			set_physics_process(false)	
 		)
