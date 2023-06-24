@@ -14,6 +14,8 @@ var first_group: FollowGroup
 var game_ready = false
 
 func _init():
+	_seed(757992645)
+	
 	Events.balls_exploding.connect(_on_balls_exploding)
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	Events.hidden_follows_updated.connect(func(hidden_count):
@@ -22,26 +24,26 @@ func _init():
 	)
 	
 func _ready():
-	_seed()
 	_generate_balls(
 #		[1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]
+#		[3,2,3,2,3,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,3,0]
+#		[0,1,2,3,0,1,2,3,0,0,0,1,1,1,2,2,2,3,3,3,2,2,2,1,1,1,0,0,0,3,2,1,0]
+		[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3]
 	)
 		
 func _physics_process(delta):
 	_check_first_group()
-#	var groups = []
 	var next: FollowGroup = first_group
-	
 	while next:
-#		groups.append(next)
 		next.physics_process(delta)
 		next = next.next_group
 		
-func _seed():
-	var n = randi()
+func _seed(n = randi()):
 	seed(n)	
-	seed_label.text = str(n)
-	print("Seed : ", n)	
+	print("Seed : ", n)
+	await ready
+	seed_label.text = str(n)	
+	
 		
 func _generate_balls(test_data = null):
 	var total_number = test_data.size() if test_data else Globals.TOTAL_NUMBER_OF_BALLS
@@ -65,9 +67,10 @@ func _generate_balls(test_data = null):
 	tween.tween_property(first_group, "global_progress", target_global_progress, 2)
 	
 func _check_first_group():
-	if first_group and first_group.is_removed and first_group.next_group:
+	if first_group and first_group.is_removed:
 		first_group = first_group.next_group
-		first_group.state = FollowGroup.State.FORWARDS
+		if !first_group:
+			print("Game Over :)")
 
 func _on_shooting_ball_collided(ball: Ball, collided_follow: FollowingBall, normal: Vector2):
 	AudioManager.play(AudioManager.insert_sound)

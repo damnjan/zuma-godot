@@ -78,6 +78,9 @@ func remove():
 		next_group.prev_group = prev_group
 	items.clear()
 	is_removed = true
+	# if this was the first group
+	if !prev_group and next_group:
+		next_group.state = State.FORWARDS
 
 func merge_next_group():
 	var item_to_check_from = last_item()
@@ -92,7 +95,7 @@ var curve_time: float = 0.0
 var last_speed = current_speed
 
 func physics_process(delta):
-	assert(!is_removed, "Game over?")
+	assert(!is_removed, "Probably still the first group, def a bug")
 				
 	if next_group and last_item().current_progress >= next_group.first_item().current_progress - Globals.BALL_WIDTH:
 		merge_next_group()

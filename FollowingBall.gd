@@ -36,15 +36,16 @@ var frame:
 	get:
 		return ball.frame
 	set(value):
+		assert(false, "Why would you do that? :)")
 		ball.frame = value
 		
 		
 var _origin_position = null # this is set when ball is being added from colliding, for animation purpose
 
-func _init(frame, origin_position = null):
+func _init(ball_frame, origin_position = null):
 	loop = false
-	if frame != null:
-		self.frame = frame
+	if ball_frame != null:
+		ball.frame = ball_frame
 	if origin_position:
 		_origin_position = origin_position
 		is_ready_for_checking = false
@@ -81,11 +82,12 @@ func _physics_process(delta):
 		
 func _update_progress(delta):
 	var next_progress = group.global_progress + index * Globals.BALL_WIDTH
-	# when being hit from a group that moves backwards, don't interpolate because it looks weird
-	if !group.is_inserting and group.state == FollowGroup.State.FORWARDS and group.current_speed < 0:
-		current_progress = next_progress
-	else:
-		current_progress = lerpf(current_progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
+	current_progress = lerpf(current_progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)	
+	# when being hit from a group that moves backwards, don't interpolate because it looks weird (or does it?)
+#	if !group.is_inserting and group.state == FollowGroup.State.FORWARDS and group.current_speed < 0:
+#		current_progress = next_progress
+#	else:
+#		current_progress = lerpf(current_progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
 		
 	
 func _set_ready_for_checking():
