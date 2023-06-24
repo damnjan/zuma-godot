@@ -7,6 +7,8 @@ enum State {
 var prev_group: FollowGroup
 var next_group: FollowGroup
 
+var manager: GroupManager
+
 var is_removed = false
 var state = State.FORWARDS
 var items: Array[FollowingBall]
@@ -15,28 +17,24 @@ var current_speed: float = Globals.MAX_FORWARDS_SPEED
 var is_inserting = false # a ball is currently being inserted (added but not ready)
 
 var _balls_being_inserted = []
+var group_index := -1
 
 func _init(initial_items: Array[FollowingBall]):
 	# keep active reference to groups because godot's garbage collector seems to have some weird bug
 	# i know it makes no sense but after many hours of hunting for the bug, this is the only thing that works
-	Globals.all_groups.append(self)
+#	Globals.all_groups.append(self)
 	items = initial_items
 	update_items_index_and_group()
 
-# a and b are indexes of first and last marble that explodes
-func split_group(index):
+func split_group(index: int):
 	assert(index > 0 and index < items.size(), "Invalid index")
 	var new_group = FollowGroup.new(items.slice(index))
-	new_group.prev_group = self
-	new_group.next_group = next_group
+	
 	
 	items = items.slice(0, index)
 	update_items_index_and_group()
-	
-	if next_group:
-		next_group.prev_group = new_group
-		
-	next_group = new_group
+
+	manager.insert_group(new_group, group_index + 1)
 	new_group.global_progress = new_group.first_item().current_progress
 	new_group.state = State.WAITING
 	return new_group
@@ -72,15 +70,12 @@ func change_state(next_state: State):
 	state = next_state
 	
 func remove():
-	if prev_group:
-		prev_group.next_group = next_group
-	if next_group:
-		next_group.prev_group = prev_group
 	items.clear()
 	is_removed = true
 	# if this was the first group
 	if !prev_group and next_group:
 		next_group.state = State.FORWARDS
+	manager.remove_group(self)
 
 func merge_next_group():
 	var item_to_check_from = last_item()
@@ -96,6 +91,7 @@ var last_speed = current_speed
 
 func physics_process(delta):
 	assert(!is_removed, "Probably still the first group, def a bug")
+	assert(group_index >= 0)
 				
 	if next_group and last_item().current_progress >= next_group.first_item().current_progress - Globals.BALL_WIDTH:
 		merge_next_group()

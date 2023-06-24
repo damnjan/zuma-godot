@@ -10,7 +10,7 @@ const BallScene = preload("res://Ball.tscn")
 const ComboScene = preload("res://Combo.tscn")
 const ScorePopupScene = preload("res://ScorePopup.tscn")
 
-var first_group: FollowGroup
+#var first_group: FollowGroup
 var game_ready = false
 
 func _init():
@@ -28,15 +28,17 @@ func _ready():
 #		[1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]
 #		[3,2,3,2,3,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,3,0]
 #		[0,1,2,3,0,1,2,3,0,0,0,1,1,1,2,2,2,3,3,3,2,2,2,1,1,1,0,0,0,3,2,1,0]
-		[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3]
+#		[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3]
 	)
 		
 func _physics_process(delta):
-	_check_first_group()
-	var next: FollowGroup = first_group
-	while next:
-		next.physics_process(delta)
-		next = next.next_group
+	for group in GroupManager.groups:
+		group.physics_process(delta)
+#	_check_first_group()
+#	var next: FollowGroup = first_group
+#	while next:
+#		next.physics_process(delta)
+#		next = next.next_group
 		
 func _seed(n = randi()):
 	seed(n)	
@@ -59,18 +61,19 @@ func _generate_balls(test_data = null):
 		initial_follows.append(follow)
 		path_2d.add_child.call_deferred(follow) # call deferred because we first want to set group items
 		
-	first_group = FollowGroup.new(initial_follows)
+	var first_group = FollowGroup.new(initial_follows)
 	first_group.global_progress = -total_number * Globals.BALL_WIDTH
+	GroupManager.insert_group(first_group, 0)
 		
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE)	
 	tween.tween_property(first_group, "global_progress", target_global_progress, 2)
 	
-func _check_first_group():
-	if first_group and first_group.is_removed:
-		first_group = first_group.next_group
-		if !first_group:
-			print("Game Over :)")
+#func _check_first_group():
+#	if first_group and first_group.is_removed:
+#		first_group = first_group.next_group
+#		if !first_group:
+#			print("Game Over :)")
 
 func _on_shooting_ball_collided(ball: Ball, collided_follow: FollowingBall, normal: Vector2):
 	AudioManager.play(AudioManager.insert_sound)

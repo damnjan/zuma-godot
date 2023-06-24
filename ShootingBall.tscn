@@ -7,5 +7,3 @@
 script = ExtResource("1_icmqd")
 
 [node name="Ball" parent="." instance=ExtResource("2_30jl1")]
-collision_layer = 2
-collision_mask = 1

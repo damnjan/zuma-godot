@@ -42,9 +42,8 @@ func _emit_hidden_count():
 	
 # return true in callback if you want to exit early
 func for_each_visible_ball(callback: Callable):
-	for group in all_groups:
-		if group.is_removed:
-			continue
+	for group in GroupManager.groups:
+		assert(!group.is_removed)
 		for ball in group.items:
 			if ball.is_hidden:
 				continue
