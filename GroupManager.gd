@@ -2,13 +2,17 @@ extends Node
 
 var groups: Array[FollowGroup]
 
+var _last_removed_group: FollowGroup # prevents random crashes ¯\_(ツ)_/¯
+
 func insert_group(group: FollowGroup, index: int):
 	groups.insert(index, group)
 	update_refs()
 
 func remove_group(group: FollowGroup):
 	groups.erase(group)
+	_last_removed_group = group	
 	update_refs()
+	
 
 func update_refs():
 	var size = groups.size()
