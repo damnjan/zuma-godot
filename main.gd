@@ -14,7 +14,7 @@ const ScorePopupScene = preload("res://ScorePopup.tscn")
 var game_ready = false
 
 func _init():
-	_seed(757992645)
+	_seed()
 	
 	Events.balls_exploding.connect(_on_balls_exploding)
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
@@ -81,10 +81,10 @@ func _on_shooting_ball_collided(ball: Ball, collided_follow: FollowingBall, norm
 	var group = collided_follow.group
 	var i = collided_follow.index
 	var insert_index = i if normal.x < 0 else i + 1
-	var follow = FollowingBall.new(ball.frame, ball.global_position)
+	var follow = FollowingBall.new(ball.frame, ball.global_position, ball.global_rotation)
 
 	group.insert_item(follow, insert_index)
-	path_2d.add_child(follow)		
+	path_2d.add_child(follow)
 		
 func _on_balls_exploding(balls):
 	var middle_ball = balls[balls.size() / 2]

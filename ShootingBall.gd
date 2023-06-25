@@ -15,6 +15,7 @@ var state = State.IDLE
 var _direction: Vector2
 
 func _physics_process(delta):
+#	ball.rotation = -global_rotation
 	if state == State.SHOOTING:
 		position += _direction * Globals.SHOOTING_SPEED * delta
 		Globals.check_collision_with_follows(self, Globals.BALL_WIDTH / 2, func(follow):
@@ -39,7 +40,7 @@ func change_color():
 
 # todo: refactor. why ball.global_position instead of global_position? why pass ball when emitting?
 func _on_follow_collided(follow: FollowingBall):
-	var normal = (ball.global_position - follow.global_position).normalized().rotated(-follow.get_global_transform().get_rotation())
+	var normal = (ball.global_position - follow.global_position).normalized().rotated(-follow.rotation)
 	Events.shooting_ball_collided.emit(ball, follow, normal)
 	collided.emit(ball, follow, normal)	
 	queue_free()

@@ -41,14 +41,16 @@ var frame:
 		
 		
 var _origin_position = null # this is set when ball is being added from colliding, for animation purpose
-
-func _init(ball_frame, origin_position = null):
+var _origin_rotation = null
+func _init(ball_frame, origin_position = null, origin_rotation = null):
 	loop = false
 	if ball_frame != null:
 		ball.frame = ball_frame
 	if origin_position:
 		_origin_position = origin_position
-		is_ready_for_checking = false
+		is_ready_for_checking = false		
+	_origin_rotation = origin_rotation
+#	_target_rotation = target_rotation
 	add_child(ball)
 	ball.exploded.connect(_on_ball_exploded)
 	
@@ -59,7 +61,9 @@ func _ready():
 	is_hidden = false
 	current_progress = index * Globals.BALL_WIDTH + group.global_progress
 	if _origin_position:
-		ball.global_position = _origin_position
+		ball.position = to_local(_origin_position)
+	if _origin_rotation:
+		ball.rotation =  _origin_rotation - rotation
 	_curve_length = get_parent().curve.get_baked_length()
 	
 	
@@ -71,9 +75,12 @@ func _physics_process(delta):
 	_update_visibility()
 
 	if _origin_position:
-		ball.global_position = lerp(ball.global_position, global_position, Globals.PROGRESS_LERP_WEIGHT * delta)
+		ball.position = lerp(ball.position, Vector2.ZERO, Globals.PROGRESS_LERP_WEIGHT * delta)
+	if _origin_rotation:
+		ball.rotation = lerp_angle(ball.rotation, 0.0, Globals.PROGRESS_LERP_WEIGHT * delta)
+		
 
-	var distance = ball.global_position.distance_to(global_position)
+	var distance = ball.position.distance_to(Vector2.ZERO)
 	var is_settled = distance < DISTANCE_TOLERANCE
 	if is_settled and !is_ready_for_checking:
 		# the ball has settled in the chain visually (approximately) so it means it is ready

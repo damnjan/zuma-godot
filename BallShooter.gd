@@ -61,7 +61,7 @@ func ray_to_ball_intersection(ray_origin: Vector2, ray_direction: Vector2):
 	return closest.intersection
 
 func _physics_process(_delta):
-	var mouse_rotation = Vector2.UP.angle_to(get_local_mouse_position().normalized())	
+	var mouse_rotation = Vector2.UP.angle_to(get_local_mouse_position().normalized())
 	var collision_point =  ray_to_ball_intersection(global_position, get_local_mouse_position().normalized())
 	
 	var point_position = collision_point if collision_point else shooting_direction * 4000
@@ -71,7 +71,7 @@ func _physics_process(_delta):
 	polygon_2d.polygon = [Vector2(0, -local_point_position.length() - polygon_2d.position.y), Vector2(-30, 0), Vector2(30, 0)]
 	toad.rotation = mouse_rotation
 	if shooting_ball:
-		shooting_ball.global_position = spawn_point.global_position	
+		shooting_ball.global_position = spawn_point.global_position
 		polygon_2d.color = Globals.color_dict[shooting_ball.ball.frame] if Globals.color_dict.has(shooting_ball.ball.frame) else Color(1,1,1,0.5)
 	else:
 		polygon_2d.color = Color(1,1,1,0.5)
@@ -79,11 +79,13 @@ func _physics_process(_delta):
 
 func _input(event):
 	if event.is_action_pressed("shoot") and shooting_ball:
-		var glob = shooting_ball.global_position
+		var glob_pos = shooting_ball.global_position
+		var glob_rot = shooting_ball.global_rotation
 		spawn_point.remove_child(shooting_ball)
 		get_tree().root.add_child(shooting_ball)
 		shooting_ball.global_scale = Vector2.ONE
-		shooting_ball.global_position = glob
+		shooting_ball.global_position = glob_pos
+		shooting_ball.global_rotation = glob_rot
 		shooting_ball.shoot(get_local_mouse_position().normalized())
 		shooting_ball = null
 		animation_player.play("shoot")

@@ -133,11 +133,16 @@ func last_item() -> FollowingBall:
 	
 	
 func rush_backwards_if_needed(delay = false):
+	if delay:
+		await GlobalTimer.create(Globals.GOING_BACKWARDS_DELAY).timeout
+	if is_removed:
+		return
 	if _should_rush_backwards():
-		if delay:
-			GlobalTimer.create_async(rush_backwards, Globals.GOING_BACKWARDS_DELAY)
-		else:
-			rush_backwards()
+		rush_backwards()
+	# if currently rushing but shouldn't anymore (e.g. a ball got inbetween)
+	elif state == State.BACKWARDS:
+			state = State.WAITING
+		
 	
 func rush_backwards():
 	state = State.BACKWARDS
