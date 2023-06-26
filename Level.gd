@@ -1,11 +1,23 @@
 extends Node2D
 
+class_name Level
+
 @onready var path_2d: Path2D = $Path2D
 @onready var seed_label = $SeedLabel
 @onready var end_count_label = $EndCountLabel
 @onready var shaker = $Shaker
+@onready var group_manager = $GroupManager
 
-const BALL_WIDTH = Globals.BALL_WIDTH
+@export var initial_balls: String
+
+@export_range(0.1, 2, 0.1) var SPEED_SCALE = 1.0:
+	set(value):
+		print("set")
+		Globals.SPEED_SCALE = value
+		Globals.update_speed_values()
+	get:
+		return Globals.SPEED_SCALE
+
 const BallScene = preload("res://Ball.tscn")
 const ComboScene = preload("res://Combo.tscn")
 const ScorePopupScene = preload("res://ScorePopup.tscn")
@@ -17,19 +29,17 @@ func _init():
 	_seed()
 	
 	Events.balls_exploding.connect(_on_balls_exploding)
-	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	Events.hidden_follows_updated.connect(func(hidden_count):
 		var hidden_end = hidden_count[Globals.END]
 		end_count_label.set_value(hidden_end)
 	)
+	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	
 func _ready():
-	_generate_balls(
-#		[1,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,2,2,2,2,2,2,2,2,2,1]
-#		[3,2,3,2,3,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,3,0]
-#		[0,1,2,3,0,1,2,3,0,0,0,1,1,1,2,2,2,3,3,3,2,2,2,1,1,1,0,0,0,3,2,1,0]
-#		[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3]
-	)
+	print("Level ready")
+	var arr: PackedStringArray
+	var initial_balls_array = Utils.split_to_int_array(initial_balls) if initial_balls else null
+	_generate_balls( initial_balls_array)
 		
 func _seed(n = randi()):
 	seed(n)	
@@ -50,32 +60,21 @@ func _generate_balls(test_data = null):
 			frame = initial_follows[i - 1].frame
 		var follow = FollowingBall.new(frame)
 		initial_follows.append(follow)
-		path_2d.add_child.call_deferred(follow) # call deferred because we first want to set group items
 		
-	var first_group = FollowGroup.new(initial_follows)
+	var first_group = group_manager.create_first_group()
 	first_group.global_progress = -total_number * Globals.BALL_WIDTH
-	GroupManager.insert_group(first_group, 0)
+	first_group.add_items(initial_follows)
+	
+#	first_group.global_progress = -total_number * Globals.BALL_WIDTH
 		
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE)	
 	tween.tween_property(first_group, "global_progress", target_global_progress, 2)
-	
-#func _check_first_group():
-#	if first_group and first_group.is_removed:
-#		first_group = first_group.next_group
-#		if !first_group:
-#			print("Game Over :)")
 
-func _on_shooting_ball_collided(ball: Ball, collided_follow: FollowingBall, normal: Vector2):
+func _on_shooting_ball_collided(ball: Ball, collided_follow: FollowingBall):
 	AudioManager.play(AudioManager.insert_sound)
 	Globals.combo = 0
-	var group = collided_follow.group
-	var i = collided_follow.index
-	var insert_index = i if normal.x < 0 else i + 1
-	var follow = FollowingBall.new(ball.frame, ball.global_position, ball.global_rotation)
 
-	group.insert_item(follow, insert_index)
-	path_2d.add_child(follow)
 		
 func _on_balls_exploding(balls):
 	var middle_ball = balls[balls.size() / 2]

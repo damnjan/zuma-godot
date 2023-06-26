@@ -18,11 +18,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GlobalTimer="*res://Timer.gd"
 Globals="*res://Globals.gd"
 Events="*res://Events.gd"
 AudioManager="*res://AudioManager.tscn"
-GroupManager="*res://GroupManager.gd"
 
 [display]
 
@@ -59,4 +57,5 @@ tongue={
 
 [rendering]
 
+renderer/rendering_method="gl_compatibility"
 textures/vram_compression/import_s3tc_bptc=true

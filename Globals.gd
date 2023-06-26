@@ -2,22 +2,33 @@ extends Node
 
 enum { START, END }
 
-const SPEED_SCALE = 1
-const NUMBER_OF_COLORS = 4
-const TOTAL_NUMBER_OF_BALLS = 200
-const INITIAL_NUMBER_OF_BALLS = 100
-const ORIGINAL_BALL_WIDTH := 92.0
-const BALL_WIDTH := ORIGINAL_BALL_WIDTH
-const MAX_FORWARDS_SPEED := 190.0 * SPEED_SCALE
-const MAX_BACKWARDS_SPEED := MAX_FORWARDS_SPEED * 40
-const BACKWARDS_ACCELERATION = MAX_FORWARDS_SPEED * 40
-const SHOOTING_SPEED = 3600.0 * SPEED_SCALE
-const MIN_CONSECUTIVE_MATCH = 3
-const GOING_BACKWARDS_DELAY = 0.5 / SPEED_SCALE
-const PROGRESS_LERP_WEIGHT = 12 * SPEED_SCALE
-const SAME_CONSECUTIVE_BALL_CHANCE = 0.3
-const SPRING_CONSTANT = 5
-const TONGUE_SPEED = 3600.0
+var SPEED_SCALE := 1.0
+var NUMBER_OF_COLORS := 4
+var TOTAL_NUMBER_OF_BALLS := 200
+var INITIAL_NUMBER_OF_BALLS := 100
+var ORIGINAL_BALL_WIDTH := 92.0
+var BALL_WIDTH := ORIGINAL_BALL_WIDTH
+var MAX_FORWARDS_SPEED := 190.0 * SPEED_SCALE
+var MAX_BACKWARDS_SPEED := MAX_FORWARDS_SPEED * 40
+var BACKWARDS_ACCELERATION := MAX_FORWARDS_SPEED * 40
+var SHOOTING_SPEED := 3600.0 * SPEED_SCALE
+var MIN_CONSECUTIVE_MATCH := 3
+var GOING_BACKWARDS_DELAY := 0.5 / SPEED_SCALE
+var PROGRESS_LERP_WEIGHT := 12 * SPEED_SCALE
+var SAME_CONSECUTIVE_BALL_CHANCE := 0.3
+var SPRING_CONSTANT := 5
+var TONGUE_SPEED := 3600.0 * SPEED_SCALE
+
+func update_speed_values():
+	MAX_FORWARDS_SPEED = 190.0 * SPEED_SCALE
+	MAX_BACKWARDS_SPEED = MAX_FORWARDS_SPEED * 40
+	BACKWARDS_ACCELERATION = MAX_FORWARDS_SPEED * 40
+	SHOOTING_SPEED = 3600.0 * SPEED_SCALE
+	GOING_BACKWARDS_DELAY = 0.5 / SPEED_SCALE
+	PROGRESS_LERP_WEIGHT = 12 * SPEED_SCALE
+	TONGUE_SPEED = 3600.0 * SPEED_SCALE
+
+var current_level: Level
 
 var hidden_follows = {}
 var score = 0
@@ -29,8 +40,6 @@ const color_dict = {
 	2: Color8(255,193,2, 100),
 	3: Color8(216,42,87, 100)
 }
-	
-var all_groups: Array[FollowGroup] = []
 
 func _emit_hidden_count():
 	var hidden_count = {
@@ -42,8 +51,12 @@ func _emit_hidden_count():
 	Events.hidden_follows_updated.emit(hidden_count)
 	
 				
+
+func _ready():
+	current_level = get_tree().current_scene
+				
 func check_collision_with_follows(object: Node2D, self_radius: float, callback: Callable):
-	for group in GroupManager.groups:
+	for group in current_level.group_manager.groups:
 		for ball in group.items:
 			if ball.is_hidden:
 				continue

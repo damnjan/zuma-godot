@@ -2,8 +2,6 @@ extends Node2D
 
 class_name ShootingBall
 
-signal collided(ball: Ball, area: Area2D, normal: Vector2)
-
 enum State {
 	IDLE, SHOOTING
 }
@@ -40,8 +38,8 @@ func change_color():
 
 # todo: refactor. why ball.global_position instead of global_position? why pass ball when emitting?
 func _on_follow_collided(follow: FollowingBall):
-	var normal = (ball.global_position - follow.global_position).normalized().rotated(-follow.rotation)
-	Events.shooting_ball_collided.emit(ball, follow, normal)
-	collided.emit(ball, follow, normal)	
+	
+	follow.group.handle_shooting_ball_collision(ball, follow)
+	Events.shooting_ball_collided.emit(ball, follow)
 	queue_free()
 	

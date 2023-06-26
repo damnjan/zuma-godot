@@ -1,10 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://bu7cjyo7wkd8u"]
+[gd_scene load_steps=14 format=3 uid="uid://bu7cjyo7wkd8u"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_wdpau"]
+[ext_resource type="Script" path="res://Level.gd" id="1_qnpv5"]
 [ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://zuma_bg.png" id="2_yddoi"]
 [ext_resource type="Script" path="res://Path2D.gd" id="3_7x4g3"]
 [ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="3_r5c63"]
 [ext_resource type="PackedScene" uid="uid://12fhuuwwpgh2" path="res://BallShooter.tscn" id="4_4kumu"]
+[ext_resource type="Script" path="res://GroupManager.gd" id="8_f3xjb"]
 [ext_resource type="Script" path="res://EndCountLabel.gd" id="13_j3a3c"]
 [ext_resource type="Script" path="res://ScoreLabel.gd" id="14_4nb6k"]
 
@@ -32,8 +33,8 @@ font_color = Color(0.878431, 0.784314, 0.00784314, 1)
 shadow_size = 11
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="Node2D" type="Node2D"]
-script = ExtResource("1_wdpau")
+[node name="Level" type="Node2D"]
+script = ExtResource("1_qnpv5")
 
 [node name="Background" type="Sprite2D" parent="."]
 position = Vector2(1653.22, 972)
@@ -83,3 +84,6 @@ offset_bottom = 107.0
 text = "51300"
 label_settings = SubResource("LabelSettings_qjwhu")
 script = ExtResource("14_4nb6k")
+
+[node name="GroupManager" type="Node" parent="."]
+script = ExtResource("8_f3xjb")

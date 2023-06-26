@@ -16,6 +16,7 @@ const shooting_direction = Vector2.UP
 @onready var spawn_point = $Toad/SpawnPoint
 @onready var animation_player = $Toad/AnimationPlayer
 @onready var tongue = $Toad/TongueMask/Tongue
+@onready var group_manager = $"../GroupManager"
 
 func _ready():
 	if mode == Modes.NORMAL:
@@ -23,13 +24,22 @@ func _ready():
 	tongue.returned.connect(_on_tongue_returned)
 	tongue.collided.connect(_on_tongue_collided)
 	
+func check_collision_with_follows(object: Node2D, self_radius: float, callback: Callable):
+	for group in group_manager.groups:
+		for ball in group.items:
+			if ball.is_hidden:
+				continue
+			if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2 + self_radius:
+				callback.call(ball)
+				return
+	
 func ray_to_ball_intersection(ray_origin: Vector2, ray_direction: Vector2):
 
 	var closest_intersection = null
 	var closest_distance = INF
 	var ball_radius = Globals.BALL_WIDTH / 2  # Assuming you have a property for the ball's radius
 	
-	for group in GroupManager.groups:
+	for group in group_manager.groups:
 		for ball in group.items:
 			if ball.is_hidden:
 				continue
@@ -64,7 +74,6 @@ func ray_to_ball_intersection(ray_origin: Vector2, ray_direction: Vector2):
 func _physics_process(_delta):
 	var mouse_rotation = Vector2.UP.angle_to(get_local_mouse_position().normalized())
 	var collision_point =  ray_to_ball_intersection(global_position, get_local_mouse_position().normalized())
-	
 	var point_position = collision_point if collision_point else shooting_direction * 4000
 	var local_point_position = to_local(point_position)
 	if mode == Modes.NORMAL:
@@ -92,7 +101,7 @@ func _input(event):
 		animation_player.play("shoot")
 		AudioManager.play(AudioManager.shooting_sound)
 		if mode == Modes.NORMAL:
-			GlobalTimer.create_async(spawn_shooting_ball, 0.2)
+			get_tree().create_timer(0.2).timeout.connect(spawn_shooting_ball)
 	elif event.is_action_pressed("tongue") and !shooting_ball:
 		if mode == Modes.TONGUE:
 			polygon_2d.hide()

@@ -8,7 +8,7 @@ var prev_group: FollowGroup
 var next_group: FollowGroup
 
 var manager: GroupManager
-
+var path_2d: Path2D
 var is_removed = false
 var state = State.FORWARDS
 var items: Array[FollowingBall]
@@ -18,19 +18,26 @@ var is_inserting = false # a ball is currently being inserted (added but not rea
 
 var _balls_being_inserted = []
 
-func _init(initial_items: Array[FollowingBall]):
-	items = initial_items
+func _init(_path_2d):
+	path_2d = _path_2d
+
+
+func add_items(_items: Array[FollowingBall], add_to_path = true):
+	items.append_array(_items)
 	update_items_index_and_group()
+	if add_to_path:
+		for item in items:
+			path_2d.add_child(item)
 
 func split_group(index: int):
 	assert(index > 0 and index < items.size(), "Invalid index")
-	var new_group = FollowGroup.new(items.slice(index))
-	
+	var new_group_items = items.slice(index)
 	
 	items = items.slice(0, index)
 	update_items_index_and_group()
 
-	manager.insert_group_after(self, new_group)
+	var new_group = manager.create_group_after(self)
+	new_group.add_items(new_group_items, false)
 	new_group.global_progress = new_group.first_item().current_progress
 	new_group.state = State.WAITING
 	return new_group
@@ -41,7 +48,8 @@ func insert_item(item: FollowingBall, index = null):
 		index = items.size()
 
 	items.insert(index, item)
-	update_items_index_and_group()	
+	update_items_index_and_group()		
+	path_2d.add_child(item)	
 	
 	# if adding at the beginning, don't push others (actually, move everything back)
 	if index == 0:
@@ -199,6 +207,13 @@ func explode_balls(items_to_explode: Array[FollowingBall]):
 	for group in [self, next_group]:
 		if group and !group.is_removed:
 			group.rush_backwards_if_needed(true)
+			
+func handle_shooting_ball_collision(ball: Ball, collided_follow: FollowingBall):
+	var normal = (ball.global_position - collided_follow.global_position).normalized().rotated(-collided_follow.rotation)
+	var i = collided_follow.index
+	var insert_index = i if normal.x < 0 else i + 1
+	var follow = FollowingBall.new(ball.frame, ball.global_position, ball.global_rotation)
+	insert_item(follow, insert_index)
 	
 func _should_rush_backwards():
 	return prev_group and first_item().frame == prev_group.last_item().frame

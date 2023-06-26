@@ -1,5 +1,10 @@
 extends Node
 
+class_name GroupManager
+
+@onready var path_2d = $"../Path2D"
+
+
 var groups: Array[FollowGroup]
 
 var _last_removed_group: FollowGroup # prevents random crashes ¯\_(ツ)_/¯
@@ -8,24 +13,31 @@ func _physics_process(delta):
 	for group in groups:
 		group.physics_process(delta)
 		
-
-func insert_group(group: FollowGroup, index: int):
-	groups.insert(index, group)
-	update_refs()
+func create_first_group() -> FollowGroup:
+	assert(groups.is_empty())
+	var group = FollowGroup.new(path_2d)
+	_insert_group(group, 0)	
+	return group
+		
 	
-func insert_group_after(group: FollowGroup, new_group: FollowGroup):
+func create_group_after(group: FollowGroup) -> FollowGroup:
 	var index = groups.find(group)
 	assert(index >= 0)
-	groups.insert(index+ 1, new_group)
-	update_refs()
+	var new_group = FollowGroup.new(path_2d)
+	_insert_group(new_group, index + 1)
+	return new_group
 
 func remove_group(group: FollowGroup):
 	groups.erase(group)
 	_last_removed_group = group	
-	update_refs()
+	_update_refs()
 	
 
-func update_refs():
+func _insert_group(group: FollowGroup, index: int):
+	groups.insert(index, group)
+	_update_refs()
+
+func _update_refs():
 	var size = groups.size()
 	for i in size:
 		var group = groups[i]
