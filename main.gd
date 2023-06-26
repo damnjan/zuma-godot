@@ -31,15 +31,6 @@ func _ready():
 #		[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3]
 	)
 		
-func _physics_process(delta):
-	for group in GroupManager.groups:
-		group.physics_process(delta)
-#	_check_first_group()
-#	var next: FollowGroup = first_group
-#	while next:
-#		next.physics_process(delta)
-#		next = next.next_group
-		
 func _seed(n = randi()):
 	seed(n)	
 	print("Seed : ", n)

@@ -17,12 +17,8 @@ var current_speed: float = Globals.MAX_FORWARDS_SPEED
 var is_inserting = false # a ball is currently being inserted (added but not ready)
 
 var _balls_being_inserted = []
-var group_index := -1
 
 func _init(initial_items: Array[FollowingBall]):
-	# keep active reference to groups because godot's garbage collector seems to have some weird bug
-	# i know it makes no sense but after many hours of hunting for the bug, this is the only thing that works
-#	Globals.all_groups.append(self)
 	items = initial_items
 	update_items_index_and_group()
 
@@ -34,7 +30,7 @@ func split_group(index: int):
 	items = items.slice(0, index)
 	update_items_index_and_group()
 
-	manager.insert_group(new_group, group_index + 1)
+	manager.insert_group_after(self, new_group)
 	new_group.global_progress = new_group.first_item().current_progress
 	new_group.state = State.WAITING
 	return new_group
@@ -91,7 +87,6 @@ var last_speed = current_speed
 
 func physics_process(delta):
 	assert(!is_removed, "Probably still the first group, def a bug")
-	assert(group_index >= 0)
 				
 	if next_group and last_item().current_progress >= next_group.first_item().current_progress - Globals.BALL_WIDTH:
 		merge_next_group()
@@ -134,7 +129,7 @@ func last_item() -> FollowingBall:
 	
 func rush_backwards_if_needed(delay = false):
 	if delay:
-		await GlobalTimer.create(Globals.GOING_BACKWARDS_DELAY).timeout
+		await manager.get_tree().create_timer(Globals.GOING_BACKWARDS_DELAY).timeout
 	if is_removed:
 		return
 	if _should_rush_backwards():
