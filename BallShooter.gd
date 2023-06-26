@@ -24,41 +24,42 @@ func _ready():
 	tongue.collided.connect(_on_tongue_collided)
 	
 func ray_to_ball_intersection(ray_origin: Vector2, ray_direction: Vector2):
-	var closest = {
-		"intersection": null,
-		"distance": INF
-	}
+
+	var closest_intersection = null
+	var closest_distance = INF
 	var ball_radius = Globals.BALL_WIDTH / 2  # Assuming you have a property for the ball's radius
 	
-	Globals.for_each_visible_ball(func (ball):
-		var ball_position: Vector2 = ball.global_position
-		var origin_to_ball: Vector2 = ball_position - ray_origin
-		
-		# Projection of the ball's position onto the ray direction
-		var projection_length = origin_to_ball.dot(ray_direction)
+	for group in GroupManager.groups:
+		for ball in group.items:
+			if ball.is_hidden:
+				continue
+				
+			var ball_position: Vector2 = ball.global_position
+			var origin_to_ball: Vector2 = ball_position - ray_origin
 			
-		if projection_length < 0:
-			return
+			# Projection of the ball's position onto the ray direction
+			var projection_length = origin_to_ball.dot(ray_direction)
+			if projection_length < 0:
+				continue
 
-		# Closest point on the ray to the center of the circle
-		var closest_point = ray_origin + ray_direction * projection_length
+			# Closest point on the ray to the center of the circle
+			var closest_point = ray_origin + ray_direction * projection_length
 
-		var distance_to_ball_center = closest_point.distance_to(ball_position)
+			var distance_to_ball_center = closest_point.distance_to(ball_position)
 
-		if distance_to_ball_center < ball_radius:
-			# The ray intersects the ball.
-			# Distance from the closest point on the line to the intersection
-			var distance_to_intersection = sqrt(ball_radius * ball_radius - distance_to_ball_center * distance_to_ball_center)
-			
-			var intersection_point = closest_point - ray_direction* distance_to_intersection
-			var distance = ray_origin.distance_to(intersection_point)
+			if distance_to_ball_center < ball_radius:
+				# The ray intersects the ball.
+				# Distance from the closest point on the line to the intersection
+				var distance_to_intersection = sqrt(ball_radius * ball_radius - distance_to_ball_center * distance_to_ball_center)
+				
+				var intersection_point = closest_point - ray_direction* distance_to_intersection
+				var distance = ray_origin.distance_to(intersection_point)
 
-			if distance < closest.distance:
-				closest.distance = distance
-				closest.intersection = intersection_point
-	)
-
-	return closest.intersection
+				if distance < closest_distance:
+					closest_distance = distance
+					closest_intersection = intersection_point
+	
+	return closest_intersection
 
 func _physics_process(_delta):
 	var mouse_rotation = Vector2.UP.angle_to(get_local_mouse_position().normalized())

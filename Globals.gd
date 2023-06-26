@@ -41,23 +41,16 @@ func _emit_hidden_count():
 		hidden_count[location] += 1
 	Events.hidden_follows_updated.emit(hidden_count)
 	
-# return true in callback if you want to exit early
-func for_each_visible_ball(callback: Callable):
+				
+func check_collision_with_follows(object: Node2D, self_radius: float, callback: Callable):
 	for group in GroupManager.groups:
-		assert(!group.is_removed)
 		for ball in group.items:
 			if ball.is_hidden:
 				continue
-			var should_return = callback.call(ball)
-			if should_return:
+			if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2 + self_radius:
+				callback.call(ball)
 				return
-				
-func check_collision_with_follows(object: Node2D, self_radius: float, callback: Callable):
-	for_each_visible_ball(func (ball):
-		if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2 + self_radius:
-			callback.call(ball)
-			return true	
-	)
+
 
 func on_follow_hidden(follow: FollowingBall):
 	var location

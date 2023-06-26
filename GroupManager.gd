@@ -7,6 +7,7 @@ var _last_removed_group: FollowGroup # prevents random crashes ¯\_(ツ)_/¯
 func _physics_process(delta):
 	for group in groups:
 		group.physics_process(delta)
+		
 
 func insert_group(group: FollowGroup, index: int):
 	groups.insert(index, group)
@@ -15,7 +16,8 @@ func insert_group(group: FollowGroup, index: int):
 func insert_group_after(group: FollowGroup, new_group: FollowGroup):
 	var index = groups.find(group)
 	assert(index >= 0)
-	insert_group(new_group, index + 1)
+	groups.insert(index+ 1, new_group)
+	update_refs()
 
 func remove_group(group: FollowGroup):
 	groups.erase(group)
@@ -30,4 +32,3 @@ func update_refs():
 		group.manager = self
 		group.prev_group = groups[i - 1] if i > 0 else null
 		group.next_group = groups[i + 1] if i < size - 1 else null
-			
