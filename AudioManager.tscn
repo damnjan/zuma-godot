@@ -10,18 +10,26 @@
 [node name="AudioManager" type="Node2D"]
 script = ExtResource("1_vgnro")
 
-[node name="InsertSound" type="AudioStreamPlayer" parent="."]
+[node name="InsertSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_3vrd1")
+attenuation = 1e-05
+panning_strength = 2.0
 
-[node name="PoppingSound" type="AudioStreamPlayer" parent="."]
+[node name="PoppingSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_5jdlg")
+attenuation = 1e-05
+panning_strength = 2.0
 
-[node name="MergeSound" type="AudioStreamPlayer" parent="."]
+[node name="MergeSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_c4oyu")
+attenuation = 1e-05
+panning_strength = 2.0
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_mlrdj")
 volume_db = -2.811
 
-[node name="ShootingSound" type="AudioStreamPlayer" parent="."]
+[node name="ShootingSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("6_ilotl")
+attenuation = 1e-05
+panning_strength = 2.0

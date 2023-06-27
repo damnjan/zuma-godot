@@ -66,7 +66,7 @@ func _generate_balls(test_data = null):
 	tween.tween_property(first_group, "global_progress", target_global_progress, 2)
 
 func _on_shooting_ball_collided(ball: Ball, collided_follow: FollowingBall):
-	AudioManager.play(AudioManager.insert_sound)
+	AudioManager.play(AudioManager.insert_sound, ball.global_position)
 	Globals.combo = 0
 
 		
@@ -85,7 +85,7 @@ func _on_balls_exploding(balls):
 	shaker.duration = 0.2 + (Globals.combo - 1) * 0.1
 	shaker.start()
 	AudioManager.popping_sound.pitch_scale = 1 + (Globals.combo - 1) * 0.1
-	AudioManager.play(AudioManager.popping_sound)
+	AudioManager.play(AudioManager.popping_sound, middle_ball.global_position)
 	if Globals.combo > 1:
 		var combo: Node2D = ComboScene.instantiate()
 		combo.value = (Globals.combo)

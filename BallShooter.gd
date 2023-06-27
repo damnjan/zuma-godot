@@ -95,9 +95,9 @@ func _input(event):
 		shooting_ball.global_position = glob_pos
 		shooting_ball.global_rotation = glob_rot
 		shooting_ball.shoot(get_local_mouse_position().normalized())
-		shooting_ball = null
 		animation_player.play("shoot")
-		AudioManager.play(AudioManager.shooting_sound)
+		AudioManager.play(AudioManager.shooting_sound, shooting_ball.global_position)
+		shooting_ball = null		
 		if mode == Modes.NORMAL:
 			get_tree().create_timer(0.2).timeout.connect(spawn_shooting_ball)
 	elif event.is_action_pressed("tongue") and !shooting_ball:

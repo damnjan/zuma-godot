@@ -36,9 +36,10 @@ func split_group(group: FollowGroup, index: int):
 	return new_group
 	
 func merge_groups(group: FollowGroup, next_group: FollowGroup):
+	var audio_position = group.last_item().global_position
 	group.set_items(group.items + next_group.items)
 	remove_group(next_group)
-	AudioManager.play(AudioManager.merge_sound)
+	AudioManager.play(AudioManager.merge_sound, audio_position)
 		
 
 func remove_group(group: FollowGroup):

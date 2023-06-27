@@ -14,10 +14,13 @@ extends Node2D
 func _ready():
 	if OS.is_debug_build() and !music_while_debug:
 		return
-	play(music)
+	music.play()
 
 
-func play(player: AudioStreamPlayer):
+func play(player: AudioStreamPlayer2D, _position = null):
 	if muted:
 		return
+	if _position == null:
+		_position = get_viewport_rect().size / 2
+	player.position = _position
 	player.play()
