@@ -59,6 +59,7 @@ func _init(ball_frame, origin_position = null, origin_rotation = null):
 func _ready():
 	assert(group and index >= 0, "Item must be in a group and have an index set")	
 	is_hidden = false
+	add_to_group('visible_balls')
 	current_progress = index * Globals.BALL_WIDTH + group.global_progress
 	if _origin_position:
 		ball.position = to_local(_origin_position)
@@ -108,9 +109,11 @@ func _update_visibility():
 		is_hidden = new_value
 		if is_hidden:
 			hide()
+			remove_from_group('visible_balls')
 			Globals.on_follow_hidden(self)
 		else:
 			show()
+			add_to_group('visible_balls')
 			progress = current_progress # update visual progress now that visibility changed
 			Globals.on_follow_shown(self)
 		
@@ -134,6 +137,7 @@ func remove_self():
 	
 	
 func kill_ball():
+	remove_from_group('visible_balls')
 	is_dying = true
 	ball.explode()
 	

@@ -22,9 +22,6 @@ const BallScene = preload("res://Ball.tscn")
 const ComboScene = preload("res://Combo.tscn")
 const ScorePopupScene = preload("res://ScorePopup.tscn")
 
-#var first_group: FollowGroup
-var game_ready = false
-
 func _init():
 	_seed()
 	
@@ -36,7 +33,6 @@ func _init():
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	
 func _ready():
-	print("Level ready")
 	var arr: PackedStringArray
 	var initial_balls_array = Utils.split_to_int_array(initial_balls) if initial_balls else null
 	_generate_balls( initial_balls_array)
@@ -50,7 +46,7 @@ func _seed(n = randi()):
 		
 func _generate_balls(test_data = null):
 	var total_number = test_data.size() if test_data else Globals.TOTAL_NUMBER_OF_BALLS
-	var initial_number = test_data.size() if test_data else Globals.INITIAL_NUMBER_OF_BALLS
+	var initial_number = test_data.size() if test_data else min(total_number, Globals.INITIAL_NUMBER_OF_BALLS)
 	var target_global_progress = -(total_number - initial_number) * Globals.BALL_WIDTH
 	
 	var initial_follows: Array[FollowingBall] = []

@@ -53,16 +53,15 @@ func _emit_hidden_count():
 				
 
 func _ready():
-	current_level = get_tree().current_scene
+	var current_scene = get_tree().current_scene
+	if current_scene is Level:
+		current_level = current_scene
 				
 func check_collision_with_follows(object: Node2D, self_radius: float, callback: Callable):
-	for group in current_level.group_manager.groups:
-		for ball in group.items:
-			if ball.is_hidden:
-				continue
-			if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2 + self_radius:
-				callback.call(ball)
-				return
+	for ball in get_tree().get_nodes_in_group('visible_balls'):
+		if object.global_position.distance_to(ball.global_position) < Globals.BALL_WIDTH / 2 + self_radius:
+			callback.call(ball)
+			return
 
 
 func on_follow_hidden(follow: FollowingBall):
@@ -83,3 +82,4 @@ func on_follow_shown(follow: FollowingBall):
 	hidden_follows.erase(follow)	
 	_emit_hidden_count()
 	
+

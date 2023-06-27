@@ -98,7 +98,9 @@ texture = ExtResource("2_8in5a")
 position = Vector2(3.99988, -186)
 
 [node name="TongueMask" type="Polygon2D" parent="Toad"]
+visible = false
 clip_children = 1
+light_mask = 0
 position = Vector2(0, -147)
 polygon = PackedVector2Array(-43, 230, 60, 221, 140, -35, 126, -2778, -91, -2774, -98, 21)
 

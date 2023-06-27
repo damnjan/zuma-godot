@@ -1,13 +1,13 @@
 [gd_scene load_steps=14 format=3 uid="uid://bu7cjyo7wkd8u"]
 
-[ext_resource type="Script" path="res://Level.gd" id="1_qnpv5"]
-[ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://zuma_bg.png" id="2_yddoi"]
-[ext_resource type="Script" path="res://Path2D.gd" id="3_7x4g3"]
-[ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="3_r5c63"]
-[ext_resource type="PackedScene" uid="uid://12fhuuwwpgh2" path="res://BallShooter.tscn" id="4_4kumu"]
-[ext_resource type="Script" path="res://GroupManager.gd" id="8_f3xjb"]
-[ext_resource type="Script" path="res://EndCountLabel.gd" id="13_j3a3c"]
-[ext_resource type="Script" path="res://ScoreLabel.gd" id="14_4nb6k"]
+[ext_resource type="Script" path="res://Level.gd" id="1_k5a44"]
+[ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://zuma_bg.png" id="2_i4jxr"]
+[ext_resource type="Script" path="res://Path2D.gd" id="3_lnqjk"]
+[ext_resource type="PackedScene" uid="uid://12fhuuwwpgh2" path="res://BallShooter.tscn" id="4_g3whm"]
+[ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="5_7ndgl"]
+[ext_resource type="Script" path="res://EndCountLabel.gd" id="6_v1a0a"]
+[ext_resource type="Script" path="res://ScoreLabel.gd" id="7_vnsvs"]
+[ext_resource type="Script" path="res://GroupManager.gd" id="8_ge1iu"]
 
 [sub_resource type="Curve2D" id="Curve2D_x5r2q"]
 _data = {
@@ -34,26 +34,26 @@ shadow_size = 11
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="Level" type="Node2D"]
-script = ExtResource("1_qnpv5")
+script = ExtResource("1_k5a44")
 
 [node name="Background" type="Sprite2D" parent="."]
 position = Vector2(1653.22, 972)
 scale = Vector2(1.88356, 2.11667)
-texture = ExtResource("2_yddoi")
+texture = ExtResource("2_i4jxr")
 
 [node name="Path2D" type="Path2D" parent="."]
 position = Vector2(-180, 38)
 curve = SubResource("Curve2D_x5r2q")
-script = ExtResource("3_7x4g3")
+script = ExtResource("3_lnqjk")
 
-[node name="BallShooter" parent="." instance=ExtResource("4_4kumu")]
+[node name="BallShooter" parent="." instance=ExtResource("4_g3whm")]
 position = Vector2(1860, 1028)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(1678, 952)
 
 [node name="Shaker" type="Node" parent="." node_paths=PackedStringArray("target_node")]
-script = ExtResource("3_r5c63")
+script = ExtResource("5_7ndgl")
 target_node = NodePath("../Camera2D")
 target_property = &"offset"
 max_value = 10.0
@@ -74,7 +74,7 @@ offset_right = 830.0
 offset_bottom = 1102.0
 text = "← 56"
 label_settings = SubResource("LabelSettings_s6xxj")
-script = ExtResource("13_j3a3c")
+script = ExtResource("6_v1a0a")
 
 [node name="ScoreLabel" type="Label" parent="."]
 offset_left = 43.0
@@ -83,7 +83,7 @@ offset_right = 130.0
 offset_bottom = 107.0
 text = "51300"
 label_settings = SubResource("LabelSettings_qjwhu")
-script = ExtResource("14_4nb6k")
+script = ExtResource("7_vnsvs")
 
 [node name="GroupManager" type="Node" parent="."]
-script = ExtResource("8_f3xjb")
+script = ExtResource("8_ge1iu")
