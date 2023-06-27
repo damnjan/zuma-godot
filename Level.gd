@@ -2,7 +2,6 @@ extends Node2D
 
 class_name Level
 
-@onready var path_2d: Path2D = $Path2D
 @onready var seed_label = $SeedLabel
 @onready var end_count_label = $EndCountLabel
 @onready var shaker = $Shaker
@@ -57,9 +56,8 @@ func _generate_balls(test_data = null):
 		var follow = FollowingBall.new(frame)
 		initial_follows.append(follow)
 		
-	var first_group = group_manager.create_first_group()
+	var first_group = group_manager.create_first_group(initial_follows)
 	first_group.global_progress = -total_number * Globals.BALL_WIDTH
-	first_group.add_items(initial_follows)
 	
 #	first_group.global_progress = -total_number * Globals.BALL_WIDTH
 		

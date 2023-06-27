@@ -38,8 +38,6 @@ func change_color():
 
 # todo: refactor. why ball.global_position instead of global_position? why pass ball when emitting?
 func _on_follow_collided(follow: FollowingBall):
-	
-	follow.group.handle_shooting_ball_collision(ball, follow)
 	Events.shooting_ball_collided.emit(ball, follow)
 	queue_free()
 	

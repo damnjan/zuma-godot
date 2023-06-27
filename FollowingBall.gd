@@ -91,16 +91,11 @@ func _physics_process(delta):
 func _update_progress(delta):
 	var next_progress = group.global_progress + index * Globals.BALL_WIDTH
 	current_progress = lerpf(current_progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)	
-	# when being hit from a group that moves backwards, don't interpolate because it looks weird (or does it?)
-#	if !group.is_inserting and group.state == FollowGroup.State.FORWARDS and group.current_speed < 0:
-#		current_progress = next_progress
-#	else:
-#		current_progress = lerpf(current_progress, next_progress, Globals.PROGRESS_LERP_WEIGHT * delta)
 		
 	
 func _set_ready_for_checking():
 	is_ready_for_checking = true
-	ready_for_checking.emit()
+	group.check_for_matches_from_item(self)
 		
 # hides/shows the ball and disables/enables collision if outside the path
 func _update_visibility():
@@ -127,9 +122,9 @@ func remove_self():
 		if index > 0 and index < group.items.size():
 			next_group = group.split_group(index)	
 		if group._should_rush_backwards():
-			group.state = group.State.BACKWARDS
+			group.state = FollowGroup.State.RUSHING_BACKWARDS
 		if next_group and next_group._should_rush_backwards():
-			next_group.state = group.State.BACKWARDS
+			next_group.state = FollowGroup.State.RUSHING_BACKWARDS
 	else:
 		group.remove()
 
