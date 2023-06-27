@@ -85,7 +85,14 @@ func _physics_process(_delta):
 		polygon_2d.color = Color(1,1,1,0.5)
 
 
+
 func _input(event):
+	if OS.is_debug_build():
+		var keys = [KEY_1, KEY_2, KEY_3, KEY_4]
+		for i in keys.size():
+			if Input.is_key_pressed(keys[i]):
+				shooting_ball.ball.frame = i
+	
 	if event.is_action_pressed("shoot") and shooting_ball:
 		var glob_pos = shooting_ball.global_position
 		var glob_rot = shooting_ball.global_rotation

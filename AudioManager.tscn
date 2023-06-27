@@ -12,24 +12,24 @@ script = ExtResource("1_vgnro")
 
 [node name="InsertSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("2_3vrd1")
+max_distance = 999999.0
 attenuation = 1e-05
-panning_strength = 2.0
 
 [node name="PoppingSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_5jdlg")
+max_distance = 999999.0
 attenuation = 1e-05
-panning_strength = 2.0
 
 [node name="MergeSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_c4oyu")
+max_distance = 999999.0
 attenuation = 1e-05
-panning_strength = 2.0
+
+[node name="ShootingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_ilotl")
+max_distance = 999999.0
+attenuation = 1e-05
 
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_mlrdj")
 volume_db = -2.811
-
-[node name="ShootingSound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("6_ilotl")
-attenuation = 1e-05
-panning_strength = 2.0

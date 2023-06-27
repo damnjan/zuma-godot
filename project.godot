@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.1", "Forward Plus")
 run/max_fps=60
 config/icon="res://icon.svg"
 
+[audio]
+
+general/2d_panning_strength=1.0
+
 [autoload]
 
 Globals="*res://Globals.gd"
