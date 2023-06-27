@@ -1,0 +1,117 @@
+[gd_scene load_steps=10 format=3 uid="uid://12fhuuwwpgh2"]
+
+[ext_resource type="Script" path="res://ball_shooter/BallShooter.gd" id="1_lgsxn"]
+[ext_resource type="Texture2D" uid="uid://c76k8m43cxlwk" path="res://sprites/mouth.png" id="2_g5jhs"]
+[ext_resource type="PackedScene" uid="uid://d06qy6up6csy5" path="res://ball_shooter/Tongue.tscn" id="3_ly0xv"]
+[ext_resource type="Texture2D" uid="uid://dueyn0nftpj0r" path="res://sprites/toad2.png" id="4_nirvo"]
+
+[sub_resource type="Gradient" id="Gradient_nepga"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_grrga"]
+gradient = SubResource("Gradient_nepga")
+width = 300
+height = 300
+fill_from = Vector2(0.519417, 0.538835)
+fill_to = Vector2(0.509709, 0)
+
+[sub_resource type="Animation" id="Animation_dxbgw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mouth:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_h47lw"]
+resource_name = "shoot"
+length = 0.2
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Body:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.025, 0.15),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-0.44458, 21), Vector2(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Mouth:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.025, 0.15),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(-0.44458, 21), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cylvb"]
+_data = {
+"RESET": SubResource("Animation_dxbgw"),
+"shoot": SubResource("Animation_h47lw")
+}
+
+[node name="BallShooter" type="Node2D"]
+position = Vector2(1498, 850)
+script = ExtResource("1_lgsxn")
+
+[node name="Toad" type="Node2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="Toad"]
+position = Vector2(2.08165e-12, -186)
+color = Color(0.980392, 1, 0, 0.396078)
+texture = SubResource("GradientTexture2D_grrga")
+texture_offset = Vector2(2.08165e-12, 200)
+polygon = PackedVector2Array(75, -1, -72, 8, 8, -401)
+
+[node name="Mouth" type="Sprite2D" parent="Toad"]
+scale = Vector2(0.77, 0.77)
+texture = ExtResource("2_g5jhs")
+
+[node name="SpawnPoint" type="Marker2D" parent="Toad"]
+position = Vector2(3.99988, -186)
+
+[node name="TongueMask" type="Polygon2D" parent="Toad"]
+visible = false
+clip_children = 1
+light_mask = 0
+position = Vector2(0, -147)
+polygon = PackedVector2Array(-43, 230, 60, 221, 140, -35, 126, -2778, -91, -2774, -98, 21)
+
+[node name="Tongue" parent="Toad/TongueMask" instance=ExtResource("3_ly0xv")]
+position = Vector2(0, -14)
+
+[node name="Body" type="Sprite2D" parent="Toad"]
+scale = Vector2(0.77037, 0.77037)
+texture = ExtResource("4_nirvo")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Toad"]
+libraries = {
+"": SubResource("AnimationLibrary_cylvb")
+}

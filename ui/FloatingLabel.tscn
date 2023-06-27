@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://bv668oj6kh2u8"]
+
+[ext_resource type="Script" path="res://ui/EndCountLabel.gd" id="1_uyw12"]
+
+[sub_resource type="FontVariation" id="FontVariation_weu1d"]
+variation_embolden = 0.42
+spacing_glyph = 4
+spacing_space = -3
+
+[sub_resource type="LabelSettings" id="LabelSettings_miysv"]
+font = SubResource("FontVariation_weu1d")
+font_size = 61
+font_color = Color(0.662745, 0.513726, 0.0470588, 1)
+shadow_size = 0
+shadow_color = Color(0, 0, 0, 0.541176)
+
+[node name="FloatingLabel" type="Label"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -3000.0
+offset_right = -2812.0
+offset_bottom = 87.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+text = "Label"
+label_settings = SubResource("LabelSettings_miysv")
+horizontal_alignment = 2
+script = ExtResource("1_uyw12")

@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://dbx5m3g0x5rqe"]
+
+[ext_resource type="Script" path="res://audio/AudioManager.gd" id="1_5e2mi"]
+[ext_resource type="AudioStream" uid="uid://bbl2modj0rqn8" path="res://audio/insert.mp3" id="2_r2qxn"]
+[ext_resource type="AudioStream" uid="uid://bxfw5gqheltk8" path="res://audio/popping.mp3" id="3_im7y8"]
+[ext_resource type="AudioStream" uid="uid://x1lcasidcc2o" path="res://audio/merge.mp3" id="4_60t21"]
+[ext_resource type="AudioStream" uid="uid://cx41v31pulmqi" path="res://audio/shoot.mp3" id="5_fm7bb"]
+[ext_resource type="AudioStream" uid="uid://c2trvu2nqabum" path="res://audio/music.mp3" id="6_fbfg7"]
+
+[node name="AudioManager" type="Node2D"]
+script = ExtResource("1_5e2mi")
+
+[node name="InsertSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_r2qxn")
+max_distance = 999999.0
+attenuation = 1e-05
+
+[node name="PoppingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_im7y8")
+max_distance = 999999.0
+attenuation = 1e-05
+
+[node name="MergeSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_60t21")
+max_distance = 999999.0
+attenuation = 1e-05
+
+[node name="ShootingSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_fm7bb")
+max_distance = 999999.0
+attenuation = 1e-05
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_fbfg7")
+volume_db = -2.811

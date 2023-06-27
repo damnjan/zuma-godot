@@ -1,12 +1,11 @@
 [gd_scene load_steps=13 format=3 uid="uid://bu7cjyo7wkd8u"]
 
 [ext_resource type="Script" path="res://Level.gd" id="1_k5a44"]
-[ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://zuma_bg.png" id="2_i4jxr"]
-[ext_resource type="Script" path="res://GroupManager.gd" id="3_nhjef"]
-[ext_resource type="PackedScene" uid="uid://12fhuuwwpgh2" path="res://BallShooter.tscn" id="4_g3whm"]
+[ext_resource type="Texture2D" uid="uid://cjeu22dnnw1ml" path="res://sprites/zuma_bg.png" id="2_i4jxr"]
+[ext_resource type="Script" path="res://group_manager/GroupManager.gd" id="3_nhjef"]
+[ext_resource type="PackedScene" uid="uid://12fhuuwwpgh2" path="res://ball_shooter/BallShooter.tscn" id="4_g3whm"]
 [ext_resource type="Script" path="res://addons/shaker/shaker.gd" id="5_7ndgl"]
-[ext_resource type="Script" path="res://EndCountLabel.gd" id="6_v1a0a"]
-[ext_resource type="Script" path="res://ScoreLabel.gd" id="7_vnsvs"]
+[ext_resource type="Script" path="res://ui/ScoreLabel.gd" id="6_iv38f"]
 
 [sub_resource type="Curve2D" id="Curve2D_x5r2q"]
 _data = {
@@ -20,6 +19,17 @@ font_size = 21
 [sub_resource type="LabelSettings" id="LabelSettings_s6xxj"]
 font_size = 50
 font_color = Color(0.2, 0.188235, 0, 1)
+
+[sub_resource type="GDScript" id="GDScript_xbtbk"]
+script/source = "extends Label
+
+var tween: Tween
+	
+func set_value(value):
+	text = \"\" if value == 0 else \"← \" + str(value)
+	
+	
+"
 
 [sub_resource type="FontVariation" id="FontVariation_e5vd8"]
 variation_embolden = 1.2
@@ -73,7 +83,7 @@ offset_right = 830.0
 offset_bottom = 1102.0
 text = "← 56"
 label_settings = SubResource("LabelSettings_s6xxj")
-script = ExtResource("6_v1a0a")
+script = SubResource("GDScript_xbtbk")
 
 [node name="ScoreLabel" type="Label" parent="."]
 offset_left = 43.0
@@ -82,4 +92,4 @@ offset_right = 130.0
 offset_bottom = 107.0
 text = "51300"
 label_settings = SubResource("LabelSettings_qjwhu")
-script = ExtResource("7_vnsvs")
+script = ExtResource("6_iv38f")

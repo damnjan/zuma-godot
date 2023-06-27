@@ -17,9 +17,8 @@ class_name Level
 	get:
 		return Globals.SPEED_SCALE
 
-const BallScene = preload("res://Ball.tscn")
-const ComboScene = preload("res://Combo.tscn")
-const ScorePopupScene = preload("res://ScorePopup.tscn")
+const ComboScene = preload("res://ui/Combo.tscn")
+const ScorePopupScene = preload("res://ui/ScorePopup.tscn")
 
 func _init():
 	_seed()

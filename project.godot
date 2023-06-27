@@ -14,7 +14,6 @@ config/name="Zuma"
 run/main_scene="res://Level.tscn"
 config/features=PackedStringArray("4.1", "Forward Plus")
 run/max_fps=60
-config/icon="res://icon.svg"
 
 [audio]
 
@@ -24,7 +23,7 @@ general/2d_panning_strength=1.0
 
 Globals="*res://Globals.gd"
 Events="*res://Events.gd"
-AudioManager="*res://AudioManager.tscn"
+AudioManager="*res://audio/AudioManager.tscn"
 
 [display]
 

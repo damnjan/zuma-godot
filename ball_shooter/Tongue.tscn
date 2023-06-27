@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://d06qy6up6csy5"]
+
+[ext_resource type="Script" path="res://ball_shooter/Tongue.gd" id="1_u2b50"]
+[ext_resource type="PackedScene" uid="uid://do1coluqet8qu" path="res://ball/BallSprite.tscn" id="2_mt4h4"]
+
+[sub_resource type="Curve" id="Curve_c27dh"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
+[node name="Tongue" type="Node2D"]
+script = ExtResource("1_u2b50")
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 3316, 0, 0)
+width = 20.0
+width_curve = SubResource("Curve_c27dh")
+default_color = Color(0.87451, 0.0901961, 0.0901961, 1)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="BallSprite" parent="." instance=ExtResource("2_mt4h4")]
