@@ -1,10 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://cs0g6j0rmm486"]
+[gd_scene load_steps=4 format=3 uid="uid://cs0g6j0rmm486"]
 
 [ext_resource type="Script" path="res://ball/ball.gd" id="1_5eh0u"]
 [ext_resource type="PackedScene" uid="uid://do1coluqet8qu" path="res://ball/BallSprite.tscn" id="2_5dfqk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_v7rjs"]
+font_size = 55
 
 [node name="Ball" type="Node2D"]
 self_modulate = Color(0, 0, 0, 1)
 script = ExtResource("1_5eh0u")
 
 [node name="Sprite" parent="." instance=ExtResource("2_5dfqk")]
+
+[node name="Label" type="Label" parent="."]
+offset_left = -16.0
+offset_top = -36.0
+offset_right = 24.0
+offset_bottom = 43.0
+text = "E"
+label_settings = SubResource("LabelSettings_v7rjs")

@@ -48,7 +48,7 @@ direction = Vector2(2.08165e-12, -1)
 spread = 180.0
 gravity = Vector2(2.08165e-12, 2.08165e-12)
 initial_velocity_min = 318.18
-initial_velocity_max = 636.36
+initial_velocity_max = 636.9
 scale_amount_max = 5.0
 scale_amount_curve = SubResource("Curve_dm7wg")
 

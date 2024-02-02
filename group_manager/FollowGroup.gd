@@ -50,10 +50,19 @@ func physics_process(delta):
 				
 	if next_group and last_item().current_progress >= next_group.first_item().current_progress - Globals.BALL_WIDTH:
 		_on_next_group_collision()
+		Window
+	if Globals.force_backwards:
+		_spring(-Globals.MAX_FORWARDS_SPEED * 2, delta)
+		return
 		
 	match state:
 		State.FORWARDS:
-			_spring(Globals.MAX_FORWARDS_SPEED, delta)
+			if Globals.force_waiting:
+				current_speed -= Globals.MAX_FORWARDS_SPEED * 2 * delta
+				current_speed = max(current_speed, 0)
+				global_progress += current_speed * delta
+			else:
+				_spring(Globals.MAX_FORWARDS_SPEED, delta)
 		
 		State.RUSHING_BACKWARDS:
 			current_speed -= Globals.BACKWARDS_ACCELERATION * delta
@@ -107,19 +116,29 @@ func check_for_matches_from_item(item: FollowingBall, is_merge = false):
 		# this means that two groups are merging, and one of them has consecutive balls but the other doesn't, so skip
 		return
 		
-	var items_to_explode = items.slice(start, end)
+	var items_to_explode: Array[FollowingBall] = items.slice(start, end)
 		
 	if items_to_explode.any(func(item): return !item.is_ready_for_checking):
 		return
 
 	if items_to_explode.size() >= Globals.MIN_CONSECUTIVE_MATCH:
-		explode_balls(items_to_explode)
+		if items_to_explode.any(func (item): return item.ball.variant == Ball.Variants.EXPLOSIVE):
+			start = max(0, start - 5)
+			end = min(items.size(), end + 5)
+		elif items_to_explode.any(func (item): return item.ball.variant == Ball.Variants.PAUSE):
+			Globals.force_waiting = true
+			manager.get_tree().create_timer(5).timeout.connect(func(): Globals.force_waiting = false)
+		elif items_to_explode.any(func (item): return item.ball.variant == Ball.Variants.BACKWARDS):
+			Globals.force_backwards = true
+			manager.get_tree().create_timer(5).timeout.connect(func(): Globals.force_backwards = false)
+			
+		explode_balls(start, end)
 		
 
 
-func explode_balls(items_to_explode: Array[FollowingBall]):
+func explode_balls(start, end):
+	var items_to_explode: Array[FollowingBall] = items.slice(start, end)
 	Events.balls_exploding.emit(items_to_explode)
-	var start = items.find(items_to_explode[0])
 
 	for follow in items_to_explode:
 		items.erase(follow)

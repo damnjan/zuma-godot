@@ -29,6 +29,8 @@ func update_speed_values():
 	TONGUE_SPEED = 3600.0 * SPEED_SCALE
 
 var current_level: Level
+var force_waiting = false
+var force_backwards = false
 
 var hidden_follows = {}
 var score = 0

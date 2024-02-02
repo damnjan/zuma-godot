@@ -31,7 +31,6 @@ func _init():
 	Events.shooting_ball_collided.connect(_on_shooting_ball_collided)
 	
 func _ready():
-	var arr: PackedStringArray
 	var initial_balls_array = Utils.split_to_int_array(initial_balls) if initial_balls else null
 	_generate_balls( initial_balls_array)
 		
